@@ -13,6 +13,7 @@ import validateAllFields from "../../utils/validateField";
 import { formLabels } from "../../utils/formLabels";
 import texts from "../../utils/textsKompetisiPelajar";
 import SubmitButton from "../../components/form/SubmitButton";
+import GoogleSignIn from "../../components/auth/GoogleSignIn";
 
 const FormKompetisiPelajar = () => {
   const { theme } = useContext(ThemeContext);
@@ -26,7 +27,7 @@ const FormKompetisiPelajar = () => {
     const saved = localStorage.getItem("formKompetisiPelajar");
     return saved ? JSON.parse(saved) : { ...initialFormData, publikasiSetuju: false }; // Pastikan publikasiSetuju ada
   });
-
+  const [userEmail, setUserEmail] = useState(null); // State untuk menyimpan email pengguna
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -53,6 +54,9 @@ const FormKompetisiPelajar = () => {
       ...prev,
       [name]: values,
     }));
+  };
+  const handleSignIn = (email) => {
+    setUserEmail(email); // Menyimpan email pengguna yang login
   };
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -108,7 +112,14 @@ const FormKompetisiPelajar = () => {
           </a>
         </p>
 
-        <p className="text-lg mt-6">Pataremilianus@gmail.com Ganti akun</p>
+        {/* Menampilkan email pengguna yang login */}
+        {userEmail ? (
+          <p className="text-lg font-semibold">
+            Logged in as: <span className="text-blue-600">{userEmail}</span>
+          </p>
+        ) : (
+          <GoogleSignIn onSignIn={handleSignIn} /> // Tombol login Google
+        )}
         <p className="text-lg mt-4">{langText.introText.footerNote}</p>
         <p className="text-lg mt-4 font-semibold">{langText.introText.requiredNote}</p>
       </div>
