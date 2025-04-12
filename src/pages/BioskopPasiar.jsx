@@ -49,11 +49,7 @@ const BioskopPasiar = () => {
           {/* Teks dengan efek gradien di atas gambar */}
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-center justify-center p-6">
             <div className="text-white text-center w-full max-full mt-10">
-              <h4 className="text-4xl font-semibold mb-4">
-                {language === "ID"
-                  ? "Selamat datang di Bioskop Pasiar!"
-                  : "Welcome to Bioskop Pasiar!"}
-              </h4>
+              <h4 className="text-4xl font-semibold mb-4">{language === "ID" ? "Selamat datang di Bioskop Pasiar!" : "Welcome to Bioskop Pasiar!"}</h4>
               <p className="mt-4 text-lg">
                 {language === "ID"
                   ? "Bioskop Pasiar adalah program yang digagas oleh Komunitas Film Kupang sebagai bagian dari rangkaian acara menuju Flobamora Film Festival. Program ini bertujuan untuk membawa film-film berkualitas ke berbagai kelurahan di Kota Kupang, sehingga masyarakat dapat menikmati tayangan film secara gratis di lingkungan mereka. Selain itu, Bioskop Pasiar juga berupaya untuk meningkatkan literasi film dan memperkenalkan karya-karya sineas lokal kepada masyarakat luas."
@@ -65,32 +61,23 @@ const BioskopPasiar = () => {
       </div>
 
       {/* Judul dan Deskripsi Film */}
-      <h2 className="text-center text-4xl font-semibold mb-12">
-        {language === "ID" ? "Film Terbaru" : "Latest Movies"}
-      </h2>
+      <h2 className="text-center text-4xl font-semibold mb-12">{language === "ID" ? "Film Terbaru" : "Latest Movies"}</h2>
 
       {/* Loop through movie categories */}
       {movieCategories.map((category) => (
         <div key={category.title} className="my-10">
-          <h3 className="text-3xl text-center font-semibold mb-8">
-            {category.title}
-          </h3>
+          <h3 className="text-3xl text-center font-semibold mb-8">{category.title}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {category.films.map((film) => (
               <div
                 key={film.id}
                 className="flex-shrink-0 w-full h-[400px] border-[0.5px] border-gray-400 rounded-xl p-6 cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-black dark:border-white dark:hover:shadow-white dark:hover:bg-darkHover/50"
               >
-                <div
-                  className="w-full h-full bg-no-repeat bg-cover bg-center rounded-lg relative"
-                  style={{ backgroundImage: `url(${film.image})` }}
-                >
+                <div className="w-full h-full bg-no-repeat bg-cover bg-center rounded-lg relative" style={{ backgroundImage: `url(${film.image})` }}>
                   <div className="absolute bottom-5 left-1/2 -translate-x-1/2 bg-gradient-to-t from-black to-transparent w-full h-1/3 rounded-lg">
                     <div className="text-white p-3">
                       <h2 className="font-semibold">{film.title}</h2>
-                      <p className="text-sm">
-                        {language === "ID" ? "Tonton Sekarang" : "Watch Now"}
-                      </p>
+                      <p className="text-sm">{language === "ID" ? "Tonton Sekarang" : "Watch Now"}</p>
                     </div>
                   </div>
                 </div>
@@ -107,16 +94,8 @@ const BioskopPasiar = () => {
     dark:text-white dark:border-white dark:hover:bg-darkHover"
       >
         {language === "ID" ? "Tampilkan lebih banyak" : "Show more"}
-        <img
-          src="/assets/right-arrow-blod.png"
-          alt=""
-          className="w-4 dark:hidden"
-        />
-        <img
-          src="/assets/right-arrow-blod-dark.png"
-          alt=""
-          className="w-4 hidden dark:block"
-        />
+        <img src="/assets/right-arrow-blod.png" alt="" className="w-4 dark:hidden" />
+        <img src="/assets/right-arrow-blod-dark.png" alt="" className="w-4 hidden dark:block" />
       </a>
     </div>
   );
