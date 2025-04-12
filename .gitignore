@@ -1,0 +1,49 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Jangan upload node_modules (bisa di-install ulang dengan npm install)
+node_modules/
+
+# Jangan upload file build (Vercel akan build ulang)
+dist/
+
+# Jangan upload environment variables (API Key Supabase/Firebase)
+.env
+.env.local
+.env.production
+.env.development
+
+# Jangan upload cache & file sistem yang tidak perlu
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Jangan upload konfigurasi editor lokal
+.idea/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
