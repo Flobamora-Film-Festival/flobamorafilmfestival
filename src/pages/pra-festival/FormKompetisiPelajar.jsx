@@ -13,7 +13,7 @@ import validateAllFields from "../../utils/validateField";
 import { formLabels } from "../../utils/formLabels";
 import texts from "../../utils/textsKompetisiPelajar";
 import SubmitButton from "../../components/form/SubmitButton";
-import GoogleSignIn from "../../components/auth/GoogleSignIn";
+import GoogleSignIn from "../../components/form/GoogleSignIn";
 
 const FormKompetisiPelajar = () => {
   const { theme } = useContext(ThemeContext);
