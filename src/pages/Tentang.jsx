@@ -73,25 +73,11 @@ const Tentang = () => {
             <tbody>
               {[
                 {
-                  year: "2021",
-                  title: "Parade Film NTT",
-                  img: "/assets/parade-film-ntt-2021.jpg",
-                  highlight: language === "ID" ? "Tema Sokong. Program pemutaran perdana hasil kolaborasi komunitas film NTT." : "Theme: Sokong. Premiere screenings initiated by local film communities in NTT.",
-                  id: "festival-2021", // Menambahkan ID unik untuk setiap festival
-                },
-                {
-                  year: "2022",
-                  title: "Flobamora Film Festival 2022",
-                  img: "/assets/festival-2022.jpg",
-                  highlight: language === "ID" ? "Tema Harmoni. Fokus pada kolaborasi dan pemutaran lintas desa & sekolah." : "Theme: Harmony. Collaborative screenings across villages and schools.",
-                  id: "festival-2022",
-                },
-                {
-                  year: "2023",
-                  title: "Flobamora Film Festival 2023",
-                  img: "/assets/festival-2023.jpg",
-                  highlight: language === "ID" ? "Tema Konektivitas. Resmi memakai nama FFF, menampilkan kompetisi dan layar non-kompetisi." : "Theme: Connectivity. First edition under official name, featuring competitions.",
-                  id: "festival-2023",
+                  year: "2025",
+                  title: "Flobamora Film Festival 2025",
+                  img: "/assets/festival-2024.jpg",
+                  highlight: language === "ID" ? "Tema Kalunga. Ekspansi program ke berbagai kota dan komunitas." : "Theme: Kalunga. Program expansion to various cities and communities.",
+                  id: "festival-2025",
                 },
                 {
                   year: "2024",
@@ -101,11 +87,25 @@ const Tentang = () => {
                   id: "festival-2024",
                 },
                 {
-                  year: "2025",
-                  title: "Flobamora Film Festival 2025",
-                  img: "/assets/festival-2024.jpg",
-                  highlight: language === "ID" ? "Tema Kalunga. Ekspansi program ke berbagai kota dan komunitas." : "Theme: Kalunga. Program expansion to various cities and communities.",
-                  id: "festival-2025",
+                  year: "2023",
+                  title: "Flobamora Film Festival 2023",
+                  img: "/assets/festival-2023.jpg",
+                  highlight: language === "ID" ? "Tema Konektivitas. Resmi memakai nama FFF, menampilkan kompetisi dan layar non-kompetisi." : "Theme: Connectivity. First edition under official name, featuring competitions.",
+                  id: "festival-2023",
+                },
+                {
+                  year: "2022",
+                  title: "Flobamora Film Festival 2022",
+                  img: "/assets/festival-2022.jpg",
+                  highlight: language === "ID" ? "Tema Harmoni. Fokus pada kolaborasi dan pemutaran lintas desa & sekolah." : "Theme: Harmony. Collaborative screenings across villages and schools.",
+                  id: "festival-2022",
+                },
+                {
+                  year: "2021",
+                  title: "Parade Film NTT",
+                  img: "/assets/parade-film-ntt-2021.jpg",
+                  highlight: language === "ID" ? "Tema Sokong. Program pemutaran perdana hasil kolaborasi komunitas film NTT." : "Theme: Sokong. Premiere screenings initiated by local film communities in NTT.",
+                  id: "festival-2021", // Menambahkan ID unik untuk setiap festival
                 },
               ].map((item) => (
                 <tr key={item.year} id={item.id}>
