@@ -69,60 +69,33 @@ const App = () => {
 
               {/* Kompetisi */}
               <Route path="/kompetisi" element={<Kompetisi />} />
-              <Route
-                path="/kompetisi-film-ntt"
-                element={<LayarKompetisiFilmNTT />}
-              />
-              <Route
-                path="/kompetisi-film-pelajar-ntt"
-                element={<LayarKompetisiFilmPelajarNTT />}
-              />
+              <Route path="/kompetisi-film-ntt" element={<LayarKompetisiFilmNTT />} />
+              <Route path="/kompetisi-film-pelajar-ntt" element={<LayarKompetisiFilmPelajarNTT />} />
 
               {/* Non-Kompetisi */}
               <Route path="/non-kompetisi" element={<NonKompetisi />} />
               <Route path="/layar-nusantara" element={<LayarNusantara />} />
-              <Route
-                path="/layar-internasional"
-                element={<LayarInternasional />}
-              />
+              <Route path="/layar-internasional" element={<LayarInternasional />} />
 
               {/* Forum & Workshop */}
               <Route path="/kfk-film-lab" element={<KFKFilmLab />} />
-              <Route
-                path="/bakumpul-komunitas"
-                element={<BakumpulKomunitas />}
-              />
+              <Route path="/bakumpul-komunitas" element={<BakumpulKomunitas />} />
               <Route path="/baomong-film" element={<BaomongFilm />} />
 
               {/* Halaman Prafestival */}
               <Route path="/submit-film" element={<SubmitFilm />} />
-              <Route
-                path="/submit/kompetisi-pelajar"
-                element={<SubmitFilm />}
-              />
+              <Route path="/submit/kompetisi-pelajar" element={<SubmitFilm />} />
               <Route path="/submit/kompetisi-ntt" element={<SubmitFilm />} />
               <Route path="/submit/layar-nusantara" element={<SubmitFilm />} />
               <Route path="/submit/kfk-film-lab" element={<SubmitFilm />} />
 
-              <Route
-                path="/submit/form-kompetisi-pelajar-2025"
-                element={<FormKompetisiPelajar />}
-              />
-              <Route
-                path="/submit/form-kompetisi-ntt-2025"
-                element={<FormKompetisiNTT />}
-              />
-              <Route
-                path="/submit/form-layar-nusantara-2025"
-                element={<FormLayarNusantara />}
-              />
-              <Route
-                path="/submit/form-kfk-film-lab-2025"
-                element={<FormKfkFilmLab />}
-              />
+              <Route path="/submit/form-kompetisi-pelajar-2025" element={<FormKompetisiPelajar />} />
+              <Route path="/submit/form-kompetisi-ntt-2025" element={<FormKompetisiNTT />} />
+              <Route path="/submit/form-layar-nusantara-2025" element={<FormLayarNusantara />} />
+              <Route path="/submit/form-kfk-film-lab-2025" element={<FormKfkFilmLab />} />
 
               {/* Halaman Lainnya */}
-              <Route path="/tentang" element={<Tentang />} />
+              <Route path="/tentang" component={Tentang} />
               <Route path="/media" element={<Media />} />
 
               {/* Admin */}

@@ -82,6 +82,10 @@ const FormKompetisiPelajar = () => {
       alert(language === "ID" ? "Formulir berhasil dikirim!" : "Form submitted successfully!");
     }, 1500);
   };
+  const handleGoogleSignIn = (token) => {
+    console.log("Google login success!", token);
+    // Process the token (store in state, send to server, etc.)
+  };
 
   return (
     <div className={`max-w-2xl mx-auto my-16 p-6 rounded-xl shadow-lg border border-gray-700 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"}`}>
