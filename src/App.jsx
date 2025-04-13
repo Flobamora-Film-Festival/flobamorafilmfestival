@@ -95,7 +95,7 @@ const App = () => {
               <Route path="/submit/form-kfk-film-lab-2025" element={<FormKfkFilmLab />} />
 
               {/* Halaman Lainnya */}
-              <Route path="/tentang" component={Tentang} />
+              <Route path="/tentang" element={<Tentang />} />
               <Route path="/media" element={<Media />} />
 
               {/* Admin */}
