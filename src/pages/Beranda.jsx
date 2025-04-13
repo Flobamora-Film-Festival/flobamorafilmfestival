@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import right_arrow_white from "../assets/right-arrow-white.png";
 import userImageLight from "../assets/user-image.png";
 import userImageDark from "../assets/user-image-dark.png";
@@ -43,8 +43,11 @@ const text = {
     partnerships: "Bermitra dengan 50+ komunitas & industri film.",
     sponsors: "Kolaborasi & Sponsor",
     joinFestival: "Bergabung dalam Festival",
-    joinDesc: "Mari menjadi bagian dari perjalanan sinematik Flobamora Film Festival!",
-    registerNow: "Daftar Sekarang",
+    joinDesc: "Mari menjadi bagian dari perjalanan Flobamora Film Festival sebagai sponsor, mitra, atau komunitas pendukung.",
+    namePlaceholder: "Nama Anda",
+    emailPlaceholder: "Email Anda",
+    messagePlaceholder: "Pesan Anda",
+    buttonText: "Kirim Pesan",
   },
   EN: {
     date: "5-9 August 2025",
@@ -73,8 +76,11 @@ const text = {
     partnerships: "Partnering with 50+ film communities & industries.",
     sponsors: "Collaboration & Sponsors",
     joinFestival: "Join the Festival",
-    joinDesc: "Be part of the cinematic journey at the Flobamora Film Festival!",
-    registerNow: "Register Now",
+    joinDesc: "Be part of the Flobamora Film Festival journey as a sponsor, partner, or supporting community.",
+    namePlaceholder: "Your Name",
+    emailPlaceholder: "Your Email",
+    messagePlaceholder: "Your Message",
+    buttonText: "Send Message",
   },
 
   statistics: {
@@ -145,6 +151,15 @@ const Beranda = () => {
 
   // 🔹 Gunakan `import.meta.glob()` untuk mengambil gambar sponsor
   const currentSponsors = Object.values(import.meta.glob("../assets/sponsor/current/*.png", { eager: true }))?.map((mod) => mod.default) ?? [];
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = () => {
+    // Your submit logic here
+    console.log({ name, email, message });
+  };
 
   return (
     <div className="w-full">
@@ -294,19 +309,56 @@ const Beranda = () => {
 
       <div className="border-t border-gray-300 dark:border-gray-700 my-0"></div>
 
-      <motion.section
-        className="bg-white text-gray-900 dark:bg-darkTheme dark:text-white py-16 text-center"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: true }}
-      >
-        <h2 className="text-4xl font-bold">{selectedText.joinFestival}</h2>
-        <p className="mt-4 text-lg max-w-2xl mx-auto">{selectedText.joinDesc}</p>
-        <a href="/submit-film" className="mt-6 inline-block px-8 py-3 bg-red-600 rounded-full text-white text-lg hover:bg-red-700">
-          {selectedText.registerNow}
-        </a>
-      </motion.section>
+      <div className="w-full">
+        {/* Other sections... */}
+
+        <motion.section className="w-full py-16 bg-gray-50 dark:bg-gray-900 text-center" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} viewport={{ once: true }}>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
+
+          <p className="mt-4 text-lg w-full px-4 lg:px-0 lg:w-auto text-gray-700 dark:text-gray-300">{selectedText.joinDesc}</p>
+
+          <form
+            className="mt-8 w-full px-4 max-w-xl mx-auto"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
+            <div className="flex flex-col space-y-4">
+              <input
+                type="text"
+                placeholder={selectedText.namePlaceholder}
+                aria-label="Your Name"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+
+              <input
+                type="email"
+                placeholder={selectedText.emailPlaceholder}
+                aria-label="Your Email"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <textarea
+                placeholder={selectedText.messagePlaceholder}
+                rows="4"
+                aria-label="Your Message"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              ></textarea>
+
+              <button type="submit" className="w-full sm:w-auto px-6 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white mt-4 hover:opacity-90 focus:ring-2 focus:ring-[#b820e6]">
+                {selectedText.buttonText}
+              </button>
+            </div>
+          </form>
+        </motion.section>
+      </div>
     </div>
   );
 };
