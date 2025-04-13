@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { LanguageContext } from "../context/LanguageContext";
 import { Helmet } from "react-helmet-async";
 import GoogleMapComponent from "../components/GoogleMapComponent";
@@ -109,7 +109,6 @@ const Tentang = () => {
                 },
               ].map((item) => (
                 <tr key={item.year} id={item.id}>
-                  {" "}
                   {/* Menambahkan ID di setiap baris */}
                   <td className="border px-2 py-1 align-top font-medium">{item.year}</td>
                   <td className="border px-2 py-1 align-top">{item.title}</td>
