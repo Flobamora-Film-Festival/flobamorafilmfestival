@@ -256,9 +256,9 @@ const Beranda = () => {
 
               {/* Teks "Baca Selengkapnya" sebagai Link */}
               <div className="mt-4">
-                <a href={`/tentang#festival-${festival.year}`} className="text-sm font-medium text-red-600 dark:text-red-400 hover:underline">
+                <Link to={`/tentang#festival-${festival.year}`} className="text-sm font-medium text-red-600 dark:text-red-400 hover:underline">
                   {language === "ID" ? "Baca Selengkapnya →" : "Read More →"}
-                </a>
+                </Link>
               </div>
             </motion.div>
           ))}
