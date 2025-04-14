@@ -5,6 +5,7 @@ import userImageLight from "../../assets/user-image.png";
 import userImageDark from "../../assets/user-image-dark.png";
 import { LanguageContext } from "../../context/LanguageContext";
 import { ThemeContext } from "../../context/ThemeContext";
+import { loadSponsorLogos } from "../../utils/loadSponsorLogos";
 import artworkId from "../../assets/artwork-id.png";
 import artworkEn from "../../assets/artwork-en.png";
 import artworkIdmobile from "../../assets/artwork-id-mobile.png";
@@ -138,6 +139,9 @@ const previousFestivals = [
   },
 ];
 
+const mainSponsors = ["/assets/sponsors/KFK.png"];
+const supportingSponsors = [];
+
 const Beranda = () => {
   const { language: langContext } = useContext(LanguageContext);
   const language = langContext === "EN" ? "EN" : "ID";
@@ -148,8 +152,7 @@ const Beranda = () => {
   const artworkMobile = language === "ID" ? artworkIdmobile : artworkEnmobile;
   const artworkDesktop = language === "ID" ? artworkId : artworkEn;
 
-  // 🔹 Gunakan `import.meta.glob()` untuk mengambil gambar sponsor
-  const currentSponsors = Object.values(import.meta.glob("../assets/sponsor/current/*.png", { eager: true }))?.map((mod) => mod.default) ?? [];
+  const sponsorLogos = loadSponsorLogos();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -292,18 +295,43 @@ const Beranda = () => {
         </div>
 
         {/* Logo Sponsor */}
-        <div className="mt-12 w-full max-w-6xl">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-12 justify-center">
-            {currentSponsors.length > 0 ? (
-              currentSponsors.map((logo, index) => (
-                <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
-                  <img src={logo} alt={`Sponsor ${index + 1}`} className="w-32 h-auto object-contain shadow-lg hover:shadow-2xl transition-shadow duration-300" />
+        <div className="mt-12 w-full max-w-6xl mx-auto">
+          {/* Sponsor Utama */}
+          {mainSponsors.length > 0 && (
+            <>
+              <div className="mb-12">
+                <div className="flex justify-center">
+                  <div className="flex flex-wrap justify-center gap-8">
+                    {mainSponsors.map((logo, index) => (
+                      <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
+                        <img src={logo} alt={`Sponsor Utama ${index + 1}`} className="w-36 h-auto object-contain shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:shadow-gray-800" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-center mt-8">{language === "ID" ? "Tidak ada sponsor saat ini." : "No current sponsors."}</p>
-            )}
-          </div>
+              </div>
+            </>
+          )}
+
+          {/* Sponsor Pendukung */}
+          {supportingSponsors.length > 0 && (
+            <>
+              <div className="mb-12">
+                <div className="flex justify-center">
+                  <div className="flex flex-wrap justify-center gap-6">
+                    {supportingSponsors.map((logo, index) => (
+                      <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
+                        <img src={logo} alt={`Sponsor Pendukung ${index + 1}`} className="w-28 h-auto object-contain shadow hover:shadow-md transition-shadow duration-300 dark:shadow-gray-800" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Jika tidak ada sponsor sama sekali */}
+          {mainSponsors.length === 0 && supportingSponsors.length === 0 && <p className="text-center text-gray-500 dark:text-gray-400 mt-8">Tidak ada sponsor saat ini.</p>}
         </div>
       </section>
 
@@ -311,7 +339,6 @@ const Beranda = () => {
 
       <div className="w-full">
         {/* Other sections... */}
-
         <motion.section className="w-full py-16 bg-gray-50 dark:bg-gray-900 text-center" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} viewport={{ once: true }}>
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
 
