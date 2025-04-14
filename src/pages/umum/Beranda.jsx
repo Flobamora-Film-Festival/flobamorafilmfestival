@@ -158,9 +158,27 @@ const Beranda = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = () => {
-    // Your submit logic here
-    console.log({ name, email, message });
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          lang: language, // Kirim info bahasa ke backend
+        }),
+      });
+
+      const result = await response.text();
+      alert(result); // atau tampilkan ke UI
+    } catch (error) {
+      console.error("Gagal kirim pesan:", error);
+      alert(language === "id" ? "Gagal mengirim pesan." : "Failed to send message.");
+    }
   };
 
   return (
@@ -337,8 +355,8 @@ const Beranda = () => {
 
       <div className="border-t border-gray-300 dark:border-gray-700 my-0"></div>
 
+      {/* Bergabung dalam Festival*/}
       <div className="w-full">
-        {/* Other sections... */}
         <motion.section className="w-full py-16 bg-gray-50 dark:bg-gray-900 text-center" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} viewport={{ once: true }}>
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
 
