@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "./context/LanguageProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
+import ScrollToTop from "./ScrollToTop";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -56,6 +57,7 @@ const App = () => {
         <LanguageProvider>
           <ThemeProvider>
             <Navbar />
+            <ScrollToTop />
             <Routes>
               {/* Halaman Utama */}
               <Route path="/" element={<Beranda />} />
