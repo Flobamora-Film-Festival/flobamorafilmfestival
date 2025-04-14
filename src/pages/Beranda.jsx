@@ -229,13 +229,14 @@ const Beranda = () => {
 
             {/* CTA Button */}
             <div className="mt-6 flex justify-center lg:justify-start">
-              <button
-                className="px-6 sm:px-8 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white flex items-center gap-2 dark:border-transparent 
+              <Link to="/tentang">
+                <button
+                  className="px-6 sm:px-8 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white flex items-center gap-2 dark:border-transparent 
       focus:outline-none focus:ring-2 focus:ring-[#b820e6] shadow-md hover:opacity-90 active:scale-95 transition-all"
-                onClick={() => (window.location.href = "/tentang")}
-              >
-                {selectedText.learnMore}
-              </button>
+                >
+                  {selectedText.learnMore}
+                </button>
+              </Link>
             </div>
           </div>
         </motion.div>
