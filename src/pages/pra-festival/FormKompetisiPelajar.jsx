@@ -389,7 +389,8 @@ const FormKompetisiPelajar = () => {
             minFiles={3}
             maxSize={10 * 1024 * 1024} // 10MB
             description={langText.stillImagesDescription}
-            error={errors.stillImages}
+            descriptionClassName={(theme === "dark" ? "text-white" : "text-gray-800") || "text-gray-800"}
+            error={errors?.stillImages}
           />
 
           {/* Poster Film */}
@@ -403,6 +404,7 @@ const FormKompetisiPelajar = () => {
             maxFiles={5}
             maxSize={10 * 1024 * 1024} // 10MB
             error={errors.posterFilm}
+            description={langText.posterFilmDescription}
           />
 
           {/* Press Kit */}

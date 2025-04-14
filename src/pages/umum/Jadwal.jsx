@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
-import { LanguageContext } from "../context/LanguageContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import { LanguageContext } from "../../context/LanguageContext";
 
 const Jadwal = () => {
   const { theme } = useContext(ThemeContext);
@@ -64,18 +64,14 @@ const Jadwal = () => {
     {
       date: "06 Agustus 2025",
       time: "18:00 - 20:00",
-      title:
-        language === "ID" ? "Screening Kompetisi" : "Competition Screening",
+      title: language === "ID" ? "Screening Kompetisi" : "Competition Screening",
       category: "Kompetisi",
       location: "Theater 1",
     },
     {
       date: "07 Agustus 2025",
       time: "18:00 - 20:00",
-      title:
-        language === "ID"
-          ? "Screening Non-Kompetisi"
-          : "Non-Competition Screening",
+      title: language === "ID" ? "Screening Non-Kompetisi" : "Non-Competition Screening",
       category: "Non-Kompetisi",
       location: "Theater 2",
     },
@@ -108,57 +104,32 @@ const Jadwal = () => {
 
   return (
     <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 transition-all">
-      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-        {language === "ID" ? "Jadwal Festival" : "Festival Schedule"}
-      </h1>
+      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">{language === "ID" ? "Jadwal Festival" : "Festival Schedule"}</h1>
 
       {/* Bioskop Pasiar */}
       <div className="mb-16">
-        <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center border-b-4 border-gray-400 dark:border-gray-600 pb-2">
-          {language === "ID" ? "Bioskop Pasiar" : "Traveling Cinema"}
-        </h2>
+        <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center border-b-4 border-gray-400 dark:border-gray-600 pb-2">{language === "ID" ? "Bioskop Pasiar" : "Traveling Cinema"}</h2>
 
         {Object.keys(groupedBioskopPasiar).map((date, index) => (
           <div key={index} className="mb-8">
-            <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-              {date}
-            </h3>
+            <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{date}</h3>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-300 text-sm md:text-base">
                 <thead>
                   <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">
-                      Waktu
-                    </th>
-                    <th className="border border-gray-300 px-6 py-3 w-[35%]">
-                      Program
-                    </th>
-                    <th className="border border-gray-300 px-6 py-3 w-[25%]">
-                      Rute
-                    </th>
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">
-                      Lokasi
-                    </th>
+                    <th className="border border-gray-300 px-6 py-3 w-[20%]">Waktu</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[35%]">Program</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[25%]">Rute</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[20%]">Lokasi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {groupedBioskopPasiar[date].map((event, index) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      <td className="border border-gray-300 px-6 py-3">
-                        {event.time}
-                      </td>
-                      <td className="border border-gray-300 px-6 py-3 font-semibold">
-                        {event.title}
-                      </td>
-                      <td className="border border-gray-300 px-6 py-3">
-                        {event.route}
-                      </td>
-                      <td className="border border-gray-300 px-6 py-3">
-                        {event.location}
-                      </td>
+                    <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <td className="border border-gray-300 px-6 py-3">{event.time}</td>
+                      <td className="border border-gray-300 px-6 py-3 font-semibold">{event.title}</td>
+                      <td className="border border-gray-300 px-6 py-3">{event.route}</td>
+                      <td className="border border-gray-300 px-6 py-3">{event.location}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -172,51 +143,28 @@ const Jadwal = () => {
       <div className="my-16 border-t-8 border-gray-400 dark:border-gray-600"></div>
 
       {/* Jadwal Festival */}
-      <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center border-b-4 border-gray-400 dark:border-gray-600 pb-2">
-        Festival
-      </h2>
+      <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center border-b-4 border-gray-400 dark:border-gray-600 pb-2">Festival</h2>
 
       {Object.keys(groupedFestivalEvents).map((date, index) => (
         <div key={index} className="mb-8">
-          <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-            {date}
-          </h3>
+          <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{date}</h3>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300 text-sm md:text-base">
               <thead>
                 <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-                  <th className="border border-gray-300 px-6 py-3 w-[20%]">
-                    Waktu
-                  </th>
-                  <th className="border border-gray-300 px-6 py-3 w-[35%]">
-                    Program
-                  </th>
-                  <th className="border border-gray-300 px-6 py-3 w-[25%]">
-                    Kategori
-                  </th>
-                  <th className="border border-gray-300 px-6 py-3 w-[20%]">
-                    Lokasi
-                  </th>
+                  <th className="border border-gray-300 px-6 py-3 w-[20%]">Waktu</th>
+                  <th className="border border-gray-300 px-6 py-3 w-[35%]">Program</th>
+                  <th className="border border-gray-300 px-6 py-3 w-[25%]">Kategori</th>
+                  <th className="border border-gray-300 px-6 py-3 w-[20%]">Lokasi</th>
                 </tr>
               </thead>
               <tbody>
                 {groupedFestivalEvents[date].map((event, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <td className="border border-gray-300 px-6 py-3">
-                      {event.time}
-                    </td>
-                    <td className="border border-gray-300 px-6 py-3 font-semibold">
-                      {event.title}
-                    </td>
-                    <td className="border border-gray-300 px-6 py-3">
-                      {event.category}
-                    </td>
-                    <td className="border border-gray-300 px-6 py-3">
-                      {event.location}
-                    </td>
+                  <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <td className="border border-gray-300 px-6 py-3">{event.time}</td>
+                    <td className="border border-gray-300 px-6 py-3 font-semibold">{event.title}</td>
+                    <td className="border border-gray-300 px-6 py-3">{event.category}</td>
+                    <td className="border border-gray-300 px-6 py-3">{event.location}</td>
                   </tr>
                 ))}
               </tbody>

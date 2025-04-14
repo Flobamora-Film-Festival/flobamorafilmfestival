@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
-import { LanguageContext } from "../context/LanguageContext"; // Pastikan path-nya benar
-import bioskopPasiarImage from "../assets/bioskop-pasiar.png"; // Mengimpor gambar bioskop-pasiar.png
+import { LanguageContext } from "../../context/LanguageContext"; // Pastikan path-nya benar
+import bioskopPasiarImage from "../../assets/bioskop-pasiar.png"; // Mengimpor gambar bioskop-pasiar.png
 
 const BioskopPasiar = () => {
   const { language } = useContext(LanguageContext); // Mengambil data language dari context

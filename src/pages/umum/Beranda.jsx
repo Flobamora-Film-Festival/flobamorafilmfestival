@@ -1,15 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useContext } from "react";
-import right_arrow_white from "../assets/right-arrow-white.png";
-import userImageLight from "../assets/user-image.png";
-import userImageDark from "../assets/user-image-dark.png";
-import SponsorSection from "../pages/SponsorSection";
-import { LanguageContext } from "../context/LanguageContext";
-import { ThemeContext } from "../context/ThemeContext";
-import artworkId from "../assets/artwork-id.png";
-import artworkEn from "../assets/artwork-en.png";
-import artworkIdmobile from "../assets/artwork-id-mobile.png";
-import artworkEnmobile from "../assets/artwork-en-mobile.png";
+import right_arrow_white from "../../assets/right-arrow-white.png";
+import userImageLight from "../../assets/user-image.png";
+import userImageDark from "../../assets/user-image-dark.png";
+import { LanguageContext } from "../../context/LanguageContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import artworkId from "../../assets/artwork-id.png";
+import artworkEn from "../../assets/artwork-en.png";
+import artworkIdmobile from "../../assets/artwork-id-mobile.png";
+import artworkEnmobile from "../../assets/artwork-en-mobile.png";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 

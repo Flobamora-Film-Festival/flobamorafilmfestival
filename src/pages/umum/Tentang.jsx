@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import { LanguageContext } from "../context/LanguageContext";
+import { LanguageContext } from "../../context/LanguageContext";
 import { Helmet } from "react-helmet-async";
-import GoogleMapComponent from "../components/GoogleMapComponent";
+import GoogleMapComponent from "../../components/GoogleMapComponent";
 
 const Tentang = () => {
   const { language } = useContext(LanguageContext);

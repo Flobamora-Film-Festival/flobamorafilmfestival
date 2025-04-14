@@ -6,7 +6,7 @@ const textsKompetisiPelajar = {
       greeting: "Halo sineas Flobamora! Selamat datang di Program Kompetisi Pelajar NTT Flobamora Film Festival 2025. Silahkan melengkapi dan mengunggah karya-mu.",
       filmRequirementsTitle: "Persyaratan film:",
       filmRequirements: [
-        "Pendaftaran terbuka untuk pelajar setara SMA/SMK yang berada di Nusa Tenggara Timur...",
+        "Pendaftaran terbuka untuk pelajar setara SMA/SMK yang berada di Nusa Tenggara Timur.",
         "Film berdurasi maksimal 35 menit (termasuk pembuka dan credit title).",
         "Genre film dokumenter dan fiksi.",
         "Film diproduksi dalam kurun waktu 2 tahun terakhir (2024-2025).",
@@ -108,7 +108,7 @@ const textsKompetisiPelajar = {
       greeting: "Hello Flobamora filmmakers! Welcome to the NTT Student Competition Program of Flobamora Film Festival 2025. Please complete and upload your work.",
       filmRequirementsTitle: "Film Requirements:",
       filmRequirements: [
-        "Open to high school/vocational students in East Nusa Tenggara...",
+        "Open to high school/vocational students in East Nusa Tenggara.",
         "Film duration max 35 minutes (including opening and credit title).",
         "Genres: fiction and documentary.",
         "Produced within the last 2 years (2024–2025).",

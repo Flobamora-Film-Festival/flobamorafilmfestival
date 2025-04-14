@@ -9,14 +9,14 @@ import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 
 // Halaman Utama
-import Beranda from "./pages/Beranda";
-import Jadwal from "./pages/Jadwal";
-import Tiket from "./pages/Tiket";
-import Venue from "./pages/Venue";
-import Katalog from "./pages/Katalog";
+import Beranda from "./pages/umum/Beranda";
+import Jadwal from "./pages/umum/Jadwal";
+import Tiket from "./pages/umum/Tiket";
+import Venue from "./pages/umum/Venue";
+import Katalog from "./pages/umum/Katalog";
 
 // Program
-import BioskopPasiar from "./pages/BioskopPasiar";
+import BioskopPasiar from "./pages/bioskop-pasiar/BioskopPasiar";
 import Kompetisi from "./pages/kompetisi/Kompetisi";
 import LayarKompetisiFilmNTT from "./pages/kompetisi/LayarKompetisiFilmNTT";
 import LayarKompetisiFilmPelajarNTT from "./pages/kompetisi/LayarKompetisiFilmPelajarNTT";
@@ -37,16 +37,23 @@ import FormLayarNusantara from "./pages/pra-festival/FormLayarNusantara";
 import FormKfkFilmLab from "./pages/pra-festival/FormKfkFilmLab";
 
 // Halaman lainnya
-import Media from "./pages/Media";
-import Tentang from "./pages/Tentang";
+import Media from "./pages/media/Media";
+import Tentang from "./pages/umum/Tentang";
 
 // Admin
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLogin from "./pages/admin/AdminLogin";
-import AdminRoute from "./routes/AdminRoute"; // kalau kamu pakai private route
+
+// Auth Routes
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import UserDashboard from "./pages/user/UserDashboard";
+
+import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./routes/AdminRoute";
 
 // 404
-import NotFound from "./pages/NotFound";
+import NotFound from "./pages/umum/NotFound";
 
 import "./index.css";
 
@@ -66,15 +73,11 @@ const App = () => {
               <Route path="/venue" element={<Venue />} />
               <Route path="/katalog" element={<Katalog />} />
 
-              {/* Program Pemutaran */}
+              {/* Program */}
               <Route path="/bioskop-pasiar" element={<BioskopPasiar />} />
-
-              {/* Kompetisi */}
               <Route path="/kompetisi" element={<Kompetisi />} />
               <Route path="/kompetisi-film-ntt" element={<LayarKompetisiFilmNTT />} />
               <Route path="/kompetisi-film-pelajar-ntt" element={<LayarKompetisiFilmPelajarNTT />} />
-
-              {/* Non-Kompetisi */}
               <Route path="/non-kompetisi" element={<NonKompetisi />} />
               <Route path="/layar-nusantara" element={<LayarNusantara />} />
               <Route path="/layar-internasional" element={<LayarInternasional />} />
@@ -84,25 +87,34 @@ const App = () => {
               <Route path="/bakumpul-komunitas" element={<BakumpulKomunitas />} />
               <Route path="/baomong-film" element={<BaomongFilm />} />
 
-              {/* Halaman Prafestival */}
+              {/* Prafestival */}
               <Route path="/submit-film" element={<SubmitFilm />} />
               <Route path="/submit/kompetisi-pelajar" element={<SubmitFilm />} />
               <Route path="/submit/kompetisi-ntt" element={<SubmitFilm />} />
               <Route path="/submit/layar-nusantara" element={<SubmitFilm />} />
               <Route path="/submit/kfk-film-lab" element={<SubmitFilm />} />
-
               <Route path="/submit/form-kompetisi-pelajar-2025" element={<FormKompetisiPelajar />} />
               <Route path="/submit/form-kompetisi-ntt-2025" element={<FormKompetisiNTT />} />
               <Route path="/submit/form-layar-nusantara-2025" element={<FormLayarNusantara />} />
               <Route path="/submit/form-kfk-film-lab-2025" element={<FormKfkFilmLab />} />
 
-              {/* Halaman Lainnya */}
+              {/* Lainnya */}
               <Route path="/tentang" element={<Tentang />} />
               <Route path="/media" element={<Media />} />
 
-              {/* Admin */}
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
+              {/* Auth */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <UserDashboard />
+                  </PrivateRoute>
+                }
+              />
+
+              {/* Admin (hanya untuk user login dengan role admin) */}
               <Route
                 path="/admin"
                 element={
@@ -111,11 +123,11 @@ const App = () => {
                   </AdminRoute>
                 }
               />
+              <Route path="/admin/login" element={<AdminLogin />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-
             <Footer />
             <BackToTop />
           </ThemeProvider>
