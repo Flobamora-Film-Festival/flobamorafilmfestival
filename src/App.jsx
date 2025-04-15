@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "./context/LanguageProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
@@ -9,58 +9,58 @@ import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 
 // Halaman Utama
-import Beranda from "./pages/umum/Beranda";
-import Jadwal from "./pages/umum/Jadwal";
-import Tiket from "./pages/umum/Tiket";
-import Venue from "./pages/umum/Venue";
-import Katalog from "./pages/umum/Katalog";
+const Beranda = lazy(() => import("./pages/umum/Beranda"));
+const Jadwal = lazy(() => import("./pages/umum/Jadwal"));
+const Tiket = lazy(() => import("./pages/umum/Tiket"));
+const Venue = lazy(() => import("./pages/umum/Venue"));
+const Katalog = lazy(() => import("./pages/umum/Katalog"));
 
 // Program
-import BioskopPasiar from "./pages/bioskop-pasiar/BioskopPasiar";
-import Kompetisi from "./pages/kompetisi/Kompetisi";
-import LayarKompetisiFilmNTT from "./pages/kompetisi/LayarKompetisiFilmNTT";
-import LayarKompetisiFilmPelajarNTT from "./pages/kompetisi/LayarKompetisiFilmPelajarNTT";
-import NonKompetisi from "./pages/non-kompetisi/NonKompetisi";
-import LayarNusantara from "./pages/non-kompetisi/LayarNusantara";
-import LayarInternasional from "./pages/non-kompetisi/LayarInternasional";
+const BioskopPasiar = lazy(() => import("./pages/bioskop-pasiar/BioskopPasiar"));
+const Kompetisi = lazy(() => import("./pages/kompetisi/Kompetisi"));
+const LayarKompetisiFilmNTT = lazy(() => import("./pages/kompetisi/LayarKompetisiFilmNTT"));
+const LayarKompetisiFilmPelajarNTT = lazy(() => import("./pages/kompetisi/LayarKompetisiFilmPelajarNTT"));
+const NonKompetisi = lazy(() => import("./pages/non-kompetisi/NonKompetisi"));
+const LayarNusantara = lazy(() => import("./pages/non-kompetisi/LayarNusantara"));
+const LayarInternasional = lazy(() => import("./pages/non-kompetisi/LayarInternasional"));
 
 // Forum & Workshop
-import KFKFilmLab from "./pages/forum-workshop/KFKFilmLab";
-import BakumpulKomunitas from "./pages/forum-workshop/BakumpulKomunitas";
-import BaomongFilm from "./pages/forum-workshop/BaomongFilm";
+const KFKFilmLab = lazy(() => import("./pages/forum-workshop/KFKFilmLab"));
+const BakumpulKomunitas = lazy(() => import("./pages/forum-workshop/BakumpulKomunitas"));
+const BaomongFilm = lazy(() => import("./pages/forum-workshop/BaomongFilm"));
 
 // Halaman Prafestival
-import SubmitFilm from "./pages/pra-festival/SubmitFilm";
-import FormKompetisiPelajar from "./pages/pra-festival/FormKompetisiPelajar";
-import FormKompetisiNTT from "./pages/pra-festival/FormKompetisiNTT";
-import FormLayarNusantara from "./pages/pra-festival/FormLayarNusantara";
-import FormKfkFilmLab from "./pages/pra-festival/FormKfkFilmLab";
+const SubmitFilm = lazy(() => import("./pages/pra-festival/SubmitFilm"));
+const FormKompetisiPelajar = lazy(() => import("./pages/pra-festival/FormKompetisiPelajar"));
+const FormKompetisiNTT = lazy(() => import("./pages/pra-festival/FormKompetisiNTT"));
+const FormLayarNusantara = lazy(() => import("./pages/pra-festival/FormLayarNusantara"));
+const FormKfkFilmLab = lazy(() => import("./pages/pra-festival/FormKfkFilmLab"));
 
 // Halaman lainnya
-import Media from "./pages/media/Media";
-import Tentang from "./pages/umum/Tentang";
+const Media = lazy(() => import("./pages/media/Media"));
+const Tentang = lazy(() => import("./pages/umum/Tentang"));
 
 // Admin
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminLogin from "./pages/admin/AdminLogin";
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 
 // Auth Routes
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import UserDashboard from "./pages/user/UserDashboard";
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const UserDashboard = lazy(() => import("./pages/user/UserDashboard"));
 
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./routes/AdminRoute";
 
 // 404
-import NotFound from "./pages/umum/NotFound";
+const NotFound = lazy(() => import("./pages/umum/NotFound"));
 
 import "./index.css";
 
 const App = () => {
   return (
     <Router>
-      <React.StrictMode>
+      <Suspense fallback={<div>Loading...</div>}>
         <LanguageProvider>
           <ThemeProvider>
             <Navbar />
@@ -132,7 +132,7 @@ const App = () => {
             <BackToTop />
           </ThemeProvider>
         </LanguageProvider>
-      </React.StrictMode>
+      </Suspense>
     </Router>
   );
 };
