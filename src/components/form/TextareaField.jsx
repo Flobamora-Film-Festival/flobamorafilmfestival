@@ -1,22 +1,10 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 
-const TextareaField = ({
-  label,
-  name,
-  value,
-  onChange,
-  required = false,
-  placeholder = "",
-  className = "",
-  error = "",
-  rows = 6,
-  ...rest
-}) => {
+const TextareaField = ({ label, name, value, onChange, required = false, placeholder = "", className = "", error = "", rows = 6, ...rest }) => {
   const { theme } = useContext(ThemeContext);
 
-  const inputStyle =
-    theme === "dark" ? "bg-white text-black" : "bg-white text-gray-900";
+  const inputStyle = theme === "dark" ? "bg-white text-black" : "bg-white text-gray-900";
 
   return (
     <div className="mb-3">
@@ -28,7 +16,7 @@ const TextareaField = ({
       <textarea
         id={name}
         name={name}
-        value={value}
+        value={value ?? ""}
         onChange={onChange}
         required={required}
         placeholder={placeholder}
