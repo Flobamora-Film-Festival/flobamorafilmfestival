@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "redirects": [
+    {
+      "source": "https://www.flobamorafestival.com/:path*",
+      "destination": "https://www.flobamorafilmfestival.com/:path*",
+      "permanent": true
+    }
+  ]
 }
