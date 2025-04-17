@@ -30,10 +30,11 @@ const Footer = () => {
             </p>
             <p className="flex items-center justify-center md:justify-start gap-2 mt-2">
               <FontAwesomeIcon icon={faEnvelope} />
-              <a href="mailto:contact@flobamorafilmfestival.com" className="hover:text-red-600 transition">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@flobamorafilmfestival.com" target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition">
                 contact@flobamorafilmfestival.com
               </a>
             </p>
+
             {/* Ikon Media Sosial */}
             <div className="flex justify-center md:justify-start gap-4 mt-4 text-xl">
               <a href="https://www.facebook.com/profile.php?id=61551863112603" target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition" aria-label="Facebook">
