@@ -441,6 +441,8 @@ const Beranda = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
+                  {/* Honeypot field */}
+                  <input type="text" name="website" style={{ display: "none" }} tabIndex="-1" autoComplete="off" />
 
                   <textarea
                     placeholder={selectedText.messagePlaceholder}

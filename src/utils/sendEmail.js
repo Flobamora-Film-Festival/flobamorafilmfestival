@@ -1,25 +1,15 @@
-// src/utils/sendEmail.js
-export async function sendEmail({ name, email, message, lang = "ID" }) {
-  try {
-    const res = await fetch("/api/send-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, message, lang }),
-    });
+export const sendEmail = async ({ name, email, message }) => {
+  const res = await fetch("https://flobamorafilmfestival.com/send-email.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({ name, email, message }).toString(),
+  });
 
-    const text = await res.text();
-
-    return {
-      success: res.ok,
-      message: text,
-    };
-  } catch (err) {
-    console.error("sendEmail error:", err);
-    return {
-      success: false,
-      message: lang === "ID" ? "Terjadi kesalahan." : "An error occurred.",
-    };
-  }
-}
+  const data = await res.json();
+  return {
+    success: data.success,
+    message: data.message,
+  };
+};
