@@ -11,10 +11,5 @@
       "destination": "https://www.flobamorafilmfestival.com/:path*",
       "permanent": true
     }
-  ],
-  "functions": {
-    "api/verify-recaptcha.js": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  ]
 }
