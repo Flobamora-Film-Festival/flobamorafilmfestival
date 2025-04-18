@@ -157,8 +157,21 @@ const Beranda = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validasi input
+    if (!name || !email || !message || !/\S+@\S+\.\S+/.test(email)) {
+      setIsError(true);
+      return;
+    }
+    setIsError(false);
+    setLoading(true);
+
     try {
       const response = await fetch("/api/send-email", {
         method: "POST",
@@ -175,9 +188,12 @@ const Beranda = () => {
 
       const result = await response.text();
       alert(result); // atau tampilkan ke UI
+      setIsSubmitted(true); // Tampilkan konfirmasi pengiriman
     } catch (error) {
       console.error("Gagal kirim pesan:", error);
-      alert(language === "id" ? "Gagal mengirim pesan." : "Failed to send message.");
+      alert(language === "ID" ? "Gagal mengirim pesan." : "Failed to send message.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -359,49 +375,48 @@ const Beranda = () => {
       <div className="w-full">
         <motion.section className="w-full py-16 bg-gray-50 dark:bg-gray-900 text-center" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} viewport={{ once: true }}>
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
-
           <p className="mt-4 text-lg w-full px-4 lg:px-0 lg:w-auto text-gray-700 dark:text-gray-300">{selectedText.joinDesc}</p>
 
-          <form
-            className="mt-8 w-full px-4 max-w-xl mx-auto"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-          >
-            <div className="flex flex-col space-y-4">
-              <input
-                type="text"
-                placeholder={selectedText.namePlaceholder}
-                aria-label="Your Name"
-                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+          {isSubmitted ? (
+            <div className="mt-4 text-lg text-green-500">{selectedText.thankYouMessage}</div>
+          ) : (
+            <form className="mt-8 w-full px-4 max-w-xl mx-auto" onSubmit={handleSubmit}>
+              <div className="flex flex-col space-y-4">
+                <input
+                  type="text"
+                  placeholder={selectedText.namePlaceholder}
+                  aria-label="Your Name"
+                  className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
 
-              <input
-                type="email"
-                placeholder={selectedText.emailPlaceholder}
-                aria-label="Your Email"
-                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+                <input
+                  type="email"
+                  placeholder={selectedText.emailPlaceholder}
+                  aria-label="Your Email"
+                  className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
 
-              <textarea
-                placeholder={selectedText.messagePlaceholder}
-                rows="4"
-                aria-label="Your Message"
-                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              ></textarea>
+                <textarea
+                  placeholder={selectedText.messagePlaceholder}
+                  rows="4"
+                  aria-label="Your Message"
+                  className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                ></textarea>
 
-              <button type="submit" className="w-full sm:w-auto px-6 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white mt-4 hover:opacity-90 focus:ring-2 focus:ring-[#b820e6]">
-                {selectedText.buttonText}
-              </button>
-            </div>
-          </form>
+                {isError && <div className="text-red-500 text-sm">{selectedText.errorMessage}</div>}
+
+                <button type="submit" className="w-full sm:w-auto px-6 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white mt-4 hover:opacity-90 focus:ring-2 focus:ring-[#b820e6]" disabled={loading}>
+                  {loading ? (language === "ID" ? "Mengirim..." : "Sending...") : selectedText.buttonText}
+                </button>
+              </div>
+            </form>
+          )}
         </motion.section>
       </div>
     </div>

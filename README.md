@@ -30,7 +30,7 @@ Komunitas Film Kupang
 ## 📱 Contact & Socials
 
 - Instagram: [@flobamorafilmfest](https://instagram.com/flobamorafilmfest)
-- Email: info@flobamorafilmfest.com
+- Email: contact@flobamorafilmfestival.com
 
 ---
 
