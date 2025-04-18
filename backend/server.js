@@ -3,7 +3,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { sendEmail } from "./sendEmail.js";
+import { sendEmail } from "../api/send-email.js";
 
 dotenv.config();
 

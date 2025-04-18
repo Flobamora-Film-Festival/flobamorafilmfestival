@@ -3,9 +3,14 @@ import React, { useState, useContext } from "react";
 import right_arrow_white from "../../assets/right-arrow-white.png";
 import userImageLight from "../../assets/user-image.png";
 import userImageDark from "../../assets/user-image-dark.png";
+import { GoogleReCaptcha } from "react-google-recaptcha-v3";
 import { LanguageContext } from "../../context/LanguageContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { loadSponsorLogos } from "../../utils/loadSponsorLogos";
+import { sendEmail } from "../utils/sendEmail";
+import { motion, AnimatePresence } from "framer-motion";
+import ReCAPTCHA from "react-google-recaptcha";
+import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 import artworkId from "../../assets/artwork-id.png";
 import artworkEn from "../../assets/artwork-en.png";
 import artworkIdmobile from "../../assets/artwork-id-mobile.png";
@@ -160,20 +165,47 @@ const Beranda = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
+
+  const handleCaptchaChange = (token) => {
+    setCaptchaToken(token); // Menyimpan token dari reCAPTCHA
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !email || !message || !/\S+@\S+\.\S+/.test(email)) {
       setIsError(true);
       return;
     }
+
+    // Reset error dan loading
     setIsError(false);
     setLoading(true);
 
     try {
-      const response = await fetch("/api/send-email", {
+      // Dapatkan token dari reCAPTCHA
+      const token = await grecaptcha.execute("YOUR_SITE_KEY", { action: "submit" });
+
+      // Verifikasi token ke backend
+      const verifyRes = await fetch("/api/verify-recaptcha", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      const verifyData = await verifyRes.json();
+
+      if (!verifyData.success) {
+        alert(language === "ID" ? "Verifikasi reCAPTCHA gagal." : "reCAPTCHA verification failed.");
+        setLoading(false);
+        return;
+      }
+
+      // Jika lolos reCAPTCHA, kirim email
+      const sendRes = await fetch("/api/send-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -182,15 +214,22 @@ const Beranda = () => {
           name,
           email,
           message,
-          lang: language, // Kirim info bahasa ke backend
+          lang: language,
         }),
       });
 
-      const result = await response.text();
-      alert(result); // atau tampilkan ke UI
-      setIsSubmitted(true); // Tampilkan konfirmasi pengiriman
+      const responseMessage = await sendRes.text();
+
+      alert(responseMessage);
+
+      if (sendRes.ok) {
+        setIsSubmitted(true);
+        setName("");
+        setEmail("");
+        setMessage("");
+      }
     } catch (error) {
-      console.error("Gagal kirim pesan:", error);
+      console.error("Gagal kirim:", error);
       alert(language === "ID" ? "Gagal mengirim pesan." : "Failed to send message.");
     } finally {
       setLoading(false);
@@ -377,46 +416,55 @@ const Beranda = () => {
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
           <p className="mt-4 text-lg w-full px-4 lg:px-0 lg:w-auto text-gray-700 dark:text-gray-300">{selectedText.joinDesc}</p>
 
-          {isSubmitted ? (
-            <div className="mt-4 text-lg text-green-500">{selectedText.thankYouMessage}</div>
-          ) : (
-            <form className="mt-8 w-full px-4 max-w-xl mx-auto" onSubmit={handleSubmit}>
-              <div className="flex flex-col space-y-4">
-                <input
-                  type="text"
-                  placeholder={selectedText.namePlaceholder}
-                  aria-label="Your Name"
-                  className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+          <AnimatePresence mode="wait">
+            {isSubmitted ? (
+              <motion.div key="success" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 0.5 }} className="mt-4 text-lg text-green-500">
+                {selectedText.thankYouMessage}
+              </motion.div>
+            ) : (
+              <motion.form key="form" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 0.5 }} className="mt-8 w-full px-4 max-w-xl mx-auto" onSubmit={handleSubmit}>
+                <div className="flex flex-col space-y-4">
+                  <input
+                    type="text"
+                    placeholder={selectedText.namePlaceholder}
+                    aria-label="Your Name"
+                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
 
-                <input
-                  type="email"
-                  placeholder={selectedText.emailPlaceholder}
-                  aria-label="Your Email"
-                  className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                  <input
+                    type="email"
+                    placeholder={selectedText.emailPlaceholder}
+                    aria-label="Your Email"
+                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
 
-                <textarea
-                  placeholder={selectedText.messagePlaceholder}
-                  rows="4"
-                  aria-label="Your Message"
-                  className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                ></textarea>
+                  <textarea
+                    placeholder={selectedText.messagePlaceholder}
+                    rows="4"
+                    aria-label="Your Message"
+                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  ></textarea>
 
-                {isError && <div className="text-red-500 text-sm">{selectedText.errorMessage}</div>}
+                  {isError && <div className="text-red-500 text-sm">{selectedText.errorMessage}</div>}
 
-                <button type="submit" className="w-full sm:w-auto px-6 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white mt-4 hover:opacity-90 focus:ring-2 focus:ring-[#b820e6]" disabled={loading}>
-                  {loading ? (language === "ID" ? "Mengirim..." : "Sending...") : selectedText.buttonText}
-                </button>
-              </div>
-            </form>
-          )}
+                  {/* Google reCAPTCHA */}
+                  <div className="my-2">
+                    <GoogleReCaptcha onVerify={handleCaptchaChange} />
+                  </div>
+
+                  <button type="submit" className="w-full sm:w-auto px-6 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white mt-4 hover:opacity-90 focus:ring-2 focus:ring-[#b820e6]" disabled={loading}>
+                    {loading ? (language === "ID" ? "Mengirim..." : "Sending...") : selectedText.buttonText}
+                  </button>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
         </motion.section>
       </div>
     </div>
