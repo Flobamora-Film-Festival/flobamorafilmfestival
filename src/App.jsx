@@ -60,13 +60,13 @@ import "./index.css";
 
 const App = () => {
   return (
-    <Router>
-      <Suspense fallback={<div>Loading...</div>}>
-        <LanguageProvider>
-          <ThemeProvider>
-            <Navbar />
-            <ScrollToTop />
-            <GoogleReCaptchaProvider reCaptchaKey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}>
+    <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <LanguageProvider>
+            <ThemeProvider>
+              <Navbar />
+              <ScrollToTop />
               <Routes>
                 {/* Halaman Utama */}
                 <Route path="/" element={<Beranda />} />
@@ -130,13 +130,13 @@ const App = () => {
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </GoogleReCaptchaProvider>
-            <Footer />
-            <BackToTop />
-          </ThemeProvider>
-        </LanguageProvider>
-      </Suspense>
-    </Router>
+              <Footer />
+              <BackToTop />
+            </ThemeProvider>
+          </LanguageProvider>
+        </Suspense>
+      </Router>
+    </GoogleReCaptchaProvider>
   );
 };
 

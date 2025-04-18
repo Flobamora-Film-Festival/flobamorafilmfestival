@@ -1,44 +1,34 @@
-// /api/sendEmail.js
-
+// api/send-email.js
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const { name, email, message } = req.body;
+  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
-    // Membuat transporter untuk kirim email
+  const { name, email, message, lang } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).send(lang === "ID" ? "Data tidak lengkap." : "Incomplete data.");
+  }
+
+  try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.hostinger.com",
-      port: 465,
-      secure: true,
+      service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER, // Gantilah dengan email dari Niagahoster
+        user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-    const mailOptions = {
+    await transporter.sendMail({
       from: `"${name}" <${email}>`,
-      to: process.env.EMAIL_USER, // Gantilah dengan alamat email penerima
-      subject: "Pesan Baru dari Website Flobamora Film Festival",
-      html: `
-        <h3>Pesan dari: ${name}</h3>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Pesan:</strong></p>
-        <p>${message}</p>
-      `,
-    };
+      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+      subject: `Pesan dari Flobamora Film Festival (${name})`,
+      text: message,
+    });
 
-    try {
-      await transporter.sendMail(mailOptions);
-      res.status(200).json({ message: "Email berhasil dikirim!" });
-    } catch (error) {
-      res.status(500).json({ error: "Gagal mengirim email" });
-    }
-  } else {
-    res.status(405).json({ error: "Method Not Allowed" });
+    res.status(200).send(lang === "ID" ? "Pesan berhasil dikirim." : "Message sent successfully.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(lang === "ID" ? "Gagal mengirim pesan." : "Failed to send message.");
   }
 }
