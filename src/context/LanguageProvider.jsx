@@ -1,27 +1,13 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { LanguageContext } from "./LanguageContext"; // Import Context
+// src/context/LanguageProvider.jsx
+import React, { createContext, useContext, useState } from "react";
+
+export const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState(
-    localStorage.getItem("language") || "ID",
-  );
+  const [language, setLanguage] = useState("ID");
 
-  useEffect(() => {
-    localStorage.setItem("language", language);
-  }, [language]);
-
-  const switchLanguage = () => {
-    setLanguage((prev) => (prev === "ID" ? "EN" : "ID"));
-  };
-
-  return (
-    <LanguageContext.Provider value={{ language, switchLanguage }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>;
 };
 
-LanguageProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+// Custom hook untuk akses context
+export const useLanguage = () => useContext(LanguageContext);

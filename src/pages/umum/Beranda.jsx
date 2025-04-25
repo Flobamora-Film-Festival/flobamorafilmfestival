@@ -3,12 +3,11 @@ import React, { useState, useContext } from "react";
 import right_arrow_white from "../../assets/right-arrow-white.png";
 import userImageLight from "../../assets/user-image.png";
 import userImageDark from "../../assets/user-image-dark.png";
-import { GoogleReCaptcha } from "react-google-recaptcha-v3";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Perbaikan path
 import { ThemeContext } from "../../context/ThemeContext";
 import { loadSponsorLogos } from "../../utils/loadSponsorLogos";
 import { sendEmail } from "../../utils/sendEmail";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRecaptcha } from "../../hooks/useRecaptcha";
 import artworkId from "../../assets/artwork-id.png";
 import artworkEn from "../../assets/artwork-en.png";
@@ -16,15 +15,16 @@ import artworkIdmobile from "../../assets/artwork-id-mobile.png";
 import artworkEnmobile from "../../assets/artwork-en-mobile.png";
 import textsBeranda from "../../texts/textsBeranda";
 import previousFestivals from "../../texts/previousFestivals";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import ContactForm from "../../components/ContactForm";
+import { Link } from "react-router-dom"; // ✅ Tetap dipertahankan
 
 const mainSponsors = ["/assets/sponsors/KFK.png"];
 const supportingSponsors = [];
 
 const Beranda = () => {
-  const { language: langContext } = useContext(LanguageContext);
+  const { language: langContext } = useLanguage(); // ✅ Gunakan custom hook
   const language = langContext === "EN" ? "EN" : "ID";
-  const selectedText = textsBeranda[language];
+  const selectedText = textsBeranda[language]; // Access selected language
 
   const { isDarkMode } = useContext(ThemeContext);
 
@@ -146,7 +146,7 @@ const Beranda = () => {
             className="px-10 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white flex items-center gap-2 
     dark:border-transparent focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
           >
-            {selectedText.competition} <img src={right_arrow_white} alt="right arrow" className="w-4" />
+            {selectedText.submitfilm} <img src={right_arrow_white} alt="right arrow" className="w-4" />
           </Link>
         </motion.div>
       </header>
@@ -169,8 +169,9 @@ const Beranda = () => {
             <p className="mt-3 max-w-2xl font-Outfit text-gray-700 dark:text-gray-300 leading-relaxed text-justify">{selectedText.aboutFestival}</p>
 
             {/* Statistik Festival */}
+            {/* Statistik Festival */}
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-gray-800 dark:text-gray-200">
-              {(textsBeranda.statistics[language] || []).map((stat, index) => (
+              {(selectedText.statistics || []).map((stat, index) => (
                 <div key={index} className="textsBeranda-center flex flex-col items-center">
                   <p className="text-3xl font-bold">{stat.number}</p>
                   <p className="text-sm max-w-[180px]">{stat.text}</p>
@@ -282,60 +283,8 @@ const Beranda = () => {
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
           <p className="mt-4 text-lg w-full px-4 lg:px-0 lg:w-auto text-gray-700 dark:text-gray-300">{selectedText.joinDesc}</p>
 
-          <AnimatePresence mode="wait">
-            {formData.isSubmitted ? (
-              <motion.div key="success" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 0.5 }} className="mt-4 text-lg text-green-500">
-                <p className="font-semibold">{selectedText.thankYouMessage}</p>
-                <p className="mt-2 text-sm">{selectedText.successConfirmation}</p>
-              </motion.div>
-            ) : (
-              <motion.form key="form" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 0.5 }} className="mt-8 w-full px-4 max-w-xl mx-auto" onSubmit={handleSubmit}>
-                <div className="flex flex-col space-y-4">
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder={selectedText.namePlaceholder}
-                    aria-label="Your Name"
-                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder={selectedText.emailPlaceholder}
-                    aria-label="Your Email"
-                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                  />
-                  {/* Honeypot field */}
-                  <input type="text" name="website" style={{ display: "none" }} tabIndex="-1" autoComplete="off" />
-
-                  <textarea
-                    name="message"
-                    placeholder={selectedText.messagePlaceholder}
-                    rows="4"
-                    aria-label="Your Message"
-                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                  ></textarea>
-
-                  {formData.isError && <div className="text-red-500 text-sm">{language === "ID" ? "Semua field harus diisi dengan benar." : "All fields must be filled correctly."}</div>}
-
-                  {/* Google reCAPTCHA */}
-                  <div className="my-2">
-                    <GoogleReCaptcha onVerify={handleCaptchaChange} />
-                  </div>
-
-                  <button type="submit" className="w-full sm:w-auto px-6 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white mt-4 hover:opacity-90 focus:ring-2 focus:ring-[#b820e6]" disabled={formData.loading}>
-                    {formData.loading ? (language === "ID" ? "Mengirim..." : "Sending...") : selectedText.buttonText}
-                  </button>
-                </div>
-              </motion.form>
-            )}
-          </AnimatePresence>
+          {/* Contact Form Section */}
+          <ContactForm formData={formData} handleInputChange={handleInputChange} handleSubmit={handleSubmit} isDarkMode={isDarkMode} selectedText={selectedText} />
         </motion.section>
       </div>
     </div>

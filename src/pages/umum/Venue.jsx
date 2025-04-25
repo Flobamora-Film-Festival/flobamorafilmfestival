@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import GoogleMapComponent from "../../components/GoogleMapComponent";
 import { ThemeContext } from "../../context/ThemeContext";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Use the custom hook
 
 const Venue = () => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // ✅ Use custom hook to get the language
 
   const content = {
     ID: {

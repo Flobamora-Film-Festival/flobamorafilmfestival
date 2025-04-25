@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from "react";
-import { LanguageContext } from "../../context/LanguageContext";
+import React, { useEffect } from "react";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Correct path for the custom hook
 import { Helmet } from "react-helmet-async";
 import GoogleMapComponent from "../../components/GoogleMapComponent";
 
 const Tentang = () => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // ✅ Use custom hook instead of context
 
   useEffect(() => {
     const hash = window.location.hash;

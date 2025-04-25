@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { LanguageContext } from "../../context/LanguageContext";
+import React, { useContext } from "react"; // ✅ tambahkan useContext
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
 import { ThemeContext } from "../../context/ThemeContext";
 
 const BakumpulKomunitas = () => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // ✅ Ambil state bahasa langsung
   const { theme } = useContext(ThemeContext);
   const isDarkMode = theme === "dark";
 
@@ -11,8 +11,7 @@ const BakumpulKomunitas = () => {
     {
       name: "Komunitas Ugu",
       nameEN: "Ugu Community",
-      descriptionID:
-        "Komunitas dari Sikka yang berfokus pada industri kreatif.",
+      descriptionID: "Komunitas dari Sikka yang berfokus pada industri kreatif.",
       descriptionEN: "Community from Sikka focused on creative industry.",
       image: "/assets/community-1.jpg",
     },
@@ -82,44 +81,22 @@ const BakumpulKomunitas = () => {
   ];
 
   return (
-    <div
-      className={`w-full px-4 py-10 scroll-mt-20 ${
-        isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-      } transition-all`}
-    >
+    <div className={`w-full px-4 py-10 scroll-mt-20 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"} transition-all`}>
       <section className="text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4">
-          {language === "ID" ? "Bakumpul Komunitas" : "Community Gathering"}
-        </h2>
+        <h2 className="text-4xl font-bold mb-4">{language === "ID" ? "Bakumpul Komunitas" : "Community Gathering"}</h2>
         <p className="text-lg max-w-3xl mx-auto">
-          {language === "ID"
-            ? "Bakumpul Komunitas mempertemukan komunitas kreatif NTT untuk berbagi ide dan rencana bersama."
-            : "Community Gathering brings together creative communities in NTT to share ideas and plans together."}
+          {language === "ID" ? "Bakumpul Komunitas mempertemukan komunitas kreatif NTT untuk berbagi ide dan rencana bersama." : "Community Gathering brings together creative communities in NTT to share ideas and plans together."}
         </p>
       </section>
 
       <section>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {communities.map((community, index) => (
-            <div
-              key={index}
-              className={`rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300 ${
-                isDarkMode ? "bg-gray-800" : "bg-gray-100"
-              }`}
-            >
-              <div
-                className="h-[220px] bg-cover bg-center"
-                style={{ backgroundImage: `url(${community.image})` }}
-              ></div>
+            <div key={index} className={`rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300 ${isDarkMode ? "bg-gray-800" : "bg-gray-100"}`}>
+              <div className="h-[220px] bg-cover bg-center" style={{ backgroundImage: `url(${community.image})` }}></div>
               <div className="p-4">
-                <h4 className="text-xl font-semibold">
-                  {language === "ID" ? community.name : community.nameEN}
-                </h4>
-                <p className="text-sm mt-2">
-                  {language === "ID"
-                    ? community.descriptionID
-                    : community.descriptionEN}
-                </p>
+                <h4 className="text-xl font-semibold">{language === "ID" ? community.name : community.nameEN}</h4>
+                <p className="text-sm mt-2">{language === "ID" ? community.descriptionID : community.descriptionEN}</p>
               </div>
             </div>
           ))}

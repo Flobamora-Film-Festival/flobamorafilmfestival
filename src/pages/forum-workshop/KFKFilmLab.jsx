@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { LanguageContext } from "../../context/LanguageContext";
-import { ThemeContext } from "../../context/ThemeContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
+import { ThemeContext } from "../../context/ThemeContext"; // Tetap gunakan useContext untuk ThemeContext
 
 const KFKFilmLab = () => {
-  const { language } = useContext(LanguageContext);
-  const { theme } = useContext(ThemeContext);
+  const { language } = useLanguage(); // ✅ Ambil state language dengan useLanguage
+  const { theme } = useContext(ThemeContext); // ✅ Tetap gunakan useContext untuk ThemeContext
 
   const mentors = [
     {
@@ -73,25 +73,14 @@ const KFKFilmLab = () => {
   ];
 
   return (
-    <div
-      className={`w-full px-4 py-10 lg:px-20 xl:px-32 scroll-mt-20 ${
-        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
-      }`}
-    >
+    <div className={`w-full px-4 py-10 lg:px-20 xl:px-32 scroll-mt-20 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
       {/* Hero Section */}
       <section className="relative text-center mb-16">
-        <div
-          className="relative w-full h-[400px] bg-cover bg-center rounded-xl overflow-hidden"
-          style={{ backgroundImage: `url(/assets/kfk-film-lab.jpg)` }}
-        >
+        <div className="relative w-full h-[400px] bg-cover bg-center rounded-xl overflow-hidden" style={{ backgroundImage: `url(/assets/kfk-film-lab.jpg)` }}>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center p-6">
             <div className="text-white text-center max-w-3xl">
               <h2 className="text-4xl font-semibold mb-4">KFK Film Lab</h2>
-              <p className="text-lg">
-                {language === "ID"
-                  ? "KFK Film Lab adalah laboratorium naskah film pendek untuk sineas muda NTT."
-                  : "KFK Film Lab is a short film script lab for young filmmakers in East Nusa Tenggara."}
-              </p>
+              <p className="text-lg">{language === "ID" ? "KFK Film Lab adalah laboratorium naskah film pendek untuk sineas muda NTT." : "KFK Film Lab is a short film script lab for young filmmakers in East Nusa Tenggara."}</p>
             </div>
           </div>
         </div>
@@ -99,9 +88,7 @@ const KFKFilmLab = () => {
 
       {/* Tentang Program */}
       <section className="mb-16">
-        <h3 className="text-2xl font-bold mb-4 text-center">
-          {language === "ID" ? "Tentang Program" : "About the Program"}
-        </h3>
+        <h3 className="text-2xl font-bold mb-4 text-center">{language === "ID" ? "Tentang Program" : "About the Program"}</h3>
         <p className="text-lg text-center max-w-3xl mx-auto">
           {language === "ID"
             ? "KFK Film Lab bertujuan mendukung pertumbuhan industri film lokal lewat pelatihan penulisan naskah, diskusi kreatif, dan pembinaan intensif bersama mentor berpengalaman."
@@ -111,24 +98,13 @@ const KFKFilmLab = () => {
 
       {/* Mentor */}
       <section className="mb-16">
-        <h3 className="text-2xl font-bold mb-6 text-center">
-          {language === "ID" ? "Para Mentor" : "Mentors"}
-        </h3>
+        <h3 className="text-2xl font-bold mb-6 text-center">{language === "ID" ? "Para Mentor" : "Mentors"}</h3>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
           {mentors.map((mentor, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow"
-            >
-              <img
-                src={mentor.img}
-                alt={mentor.name}
-                className="w-24 h-24 rounded-full mb-3 object-cover border"
-              />
+            <div key={i} className="flex flex-col items-center text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <img src={mentor.img} alt={mentor.name} className="w-24 h-24 rounded-full mb-3 object-cover border" />
               <h4 className="font-semibold text-lg">{mentor.name}</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {mentor.role}
-              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{mentor.role}</p>
             </div>
           ))}
         </div>
@@ -136,26 +112,15 @@ const KFKFilmLab = () => {
 
       {/* 5 Naskah Terpilih */}
       <section>
-        <h3 className="text-2xl font-bold mb-6 text-center">
-          {language === "ID" ? "5 Naskah Terpilih" : "5 Selected Scripts"}
-        </h3>
+        <h3 className="text-2xl font-bold mb-6 text-center">{language === "ID" ? "5 Naskah Terpilih" : "5 Selected Scripts"}</h3>
         <div className="grid md:grid-cols-2 gap-6">
           {scripts.map((script, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow"
-            >
-              <img
-                src={script.photo}
-                alt={script.author}
-                className="w-20 h-20 object-cover rounded-full border"
-              />
+            <div key={i} className="flex items-start gap-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow">
+              <img src={script.photo} alt={script.author} className="w-20 h-20 object-cover rounded-full border" />
               <div>
                 <h4 className="text-lg font-bold">{script.title}</h4>
                 <p className="text-sm italic mb-1">{script.author}</p>
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  {script.description[language]}
-                </p>
+                <p className="text-sm text-gray-700 dark:text-gray-300">{script.description[language]}</p>
               </div>
             </div>
           ))}

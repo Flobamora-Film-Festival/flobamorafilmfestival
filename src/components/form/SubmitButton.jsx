@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
 
 const SubmitButton = ({ label, isSubmitting }) => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // Access the language context
 
   const isDark = theme === "dark";
 
@@ -17,11 +17,7 @@ const SubmitButton = ({ label, isSubmitting }) => {
           isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
         }`}
       >
-        {isSubmitting
-          ? language === "ID"
-            ? "Mengirim..."
-            : "Submitting..."
-          : label}
+        {isSubmitting ? (language === "ID" ? "Mengirim..." : "Submitting...") : label}
       </button>
     </div>
   );

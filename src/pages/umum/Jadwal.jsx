@@ -1,36 +1,36 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Use custom hook
 
 const Jadwal = () => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // ✅ Use the custom hook to get language
 
   // Data untuk Bioskop Pasiar
   const bioskopPasiar = [
     {
-      date: "05 Juli 2025",
+      date: "2025-07-05", // Format Tanggal ISO yang lebih umum
       time: "19:00 - 21:00",
       title: "Bioskop Pasiar",
       route: "Lapangan Kota Kupang",
       location: "Kupang",
     },
     {
-      date: "12 Juli 2025",
+      date: "2025-07-12",
       time: "19:00 - 21:00",
       title: "Bioskop Pasiar",
       route: "Taman Nostalgia",
       location: "Kupang",
     },
     {
-      date: "19 Juli 2025",
+      date: "2025-07-19",
       time: "19:00 - 21:00",
       title: "Bioskop Pasiar",
       route: "Terminal Bolok",
       location: "Kupang",
     },
     {
-      date: "26 Juli 2025",
+      date: "2025-07-26",
       time: "19:00 - 21:00",
       title: "Bioskop Pasiar",
       route: "Pantai Lasiana",
@@ -41,49 +41,49 @@ const Jadwal = () => {
   // Data untuk Festival (5-9 Agustus 2025)
   const festivalEvents = [
     {
-      date: "05 Agustus 2025",
+      date: "2025-08-05",
       time: "19:00 - 21:00",
       title: "Opening Ceremony",
       category: "-",
       location: "Main Hall",
     },
     {
-      date: "06 Agustus 2025",
+      date: "2025-08-06",
       time: "10:00 - 12:00",
       title: "KFK Film Lab",
       category: "KFK Film Lab",
       location: "Room A",
     },
     {
-      date: "06 Agustus 2025",
+      date: "2025-08-06",
       time: "14:00 - 16:00",
       title: language === "ID" ? "Bakumpul Komunitas" : "Community Gathering",
       category: "Bakumpul Komunitas",
       location: "Room B",
     },
     {
-      date: "06 Agustus 2025",
+      date: "2025-08-06",
       time: "18:00 - 20:00",
       title: language === "ID" ? "Screening Kompetisi" : "Competition Screening",
       category: "Kompetisi",
       location: "Theater 1",
     },
     {
-      date: "07 Agustus 2025",
+      date: "2025-08-07",
       time: "18:00 - 20:00",
       title: language === "ID" ? "Screening Non-Kompetisi" : "Non-Competition Screening",
       category: "Non-Kompetisi",
       location: "Theater 2",
     },
     {
-      date: "08 Agustus 2025",
+      date: "2025-08-08",
       time: "10:00 - 12:00",
       title: "Baomong Film",
       category: "Baomong Film",
       location: "Discussion Room",
     },
     {
-      date: "09 Agustus 2025",
+      date: "2025-08-09",
       time: "19:00 - 21:00",
       title: "Closing Ceremony",
       category: "-",
@@ -102,6 +102,21 @@ const Jadwal = () => {
   const groupedBioskopPasiar = groupByDate(bioskopPasiar);
   const groupedFestivalEvents = groupByDate(festivalEvents);
 
+  // Format Tanggal dan Waktu
+  const formatDate = (date) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    const newDate = new Date(date);
+    return newDate.toLocaleDateString(language === "ID" ? "id-ID" : "en-US", options);
+  };
+
+  const headers = {
+    time: language === "ID" ? "Waktu" : "Time",
+    program: language === "ID" ? "Program" : "Program",
+    route: language === "ID" ? "Rute" : "Route",
+    location: language === "ID" ? "Lokasi" : "Location",
+    category: language === "ID" ? "Kategori" : "Category",
+  };
+
   return (
     <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 transition-all">
       <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">{language === "ID" ? "Jadwal Festival" : "Festival Schedule"}</h1>
@@ -112,15 +127,15 @@ const Jadwal = () => {
 
         {Object.keys(groupedBioskopPasiar).map((date, index) => (
           <div key={index} className="mb-8">
-            <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{date}</h3>
+            <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{formatDate(date)}</h3>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-300 text-sm md:text-base">
                 <thead>
                   <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">Waktu</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[35%]">Program</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[25%]">Rute</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">Lokasi</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.time}</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[35%]">{headers.program}</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[25%]">{headers.route}</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.location}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -147,15 +162,15 @@ const Jadwal = () => {
 
       {Object.keys(groupedFestivalEvents).map((date, index) => (
         <div key={index} className="mb-8">
-          <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{date}</h3>
+          <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{formatDate(date)}</h3>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300 text-sm md:text-base">
               <thead>
                 <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-                  <th className="border border-gray-300 px-6 py-3 w-[20%]">Waktu</th>
-                  <th className="border border-gray-300 px-6 py-3 w-[35%]">Program</th>
-                  <th className="border border-gray-300 px-6 py-3 w-[25%]">Kategori</th>
-                  <th className="border border-gray-300 px-6 py-3 w-[20%]">Lokasi</th>
+                  <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.time}</th>
+                  <th className="border border-gray-300 px-6 py-3 w-[35%]">{headers.program}</th>
+                  <th className="border border-gray-300 px-6 py-3 w-[25%]">{headers.category}</th>
+                  <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.location}</th>
                 </tr>
               </thead>
               <tbody>

@@ -1,21 +1,12 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
 
-const DurationInputField = ({
-  label,
-  name,
-  value,
-  onChange,
-  error,
-  required = false,
-}) => {
+const DurationInputField = ({ label, name, value, onChange, error, required = false }) => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // Access the language context
 
-  const inputClassName = `w-full px-4 py-2 border border-gray-300 rounded-md mt-2 ${
-    theme === "dark" ? "bg-white text-black" : "bg-white text-gray-900"
-  }`;
+  const inputClassName = `w-full px-4 py-2 border border-gray-300 rounded-md mt-2 ${theme === "dark" ? "bg-white text-black" : "bg-white text-gray-900"}`;
 
   // Untuk pesan error multibahasa (jika perlu)
   const errorMessages = {

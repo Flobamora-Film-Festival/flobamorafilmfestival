@@ -1,28 +1,24 @@
-import React, { useContext } from "react";
-import { LanguageContext } from "../../context/LanguageContext";
+import React from "react";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
 
 const BaomongFilm = () => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // ✅ Ambil state bahasa langsung
   const videoId = "wGgiRTbcBFE";
 
   const sessions = [
     {
       topicID: "Perempuan di Balik Layar",
       topicEN: "Women Behind the Screen",
-      descriptionID:
-        "Diskusi tentang peran penting perempuan dalam produksi film, tantangan, dan peluang.",
-      descriptionEN:
-        "Discussion on the crucial role of women in film production, including challenges and opportunities.",
+      descriptionID: "Diskusi tentang peran penting perempuan dalam produksi film, tantangan, dan peluang.",
+      descriptionEN: "Discussion on the crucial role of women in film production, including challenges and opportunities.",
       speakers: ["Vania Damayanti", "Vivian Idris", "Yedida Letedara"],
       location: "Taman Budaya Gerson Poyk, Kupang",
     },
     {
       topicID: "Cerita dari Timur",
       topicEN: "Stories from the East",
-      descriptionID:
-        "Bagaimana cerita-cerita dari wilayah Timur Indonesia dapat mewarnai sinema nasional.",
-      descriptionEN:
-        "How stories from Eastern Indonesia enrich the national cinema landscape.",
+      descriptionID: "Bagaimana cerita-cerita dari wilayah Timur Indonesia dapat mewarnai sinema nasional.",
+      descriptionEN: "How stories from Eastern Indonesia enrich the national cinema landscape.",
       speakers: ["Andi Lilu", "Mira Ratu", "Deni Talo"],
       location: "Aula BPMP Provinsi NTT",
     },
@@ -55,9 +51,7 @@ const BaomongFilm = () => {
 
       {/* Tentang Program */}
       <section className="mb-16 max-w-4xl mx-auto text-center">
-        <h3 className="text-3xl font-semibold mb-6">
-          {language === "ID" ? "Tentang Baomong Film" : "About Baomong Film"}
-        </h3>
+        <h3 className="text-3xl font-semibold mb-6">{language === "ID" ? "Tentang Baomong Film" : "About Baomong Film"}</h3>
         <p className="text-lg">
           {language === "ID"
             ? "Acara ini menghadirkan topik-topik penting dan pembicara dari berbagai latar belakang untuk mendorong percakapan terbuka dan reflektif tentang sinema dan masyarakat."
@@ -67,30 +61,17 @@ const BaomongFilm = () => {
 
       {/* Sesi Baomong Film */}
       <section className="mb-16 max-w-6xl mx-auto">
-        <h3 className="text-3xl font-semibold mb-8 text-center">
-          {language === "ID" ? "Sesi Baomong Film" : "Baomong Film Sessions"}
-        </h3>
+        <h3 className="text-3xl font-semibold mb-8 text-center">{language === "ID" ? "Sesi Baomong Film" : "Baomong Film Sessions"}</h3>
         <div className="grid gap-6">
           {sessions.map((sesi, i) => (
-            <div
-              key={i}
-              className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 p-6 rounded-lg shadow"
-            >
-              <h4 className="text-2xl font-bold mb-2">
-                {language === "ID" ? sesi.topicID : sesi.topicEN}
-              </h4>
-              <p className="mb-2">
-                {language === "ID" ? sesi.descriptionID : sesi.descriptionEN}
+            <div key={i} className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 p-6 rounded-lg shadow">
+              <h4 className="text-2xl font-bold mb-2">{language === "ID" ? sesi.topicID : sesi.topicEN}</h4>
+              <p className="mb-2">{language === "ID" ? sesi.descriptionID : sesi.descriptionEN}</p>
+              <p className="text-sm">
+                <strong>{language === "ID" ? "Narasumber" : "Speakers"}:</strong> {sesi.speakers.join(", ")}
               </p>
               <p className="text-sm">
-                <strong>
-                  {language === "ID" ? "Narasumber" : "Speakers"}:
-                </strong>{" "}
-                {sesi.speakers.join(", ")}
-              </p>
-              <p className="text-sm">
-                <strong>{language === "ID" ? "Lokasi" : "Location"}:</strong>{" "}
-                {sesi.location}
+                <strong>{language === "ID" ? "Lokasi" : "Location"}:</strong> {sesi.location}
               </p>
             </div>
           ))}
@@ -99,21 +80,9 @@ const BaomongFilm = () => {
 
       {/* Video Section */}
       <section className="text-center my-16">
-        <h3 className="text-3xl font-semibold mb-6">
-          {language === "ID"
-            ? "Tonton Video Baomong Film"
-            : "Watch Baomong Film Video"}
-        </h3>
-        <a
-          href={`https://www.youtube.com/watch?v=${videoId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-            alt="Baomong Film YouTube Thumbnail"
-            className="mx-auto rounded-lg shadow-md hover:opacity-90 transition duration-300"
-          />
+        <h3 className="text-3xl font-semibold mb-6">{language === "ID" ? "Tonton Video Baomong Film" : "Watch Baomong Film Video"}</h3>
+        <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">
+          <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Baomong Film YouTube Thumbnail" className="mx-auto rounded-lg shadow-md hover:opacity-90 transition duration-300" />
         </a>
       </section>
     </div>

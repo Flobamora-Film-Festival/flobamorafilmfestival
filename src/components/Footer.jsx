@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { LanguageContext } from "../context/LanguageContext";
+import { useLanguage } from "../context/LanguageProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF, faInstagram, faYoutube, faTiktok } from "@fortawesome/free-brands-svg-icons";
 import { motion } from "framer-motion";
 
 const Footer = () => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage();
   const isIndonesian = language === "ID"; // Menggunakan bahasa yang dipilih dari Navbar
   // Fungsi untuk mengarahkan ke halaman dan scroll ke atas
   const handleNavigation = () => {

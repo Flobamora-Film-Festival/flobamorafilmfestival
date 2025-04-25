@@ -8,6 +8,7 @@ const textsBeranda = {
       "Flobamora Film Festival adalah festival film pendek berskala nasional pertama di Nusa Tenggara Timur (NTT). Kami hadir untuk memberikan ruang bagi para pembuat film, khususnya sineas muda, agar dapat menampilkan karya terbaik mereka.",
     aboutFestival:
       "Flobamora Film Festival adalah festival film pendek berskala nasional pertama di Nusa Tenggara Timur (NTT). Festival ini berawal dari Parade Film NTT pada tahun 2021 dan pertama kali diadakan pada 27 hingga 30 Oktober 2023 oleh Komunitas Film Kupang (KFK). Sejak saat itu, Flobamora Film Festival menjadi acara tahunan. Sejak awal, Flobamora Film Festival berkomitmen untuk memberikan ruang apresiasi dan edukasi bagi sineas di NTT, sekaligus membangun jaringan nasional dan internasional di tingkat individu, komunitas, organisasi, dan festival.",
+    submitfilm: "Submit Film Anda",
     festivalOverview: "Flobamora Film Festival telah menjangkau lebih dari 2.000 penonton...",
     learnMore: "Pelajari Selengkapnya",
     competition: "Kompetisi Film",
@@ -20,21 +21,21 @@ const textsBeranda = {
     shortFilms: "Menampilkan 60+ film pendek dari berbagai pembuat film.",
     audience: "Lebih dari 2.000 penonton dari berbagai usia menghadiri festival.",
     filmPractitioners: "Bekerja sama dengan lebih dari 100 praktisi film lokal, nasional, dan internasional.",
-    sponsorsTitle: "Sponsor Kami", // ID
-    sponsorsDescription: "Kami berterima kasih kepada para sponsor yang telah mendukung Flobamora Film Festival.", // ID
-    noSponsors: "Tidak ada sponsor saat ini.", // ID
+    sponsorsTitle: "Sponsor Kami",
+    sponsorsDescription: "Kami berterima kasih kepada para sponsor yang telah mendukung Flobamora Film Festival.",
+    noSponsors: "Tidak ada sponsor saat ini.",
     partnerships: "Bermitra dengan 50+ komunitas & industri film.",
     sponsors: "Kolaborasi & Sponsor",
     joinFestival: "Bergabung dalam Festival",
     joinDesc: "Mari menjadi bagian dari perjalanan Flobamora Film Festival sebagai sponsor, mitra, atau komunitas pendukung.",
-    thankYouMessage: "Terima kasih telah bergabung dengan kami!", // ID
-    successConfirmation: "Formulir Anda telah berhasil dikirim.", // ID
-    namePlaceholder: "Nama Anda",
-    emailPlaceholder: "Email Anda",
-    messagePlaceholder: "Pesan Anda",
-    buttonText: "Kirim Pesan",
-    previousFestivalsHeader: "Festival Sebelumnya", // ID
-    previousFestivalsDesc: "Berikut adalah highlights dari Flobamora Film Festival tahun-tahun sebelumnya.", // ID
+    previousFestivalsHeader: "Festival Sebelumnya",
+    previousFestivalsDesc: "Berikut adalah highlights dari Flobamora Film Festival tahun-tahun sebelumnya.",
+    statistics: [
+      { number: "2,000+", text: "Penonton dari berbagai usia hadir dalam festival." },
+      { number: "60+", text: "Film pendek ditayangkan selama festival." },
+      { number: "100+", text: "Praktisi film berpartisipasi dalam festival." },
+      { number: "50+", text: "Kolaborasi dengan komunitas film & industri." },
+    ],
   },
   EN: {
     date: "5-9 August 2025",
@@ -43,6 +44,7 @@ const textsBeranda = {
     description: "Flobamora Film Festival is the first national-scale short film festival in East Nusa Tenggara (NTT). We provide a space for filmmakers, especially young directors, to showcase their best works.",
     aboutFestival:
       "The Flobamora Film Festival is the first national-scale short film festival in East Nusa Tenggara (NTT). This festival originated from the NTT Film Parade in 2021 and was first held from October 27 to 30, 2023, by the Kupang Film Community (KFK). Since then, the Flobamora Film Festival has become an annual event. From the beginning, the Flobamora Film Festival has been committed to providing a space for film appreciation and education in NTT while also fostering national and international networks across individual, community, organizational, and festival levels.",
+    submitfilm: "Submit Your Film",
     festivalOverview: "Flobamora Film Festival has reached over 2,000 audiences...",
     learnMore: "Learn More",
     competition: "Film Competition",
@@ -55,38 +57,17 @@ const textsBeranda = {
     shortFilms: "Showcasing 60+ short films from various filmmakers.",
     audience: "More than 2,000 audiences of all ages attended the festival.",
     filmPractitioners: "Collaborating with over 100 local, national, and international film practitioners.",
-    sponsorsTitle: "Our Sponsors", // EN
-    sponsorsDescription: "We are grateful to the sponsors who have supported the Flobamora Film Festival.", // EN
-    noSponsors: "No sponsors at the moment.", // EN
+    sponsorsTitle: "Our Sponsors",
+    sponsorsDescription: "We are grateful to the sponsors who have supported the Flobamora Film Festival.",
+    noSponsors: "No sponsors at the moment.",
     partnerships: "Partnering with 50+ film communities & industries.",
     sponsors: "Collaboration & Sponsors",
     joinFestival: "Join the Festival",
     joinDesc: "Be part of the Flobamora Film Festival journey as a sponsor, partner, or supporting community.",
-    thankYouMessage: "Thank you for joining us!", // EN
-    successConfirmation: "Your form has been successfully submitted.", // EN
-    namePlaceholder: "Your Name",
-    emailPlaceholder: "Your Email",
-    messagePlaceholder: "Your Message",
-    buttonText: "Send Message",
-    previousFestivalsHeader: "Previous Festivals", // EN
-    previousFestivalsDesc: "Here are some highlights from previous editions of the Flobamora Film Festival.", // EN
-  },
-
-  statistics: {
-    ID: [
-      {
-        number: "2,000+",
-        text: "Penonton dari berbagai usia hadir dalam festival.",
-      },
-      { number: "60+", text: "Film pendek ditayangkan selama festival." },
-      { number: "100+", text: "Praktisi film berpartisipasi dalam festival." },
-      { number: "50+", text: "Kolaborasi dengan komunitas film & industri." },
-    ],
-    EN: [
-      {
-        number: "2,000+",
-        text: "Audiences from various backgrounds attended the festival.",
-      },
+    previousFestivalsHeader: "Previous Festivals",
+    previousFestivalsDesc: "Here are some highlights from previous editions of the Flobamora Film Festival.",
+    statistics: [
+      { number: "2,000+", text: "Audiences from various backgrounds attended the festival." },
       { number: "60+", text: "Short films were screened during the festival." },
       { number: "100+", text: "Film industry professionals participated." },
       { number: "50+", text: "Partnering with film communities & industries." },

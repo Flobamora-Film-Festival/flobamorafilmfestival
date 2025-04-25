@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
+import { ThemeContext } from "../../context/ThemeContext"; // Tetap gunakan useContext untuk ThemeContext
 import LayarKompetisiFilmNTT from "./LayarKompetisiFilmNTT";
 import LayarKompetisiFilmPelajarNTT from "./LayarKompetisiFilmPelajarNTT";
 
 const Kompetisi = () => {
-  const { theme } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
+  const { theme } = useContext(ThemeContext); // ✅ Tetap menggunakan useContext untuk ThemeContext
+  const { language } = useLanguage(); // ✅ Gunakan custom hook untuk mengambil language
   const isDark = theme === "dark";
 
   const textColor = isDark ? "text-white" : "text-gray-900";
@@ -17,12 +17,8 @@ const Kompetisi = () => {
   return (
     <div className="min-h-screen transition-all">
       {/* Header */}
-      <header
-        className={`${bgHeader} ${textColor} py-14 px-6 lg:px-20 text-center`}
-      >
-        <h1 className="text-3xl lg:text-4xl font-extrabold mb-4 leading-snug">
-          {language === "ID" ? "Program Kompetisi" : "Competition Program"}
-        </h1>
+      <header className={`${bgHeader} ${textColor} py-14 px-6 lg:px-20 text-center`}>
+        <h1 className="text-3xl lg:text-4xl font-extrabold mb-4 leading-snug">{language === "ID" ? "Program Kompetisi" : "Competition Program"}</h1>
         <p className="text-base lg:text-lg max-w-3xl mx-auto text-opacity-90">
           {language === "ID"
             ? "Program kompetisi menampilkan film pendek dari sineas NTT dan pelajar NTT dalam dua kategori utama."
@@ -31,9 +27,7 @@ const Kompetisi = () => {
       </header>
 
       {/* Spacer */}
-      <div
-        className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}
-      >
+      <div className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}>
         <div className="h-12 md:h-16 lg:h-20" />
       </div>
 
@@ -45,9 +39,7 @@ const Kompetisi = () => {
       </section>
 
       {/* Spacer */}
-      <div
-        className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}
-      >
+      <div className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}>
         <div className="h-12 md:h-16 lg:h-20" />
       </div>
 

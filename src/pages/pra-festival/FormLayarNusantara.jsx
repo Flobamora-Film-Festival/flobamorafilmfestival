@@ -2,7 +2,7 @@
 
 import React, { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
 import InputField from "../../components/form/InputField";
 import SelectField from "../../components/form/SelectField";
 import FormAgreementSection from "../../components/form/FormAgreementSection";
@@ -13,13 +13,13 @@ import FileUploadField from "../../components/form/FileUploadField";
 import initialFormData from "../../utils/initialFormData";
 import validateAllFields from "../../utils/validateField";
 import { formLabels } from "../../utils/formLabels";
-import texts from "../../utils/textsLayarNusantara";
+import texts from "../../texts/textsLayarNusantara"; // ✅ benar
 import SubmitButton from "../../components/form/SubmitButton";
 import GoogleSignIn from "../../components/form/GoogleSignIn";
 
 const FormLayarNusantara = () => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // ✅ Gunakan custom hook untuk mengambil language
   const langText = {
     ...(texts[language] || texts.ID),
     ...(formLabels[language] || formLabels.ID),

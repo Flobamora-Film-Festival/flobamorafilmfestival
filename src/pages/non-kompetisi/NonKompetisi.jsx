@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { LanguageContext } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageProvider"; // Update import
 import LayarNusantara from "./LayarNusantara";
 import LayarInternasional from "./LayarInternasional";
 
 const NonKompetisi = () => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguage(); // Use the custom hook `useLanguage`
   const isDark = theme === "dark";
 
   const textColor = isDark ? "text-white" : "text-gray-900";
@@ -17,14 +17,8 @@ const NonKompetisi = () => {
   return (
     <div className="min-h-screen transition-all">
       {/* Header */}
-      <header
-        className={`${bgHeader} ${textColor} py-14 px-6 lg:px-20 text-center`}
-      >
-        <h1 className="text-3xl lg:text-4xl font-extrabold mb-4 leading-snug">
-          {language === "ID"
-            ? "Program Non-Kompetisi"
-            : "Non-Competition Program"}
-        </h1>
+      <header className={`${bgHeader} ${textColor} py-14 px-6 lg:px-20 text-center`}>
+        <h1 className="text-3xl lg:text-4xl font-extrabold mb-4 leading-snug">{language === "ID" ? "Program Non-Kompetisi" : "Non-Competition Program"}</h1>
         <p className="text-base lg:text-lg max-w-3xl mx-auto text-opacity-90">
           {language === "ID"
             ? "Program non-kompetisi menampilkan film pendek dari Indonesia dan internasional untuk memperkaya perspektif dan pengalaman menonton."
@@ -33,9 +27,7 @@ const NonKompetisi = () => {
       </header>
 
       {/* Spacer */}
-      <div
-        className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}
-      >
+      <div className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}>
         <div className="h-12 md:h-16 lg:h-20" />
       </div>
 
@@ -47,9 +39,7 @@ const NonKompetisi = () => {
       </section>
 
       {/* Spacer */}
-      <div
-        className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}
-      >
+      <div className={`${bgSectionAlt} border-t border-gray-200 dark:border-gray-700`}>
         <div className="h-12 md:h-16 lg:h-20" />
       </div>
 
