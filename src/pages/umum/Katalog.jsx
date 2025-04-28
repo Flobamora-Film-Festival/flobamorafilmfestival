@@ -3,73 +3,38 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { useLanguage } from "../../context/LanguageProvider";
 import textsKatalog from "../../texts/textsKatalog";
 import HTMLFlipBook from "react-pageflip";
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import "react-pdf/dist/esm/Page/TextLayer.css";
 
-pdfjs.GlobalWorkerOptions.workerSrc = "/worker/pdf.worker.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 const Katalog = () => {
   const [numPages, setNumPages] = useState(null);
-  const [scale, setScale] = useState(1.2); // Default scale
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [pageRefs, setPageRefs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [mode, setMode] = useState("scroll"); // "scroll" or "flipbook"
+  const [scale, setScale] = useState(1.2);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mode, setMode] = useState("scroll"); // scroll or flipbook
   const [isMobile, setIsMobile] = useState(false);
 
-  const containerRef = useRef(null);
-  const flipBookRef = useRef(null);
-
+  const flipBookRef = useRef();
   const { language } = useLanguage();
   const texts = textsKatalog[language];
 
-  // Detect screen size (mobile vs desktop)
+  const pdfFile = "/katalog/Flobamora Film Festival-2025.pdf";
+
+  // Responsiveness
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
-    setPageRefs(new Array(numPages).fill(null).map(() => React.createRef()));
-  };
-
-  const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3)); // Zoom in up to 3x
-  const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.6)); // Zoom out down to 0.6x
+  const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3));
+  const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.6));
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const toggleMode = () => setMode((prev) => (prev === "scroll" ? "flipbook" : "scroll"));
 
-  useEffect(() => {
-    if (mode !== "scroll") return; // Scroll handler hanya untuk scroll mode
-
-    const handleScroll = () => {
-      const containerTop = containerRef.current?.getBoundingClientRect().top || 0;
-      const pageIndex = pageRefs.findIndex((ref) => {
-        const rect = ref?.current?.getBoundingClientRect();
-        return rect?.top > containerTop;
-      });
-      setCurrentPage(pageIndex === -1 ? numPages : pageIndex + 1);
-    };
-
-    const scrollElement = containerRef.current;
-    if (scrollElement) {
-      scrollElement.addEventListener("scroll", handleScroll);
-      return () => {
-        scrollElement.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, [pageRefs, numPages, mode]);
-
-  const scrollToPage = (index) => {
-    if (mode === "scroll") {
-      pageRefs[index]?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else if (mode === "flipbook") {
-      flipBookRef.current?.flip(index);
-    }
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
   };
 
   return (
@@ -97,12 +62,10 @@ const Katalog = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         {sidebarOpen && (
-          <aside className="w-28 border-r dark:border-gray-700 overflow-y-auto bg-white dark:bg-gray-800">
-            {Array.from(new Array(numPages), (_, index) => (
-              <div key={index} onClick={() => scrollToPage(index)} className={`cursor-pointer p-1 transition-all duration-200 ${currentPage - 1 === index ? "scale-110 border-2 border-blue-500" : "hover:scale-105"}`}>
-                <Document file="/katalog/Flobamora Film Festival-2025.pdf" loading="">
-                  <Page pageNumber={index + 1} width={80} renderAnnotationLayer={false} renderTextLayer={false} />
-                </Document>
+          <aside className="w-28 border-r dark:border-gray-700 overflow-y-auto bg-white dark:bg-gray-800 p-2">
+            {Array.from(new Array(numPages), (el, index) => (
+              <div key={index} className={`cursor-pointer p-2 text-center ${currentPage === index + 1 ? "bg-gray-300 dark:bg-gray-700" : ""}`} onClick={() => setCurrentPage(index + 1)}>
+                {index + 1}
               </div>
             ))}
           </aside>
@@ -111,11 +74,11 @@ const Katalog = () => {
         {/* Main Viewer */}
         <main className="flex-1 overflow-hidden p-4">
           {mode === "scroll" ? (
-            <div ref={containerRef} className="h-full overflow-y-scroll">
-              <Document file="/katalog/Flobamora Film Festival-2025.pdf" onLoadSuccess={onDocumentLoadSuccess} loading={<p className="text-center text-gray-600 dark:text-gray-300">Loading PDF...</p>}>
-                {Array.from(new Array(numPages), (_, index) => (
-                  <div ref={pageRefs[index]} key={index} className="mb-6 flex justify-center">
-                    <Page pageNumber={index + 1} scale={scale} renderAnnotationLayer={false} renderTextLayer={false} />
+            <div className="h-full overflow-y-scroll">
+              <Document file={pdfFile} onLoadSuccess={onDocumentLoadSuccess} loading="Loading...">
+                {Array.from(new Array(numPages), (el, index) => (
+                  <div key={index} className="flex justify-center my-2">
+                    <Page pageNumber={index + 1} scale={scale} />
                   </div>
                 ))}
               </Document>
@@ -123,13 +86,13 @@ const Katalog = () => {
           ) : (
             <div className="h-full w-full flex justify-center items-center">
               <HTMLFlipBook
-                width={1600} // lebar doubled untuk dua halaman berdampingan
-                height={800} // tinggi diperbesar agar lebih sesuai untuk halaman vertikal
-                size="fixed"
+                width={800}
+                height={600}
+                size="stretch"
                 minWidth={315}
                 maxWidth={1600}
                 minHeight={400}
-                maxHeight={1600} // Sesuaikan untuk lebih tinggi
+                maxHeight={1600}
                 maxShadowOpacity={0.5}
                 showCover={false}
                 mobileScrollSupport={true}
@@ -140,7 +103,7 @@ const Katalog = () => {
                 flippingTime={500}
                 usePortrait={true}
                 startZIndex={0}
-                autoSize={false} // non-auto size
+                autoSize={true}
                 clickEventForward={true}
                 disableFlipByClick={false}
                 swipeDistance={30}
@@ -148,15 +111,11 @@ const Katalog = () => {
                 singlePage={isMobile}
                 key={isMobile ? "mobile" : "desktop"}
               >
-                {Array.from(new Array(numPages), (_, index) => (
-                  <div key={index} className="flex justify-center items-center bg-white dark:bg-gray-800 p-4">
-                    <Document file="/katalog/Flobamora Film Festival-2025.pdf" loading="">
-                      <Page
-                        pageNumber={index + 1}
-                        width={scale * 800} // Set width based on scale
-                        renderAnnotationLayer={false}
-                        renderTextLayer={false}
-                      />
+                {/* FlipBook Content */}
+                {Array.from(new Array(numPages), (el, index) => (
+                  <div key={index} className="flex justify-center items-center bg-white">
+                    <Document file={pdfFile} loading="">
+                      <Page pageNumber={index + 1} scale={isMobile ? 0.5 : 1} />
                     </Document>
                   </div>
                 ))}
