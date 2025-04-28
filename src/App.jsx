@@ -1,6 +1,8 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
 // Halaman Utama
 const Beranda = lazy(() => import("./pages/umum/Beranda"));
@@ -23,7 +25,7 @@ const KFKFilmLab = lazy(() => import("./pages/forum-workshop/KFKFilmLab"));
 const BakumpulKomunitas = lazy(() => import("./pages/forum-workshop/BakumpulKomunitas"));
 const BaomongFilm = lazy(() => import("./pages/forum-workshop/BaomongFilm"));
 
-// Halaman Prafestival
+// Halaman Pra-festival
 const SubmitFilm = lazy(() => import("./pages/pra-festival/SubmitFilm"));
 const FormKompetisiPelajar = lazy(() => import("./pages/pra-festival/FormKompetisiPelajar"));
 const FormKompetisiNTT = lazy(() => import("./pages/pra-festival/FormKompetisiNTT"));

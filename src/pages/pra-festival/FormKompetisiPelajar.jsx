@@ -10,18 +10,19 @@ import MultiCheckboxField from "../../components/form/MultiCheckboxField";
 import FileUploadField from "../../components/form/FileUploadField";
 import initialFormData from "../../utils/initialFormData";
 import validateAllFields from "../../utils/validateField";
-import { formLabels } from "../../utils/formLabels";
-import texts from "../../texts/textsKompetisiPelajar"; // ✅
+import formLabels from "../../utils/formLabels";
 import SubmitButton from "../../components/form/SubmitButton";
 import GoogleSignIn from "../../components/form/GoogleSignIn";
+import textsKompetisiPelajar from "../../texts/textsKompetisiPelajar";
 
 const FormKompetisiPelajar = () => {
   const { theme } = useContext(ThemeContext);
   const { language } = useLanguage(); // Access the language context
   const langText = {
-    ...(texts[language] || texts.ID),
-    ...(formLabels[language] || formLabels.ID),
+    ...(textsKompetisiPelajar[language] || textsKompetisiPelajar.ID), // Fallback ke 'ID' jika undefined
+    ...(formLabels[language] || formLabels.ID), // Fallback ke 'ID' jika undefined
   };
+  console.log(langText);
 
   const [formData, setFormData] = useState(() => {
     const saved = localStorage.getItem("formKompetisiPelajar");
@@ -87,6 +88,7 @@ const FormKompetisiPelajar = () => {
     // Process the token (store in state, send to server, etc.)
   };
 
+  const introText = langText?.introText || {};
   return (
     <div className={`max-w-2xl mx-auto my-16 p-6 rounded-xl shadow-lg border border-gray-700 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"}`}>
       <div className="mb-6">

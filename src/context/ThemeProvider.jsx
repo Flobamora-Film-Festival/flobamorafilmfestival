@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { ThemeContext } from "./ThemeContext"; // Pastikan path ini sesuai
+import { ThemeContext } from "./ThemeContext";
+
+const getInitialTheme = () => {
+  const storedTheme = localStorage.getItem("theme");
+  if (storedTheme) return storedTheme;
+
+  const hour = new Date().getHours();
+  const isNight = hour < 6 || hour >= 18;
+  return isNight ? "dark" : "light";
+};
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    // Ambil theme dari localStorage atau default ke 'light'
-    return localStorage.getItem("theme") || "light";
-  });
+  const [theme, setTheme] = useState(getInitialTheme);
 
   useEffect(() => {
-    // Simpan ke localStorage
     localStorage.setItem("theme", theme);
-
-    // Tambahkan atau hapus class 'dark' di <html>
     const root = document.documentElement;
+
     if (theme === "dark") {
       root.classList.add("dark");
     } else {
@@ -25,11 +29,7 @@ export const ThemeProvider = ({ children }) => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
 ThemeProvider.propTypes = {

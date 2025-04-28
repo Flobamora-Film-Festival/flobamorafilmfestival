@@ -14,6 +14,9 @@ export default {
       animation: {
         spin_slow: "spin 6s linear infinite",
       },
+      transitionProperty: {
+        theme: "background-color, color, border-color",
+      },
       colors: {
         lightHover: "#fcf4ff",
         darkHover: "#1f2937",

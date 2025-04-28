@@ -1,6 +1,6 @@
-// utils/sendEmail.js
+// src/utils/sendEmail.js
 
-export const sendEmail = async ({
+const sendEmail = async ({
   name,
   email,
   message,
@@ -8,8 +8,16 @@ export const sendEmail = async ({
   website = "", // honeypot
   lang = "ID",
 }) => {
+  // Honeypot sederhana
+  if (website !== "") {
+    return {
+      success: false,
+      message: lang === "ID" ? "Spam terdeteksi." : "Spam detected.",
+    };
+  }
+
   try {
-    const res = await fetch("https://flobamorafilmfestival.com/send-email.php", {
+    const res = await fetch("/api/send-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -19,7 +27,6 @@ export const sendEmail = async ({
         email,
         message,
         recaptchaToken,
-        website,
         lang,
       }),
     });
@@ -38,3 +45,5 @@ export const sendEmail = async ({
     };
   }
 };
+
+export default sendEmail;

@@ -1,22 +1,34 @@
 import { useEffect, useState } from "react";
 
-export const useRecaptcha = (action = "submit") => {
+const useRecaptcha = (action = "submit") => {
   const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true); // Menambahkan state untuk loading
-  const [error, setError] = useState(null); // Menambahkan state untuk error
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const loadRecaptchaScript = () => {
+      const script = document.createElement("script");
+      script.src = `https://www.google.com/recaptcha/api.js?render=${import.meta.env.VITE_RECAPTCHA_SITE_KEY}`;
+      script.async = true;
+      script.onload = () => {
+        getRecaptchaToken(); // Run the token fetch after script is loaded
+      };
+      document.body.appendChild(script);
+    };
+
     const getRecaptchaToken = async () => {
-      if (window.grecaptcha && window.grecaptcha.execute) {
+      if (window.grecaptcha) {
         try {
           setLoading(true);
-          const newToken = await window.grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, { action });
-          setToken(newToken);
+          window.grecaptcha.ready(async () => {
+            const newToken = await window.grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, { action });
+            setToken(newToken);
+            setLoading(false);
+          });
         } catch (err) {
           console.error("Gagal generate token reCAPTCHA:", err);
           setError("Gagal mengambil token reCAPTCHA");
           setToken(null);
-        } finally {
           setLoading(false);
         }
       } else {
@@ -26,11 +38,14 @@ export const useRecaptcha = (action = "submit") => {
       }
     };
 
-    // Memastikan kita hanya mengeksekusi kode di browser
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && !window.grecaptcha) {
+      loadRecaptchaScript();
+    } else {
       getRecaptchaToken();
     }
   }, [action]);
 
   return { token, loading, error };
 };
+
+export default useRecaptcha;

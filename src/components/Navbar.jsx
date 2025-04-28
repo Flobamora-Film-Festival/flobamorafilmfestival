@@ -2,7 +2,7 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ThemeContext } from "../context/ThemeContext";
-import { useLanguage } from "../context/LanguageProvider"; // ✅ Pakai custom hook
+import { useLanguage } from "../context/LanguageProvider";
 import logo from "../assets/logo.png";
 import logo_dark from "../assets/logo_dark.png";
 import moon_icon from "../assets/moon_icon.png";
@@ -17,53 +17,34 @@ import { motion } from "framer-motion";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const { language, setLanguage } = useLanguage(); // ✅ Gunakan useLanguage
+  const isDarkMode = theme === "dark";
+  const { language, setLanguage } = useLanguage();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-
-  // ✅ Sync state lokal dengan theme dari ThemeProvider
-  const [isDarkMode, setIsDarkMode] = useState(theme === "dark");
-
-  // ✅ State untuk mendeteksi scroll
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // ✅ Simpan tema global di localStorage & cek saat komponen pertama kali dimuat
   useEffect(() => {
-    setIsDarkMode(theme === "dark");
-    document.documentElement.classList.toggle("dark", theme === "dark");
-
     const handleClickOutside = (event) => {
       if (!event.target.closest(".relative")) {
         setActiveDropdown(null);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
 
-    // Event listener untuk scroll
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true); // Navbar memiliki efek rounded setelah scroll
-      } else {
-        setIsScrolled(false); // Navbar tanpa efek rounded saat di atas
-      }
+      setIsScrolled(window.scrollY > 0);
     };
-
     window.addEventListener("scroll", handleScroll);
 
-    // Bersihkan event listener saat komponen di-unmount
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [theme]);
-
-  // ✅ Toggle Theme (Sinkron dengan ThemeProvider)
-  const handleToggleTheme = () => {
-    toggleTheme(); // 🔹 Langsung panggil `toggleTheme`
-  };
-
-  // ✅ Pastikan semua menu tertutup setelah navigasi
-  const closeMenu = () => {
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsMenuOpen(false);
     setActiveDropdown(null);
   };
@@ -72,21 +53,8 @@ const Navbar = () => {
     setIsMenuOpen((prev) => !prev);
   }, []);
 
-  // ✅ Fungsi untuk toggle dropdown & menutup dropdown lain jika sudah terbuka
   const handleDropdownToggle = (menu) => {
     setActiveDropdown((prev) => (prev === menu ? null : menu));
-  };
-
-  const [isMobileDarkMode, setIsMobileDarkMode] = useState(() => {
-    const savedMobileTheme = localStorage.getItem("mobileTheme");
-    return savedMobileTheme ? savedMobileTheme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
-
-  // ✅ Fungsi untuk scroll ke atas & tutup menu dropdown
-  const handleNavClick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setIsMenuOpen(false);
-    setActiveDropdown(null); // Tutup dropdown saat navigasi
   };
 
   const menuItems = [
@@ -197,8 +165,8 @@ const Navbar = () => {
           </button>
         </div>
 
-        <button onClick={toggleTheme} aria-label="Toggle dark mode">
-          <img src={isDarkMode ? sun_icon : moon_icon} alt="Theme Icon" className="w-6" />
+        <button onClick={toggleTheme} aria-label="Toggle dark mode" className="transition-all duration-300">
+          <img src={isDarkMode ? sun_icon : moon_icon} alt="Theme Icon" className="w-6 transition-transform duration-300" />
         </button>
 
         <button onClick={toggleMenu} className="md:hidden">
@@ -227,7 +195,7 @@ const Navbar = () => {
                   <>
                     <button onClick={() => handleDropdownToggle(item.label)} className="flex items-center gap-1 justify-center w-full">
                       {item.label}
-                      <img src={activeDropdown === item.label ? (isMobileDarkMode ? arrow_icon_dark : arrow_icon) : arrow_icon} alt="Dropdown" className={`w-3 transition-transform ${activeDropdown === item.label ? "rotate-180" : ""}`} />
+                      <img src={activeDropdown === item.label ? (isDarkMode ? arrow_icon_dark : arrow_icon) : arrow_icon} alt="Dropdown" className={`w-3 transition-transform ${activeDropdown === item.label ? "rotate-180" : ""}`} />
                     </button>
                     {activeDropdown === item.label && (
                       <motion.ul initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">

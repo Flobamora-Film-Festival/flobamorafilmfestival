@@ -1,21 +1,28 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@assets": path.resolve(__dirname, "./src/assets"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
+    },
+  },
   build: {
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Memisahkan dependensi node_modules ke dalam chunk terpisah
           if (id.includes("node_modules")) {
-            // Menggunakan nama paket untuk chunk
             return id.toString().split("node_modules/")[1].split("/")[0];
           }
         },
       },
     },
-    chunkSizeWarningLimit: 1000, // Meningkatkan batas peringatan chunk ke 1000 kB (1MB)
+    chunkSizeWarningLimit: 1000,
   },
+  assetsInclude: ["**/*.pdf", "**/*.js"],
 });

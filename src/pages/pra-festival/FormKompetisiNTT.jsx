@@ -10,7 +10,7 @@ import MultiCheckboxField from "../../components/form/MultiCheckboxField";
 import FileUploadField from "../../components/form/FileUploadField";
 import initialFormData from "../../utils/initialFormData";
 import validateAllFields from "../../utils/validateField";
-import { formLabels } from "../../utils/formLabels";
+import formLabels from "../../utils/formLabels";
 import texts from "../../texts/textsKompetisiNTT";
 import SubmitButton from "../../components/form/SubmitButton";
 import GoogleSignIn from "../../components/form/GoogleSignIn";

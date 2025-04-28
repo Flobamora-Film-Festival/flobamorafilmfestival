@@ -1,37 +1,48 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useLanguage } from "../../context/LanguageProvider";
+import { ThemeContext } from "../../context/ThemeContext";
+import previousFestivals from "../../texts/previousFestivals";
+import sendEmail from "../../utils/sendEmail";
+import { motion } from "framer-motion";
+import { GoogleReCaptcha } from "react-google-recaptcha-v3";
+import artworkId from "../../assets/artwork-id.png";
+import artworkEn from "../../assets/artwork-en.png";
 import right_arrow_white from "../../assets/right-arrow-white.png";
 import userImageLight from "../../assets/user-image.png";
 import userImageDark from "../../assets/user-image-dark.png";
-import { useLanguage } from "../../context/LanguageProvider"; // ✅ Perbaikan path
-import { ThemeContext } from "../../context/ThemeContext";
-import { loadSponsorLogos } from "../../utils/loadSponsorLogos";
-import { sendEmail } from "../../utils/sendEmail";
-import { motion } from "framer-motion";
-import { useRecaptcha } from "../../hooks/useRecaptcha";
-import artworkId from "../../assets/artwork-id.png";
-import artworkEn from "../../assets/artwork-en.png";
 import artworkIdmobile from "../../assets/artwork-id-mobile.png";
 import artworkEnmobile from "../../assets/artwork-en-mobile.png";
 import textsBeranda from "../../texts/textsBeranda";
-import previousFestivals from "../../texts/previousFestivals";
 import ContactForm from "../../components/ContactForm";
-import { Link } from "react-router-dom"; // ✅ Tetap dipertahankan
+import { Link } from "react-router-dom";
 
-const mainSponsors = ["/assets/sponsors/KFK.png"];
-const supportingSponsors = [];
+const mainSponsors = ["/assets/sponsors/sponsor-logo.png"];
 
 const Beranda = () => {
-  const { language: langContext } = useLanguage(); // ✅ Gunakan custom hook
+  const { language: langContext } = useLanguage();
   const language = langContext === "EN" ? "EN" : "ID";
-  const selectedText = textsBeranda[language]; // Access selected language
+  const selectedText = textsBeranda[language];
 
   const { isDarkMode } = useContext(ThemeContext);
 
+  // Handling Captcha value
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const [recaptchaError, setRecaptchaError] = useState(null);
+  const handleCaptchaChange = (value) => {
+    if (value) {
+      console.log("Captcha token:", value);
+      setRecaptchaToken(value);
+      setRecaptchaError(null); // Reset error jika berhasil
+    } else {
+      console.log("Captcha token belum tersedia.");
+      setRecaptchaToken(null);
+      setRecaptchaError(language === "ID" ? "Harap verifikasi bahwa Anda bukan robot" : "Please verify you are not a robot");
+    }
+  };
+
   const artworkMobile = language === "ID" ? artworkIdmobile : artworkEnmobile;
   const artworkDesktop = language === "ID" ? artworkId : artworkEn;
-
-  const sponsorLogos = loadSponsorLogos();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -42,8 +53,6 @@ const Beranda = () => {
     loading: false,
   });
 
-  const recaptchaToken = useRecaptcha("contact_form");
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -52,19 +61,11 @@ const Beranda = () => {
     }));
   };
 
-  const handleCaptchaChange = (token) => {
-    // Lakukan sesuatu dengan token, misalnya kirim token ke server atau set state
-    console.log(token);
-  };
-
-  // Menghandle submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, email, message } = formData;
-
-    // Validasi form
-    if (!name || !email || !message || !/\S+@\S+\.\S+/.test(email)) {
+    // Cek validasi input dulu
+    if (!formData.name || !formData.email || !formData.message || !/\S+@\S+\.\S+/.test(formData.email)) {
       setFormData((prevData) => ({
         ...prevData,
         isError: true,
@@ -72,6 +73,13 @@ const Beranda = () => {
       return;
     }
 
+    // Cek apakah captchaToken sudah ada
+    if (!recaptchaToken) {
+      setRecaptchaError(language === "ID" ? "Harap verifikasi reCAPTCHA terlebih dahulu" : "Please complete the reCAPTCHA verification");
+      return;
+    }
+
+    // Lanjutkan loading state
     setFormData((prevData) => ({
       ...prevData,
       isError: false,
@@ -79,32 +87,35 @@ const Beranda = () => {
     }));
 
     try {
-      const token = recaptchaToken;
-
+      // Kirim email
       const result = await sendEmail({
-        name,
-        email,
-        message,
+        ...formData,
         recaptchaToken: token,
-        website: "",
-        lang: language,
       });
 
+      // Tampilkan alert dari server
       alert(result.message);
 
+      // Kalau sukses, reset form
       if (result.success) {
         setFormData({
-          ...formData,
-          isSubmitted: true,
           name: "",
           email: "",
           message: "",
+          isSubmitted: true,
+          isError: false,
+          loading: false,
         });
+      } else {
+        setFormData((prevData) => ({
+          ...prevData,
+          loading: false,
+        }));
       }
     } catch (error) {
       console.error("Gagal kirim:", error);
       alert(language === "ID" ? "Gagal mengirim pesan." : "Failed to send message.");
-    } finally {
+
       setFormData((prevData) => ({
         ...prevData,
         loading: false,
@@ -237,54 +248,38 @@ const Beranda = () => {
           <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide mb-4">{selectedText.sponsorsTitle}</h4>
           <p className="mt-3 max-w-3xl mx-auto text-gray-700 dark:text-gray-300 leading-relaxed text-lg">{selectedText.sponsorsDescription}</p>
         </div>
-
-        {/* Logo Sponsor */}
-        <div className="mt-12 w-full max-w-6xl mx-auto">
-          {/* Sponsor Utama */}
-          {mainSponsors.length > 0 && (
-            <div className="mb-12">
-              <div className="flex justify-center">
-                <div className="flex flex-wrap justify-center gap-8">
-                  {mainSponsors.map((logo, index) => (
-                    <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
-                      <img src={logo} alt={`Sponsor Utama ${index + 1}`} className="w-36 h-auto object-contain shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:shadow-gray-800" />
-                    </div>
-                  ))}
-                </div>
+        {/* Sponsor Utama */}
+        {mainSponsors.length > 0 && (
+          <div className="mb-12">
+            <div className="flex justify-center">
+              <div className="flex flex-wrap justify-center gap-8">
+                {mainSponsors.map((logo, index) => (
+                  <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
+                    <img src={logo} alt={`Sponsor Utama ${index + 1}`} className="w-36 h-auto object-contain shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:shadow-gray-800" />
+                  </div>
+                ))}
               </div>
             </div>
-          )}
-
-          {/* Sponsor Pendukung */}
-          {supportingSponsors.length > 0 && (
-            <div className="mb-12">
-              <div className="flex justify-center">
-                <div className="flex flex-wrap justify-center gap-6">
-                  {supportingSponsors.map((logo, index) => (
-                    <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
-                      <img src={logo} alt={`Sponsor Pendukung ${index + 1}`} className="w-28 h-auto object-contain shadow hover:shadow-md transition-shadow duration-300 dark:shadow-gray-800" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Jika tidak ada sponsor sama sekali */}
-          {mainSponsors.length === 0 && supportingSponsors.length === 0 && <p className="text-center text-gray-500 dark:text-gray-400 mt-8">{selectedText.noSponsors}</p>}
-        </div>
+          </div>
+        )}
       </section>
 
       <div className="border-t border-gray-300 dark:border-gray-700 my-0"></div>
 
-      {/* Bergabung dalam Festival*/}
+      {/* Bergabung dalam Festival */}
       <div className="w-full">
         <motion.section className="w-full py-16 bg-gray-50 dark:bg-gray-900 text-center" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} viewport={{ once: true }}>
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
           <p className="mt-4 text-lg w-full px-4 lg:px-0 lg:w-auto text-gray-700 dark:text-gray-300">{selectedText.joinDesc}</p>
 
-          {/* Contact Form Section */}
-          <ContactForm formData={formData} handleInputChange={handleInputChange} handleSubmit={handleSubmit} isDarkMode={isDarkMode} selectedText={selectedText} />
+          {/* Display reCAPTCHA error if any */}
+          {recaptchaError && (
+            <div className="mt-4 text-red-600">
+              <p>{recaptchaError}</p>
+            </div>
+          )}
+
+          <ContactForm formData={formData} handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
         </motion.section>
       </div>
     </div>
