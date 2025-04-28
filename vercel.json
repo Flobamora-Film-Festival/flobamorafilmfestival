@@ -11,5 +11,11 @@
       "destination": "https://www.flobamorafilmfestival.com/:path*",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/"
+    }
   ]
 }
