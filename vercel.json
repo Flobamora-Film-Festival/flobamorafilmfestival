@@ -1,9 +1,19 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/"
+    }
+  ],
   "redirects": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.flobamorafilmfestival.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.flobamorafilmfestival.com"
+        }
+      ],
       "destination": "https://www.flobamorafilmfestival.com/:path*",
       "permanent": true
     }
