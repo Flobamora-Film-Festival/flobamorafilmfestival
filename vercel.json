@@ -1,15 +1,15 @@
 {
+  "redirects": [
+    {
+      "source": "https://flobamorafestival.com/:path*",
+      "destination": "https://flobamorafilmfestival.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/:path*",
       "destination": "/index.html"
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/:path*",
-      "destination": "https://www.flobamorafilmfestival.com/:path*",
-      "permanent": true
     }
   ],
   "trailingSlash": false
