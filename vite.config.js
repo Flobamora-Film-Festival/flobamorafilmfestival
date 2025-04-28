@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -12,7 +11,13 @@ export default defineConfig({
       "@utils": path.resolve(__dirname, "./src/utils"),
     },
   },
+  optimizeDeps: {
+    include: ["react", "react-dom"],
+  },
   build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -23,8 +28,7 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 1000,
-    // Pengaturan base untuk SPA
     base: "/",
   },
-  assetsInclude: ["**/*.pdf", "**/*.js"],
+  assetsInclude: ["**/*.pdf"],
 });

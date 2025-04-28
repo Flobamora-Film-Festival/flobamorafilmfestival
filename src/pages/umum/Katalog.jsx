@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { Document, Page } from "react-pdf";
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import { Document, Page } from "react-pdf"; // Menggunakan react-pdf untuk menampilkan PDF
 
 const Katalog = () => {
   const [numPages, setNumPages] = useState(null);

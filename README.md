@@ -37,7 +37,6 @@ Komunitas Film Kupang
 This website is built with ❤️ using HTML, CSS, JavaScript, and version-controlled with Git & GitHub.
 
 ```
-
 flobamorafilmfestival
 ├─ .eslintrc.cjs
 ├─ README.md
@@ -101,7 +100,6 @@ flobamorafilmfestival
 │     └─ pdf.worker.mjs
 ├─ src
 │  ├─ App.jsx
-│  ├─ ScrollToTop.jsx
 │  ├─ assets
 │  │  ├─ Flobamora-logo.png
 │  │  ├─ agustus.png
@@ -209,6 +207,7 @@ flobamorafilmfestival
 │  │  ├─ GoogleMapComponent.jsx
 │  │  ├─ Navbar.jsx
 │  │  ├─ PrivateRoute.jsx
+│  │  ├─ ScrollToTop.jsx
 │  │  └─ form
 │  │     ├─ CheckboxField.jsx
 │  │     ├─ DurationInputField.jsx
@@ -290,7 +289,7 @@ flobamorafilmfestival
 │  │  ├─ textsKFKFilmLab.jsx
 │  │  ├─ textsKatalog.jsx
 │  │  ├─ textsKompetisiNTT.jsx
-│  │  ├─ textsKompetisiPelajar.js
+│  │  ├─ textsKompetisiPelajar.jsx
 │  │  ├─ textsLayarNusantara.jsx
 │  │  ├─ textsMedia.jsx
 │  │  └─ textsTiket.jsx
