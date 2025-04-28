@@ -21,3 +21,4 @@ export const formLabels = {
     setujuPublikasiCheckbox: "Yes, I fully understand",
   },
 };
+export default formLabels;

@@ -1,4 +1,5 @@
-// src/utils/textsKompetisiPelajar.js
+// src/texts/textsKompetisiPelajar.jsx
+
 const textsKompetisiPelajar = {
   ID: {
     introText: {
@@ -13,11 +14,11 @@ const textsKompetisiPelajar = {
         "Film tidak sedang tayang di kanal digital seperti OTT atau layanan streaming lainnya.",
       ],
       materialsTitle: "Materi putar:",
-      materials: ["Mengirimkan file film/preview dengan format .mp4 dan .mov (Full HD 1920 x 1080) maksimal 4K.", "Film menggunakan bahasa Indonesia..."],
+      materials: ["Mengirimkan file film/preview dengan format .mp4 dan .mov (Full HD 1920 x 1080) maksimal 4K.", "Film menggunakan bahasa Indonesia atau memiliki subtitle bahasa Indonesia (untuk film berdialog bahasa daerah/asing)."],
       closing: "Sampai jumpa di Flobamora Film Festival 5 - 9 Agustus 2025.",
       contact: "Flobamora menanti karyamu! Jika menemukan kendala dapat menghubungi kami di",
       email: "contact@flobamorafilmfestival.com",
-      footerNote: "Nama, alamat email, dan foto yang terkait dengan Akun Google Anda akan direkam...",
+      footerNote: "Nama, alamat email, dan foto yang terkait dengan Akun Google Anda akan direkam ketika mengirimkan formulir ini.",
       requiredNote: "* Menunjukkan pertanyaan yang wajib diisi",
     },
     email: "Email*",
@@ -153,21 +154,20 @@ const textsKompetisiPelajar = {
       dokumenter: "Documentary",
       eksperimental: "Experimental",
     },
-
     tahunProduksi: "Production Year*",
     durasiFilm: "Film Duration*",
-    bahasaFilm: "Language used in the film *",
+    bahasaFilm: "Film Language*",
     bahasaOptions: {
       indonesia: "Indonesian",
       inggris: "English",
-      lain: "other",
-      lainLabel: "Other Language",
-      placeholderLain: "Write other language",
+      lain: "Other",
+      lainLabel: "Other Language", // 👈 Ditampilkan di checkbox
+      placeholderLain: "Enter another language",
     },
-    subtitleLink: "Subtitle File (.srt)*",
-    subtitleDescription: "Must include Indonesian subtitles (for films in local/foreign languages). You may write '-' if the film is already in Bahasa Indonesia",
+    subtitleLink: "Subtitle Link (.srt)*",
+    subtitleDescription: "Must include Indonesian subtitles (if film uses local/foreign language). Please leave blank if using Indonesian language.",
     sinopsis: "Film Synopsis (max. 1000 words)*",
-    sinopsisPlaceholder: "Write a film synopsis (max. 1000 words)",
+    sinopsisPlaceholder: "Write your film's synopsis, max 1000 words",
     pernyataanSutradara: "Director's Statement*",
     resolusiFilm: "Film Resolution*",
     resolusiOptions: {
@@ -186,22 +186,22 @@ const textsKompetisiPelajar = {
     warna: "Film Color*",
     warnaOptions: {
       warna: "Color",
-      hitamPutih: "Black and White",
+      hitamPutih: "Black & White",
       keduanya: "Both",
       placeholderSelect: "-- Select Color --",
     },
     linkPreview: "Preview Link*",
-    aksesPassword: "Access Password (if any)",
+    aksesPassword: "Password Access (if any)",
     linkTrailer: "Trailer Link*",
     stillImages: "Still Images*",
-    stillImagesDescription: "Minimum 3 and maximum 5 high-resolution still images. Max 10MB per file.",
+    stillImagesDescription: "Minimum 3, maximum 5 high-resolution still images. Upload up to 10MB per file.",
     posterFilm: "Film Poster*",
     pressKit: "Press Kit*",
-    setujuPublikasiLabel: "I agree and understand that all or part of the registration form data will be used for publication and the Flobamora Film Festival 2025 catalog.",
+    setujuPublikasiLabel: "I agree and understand that all or part of the information in this form will be used for Flobamora Film Festival 2025 publication and catalog.",
     setujuPublikasiCheckbox: "Yes, I fully understand.",
-    publikasiFilmLabel: "I have no objection if all or part of the registered film is published or screened for the purposes of organizing the Flobamora Film Festival 2025.",
+    publikasiFilmLabel: "I have no objection if all or part of my submitted film is published or screened for Flobamora Film Festival 2025 purposes.",
     publikasiFilmCheckbox: "Yes, I fully understand.",
-    dataBenarLabel: "I declare that the data I have filled in this form is true and accountable.",
+    dataBenarLabel: "I declare that the information I provided in this form is accurate and can be accounted for.",
     dataBenarCheckbox: "Yes, I fully understand.",
     submitButton: "Submit Form",
   },

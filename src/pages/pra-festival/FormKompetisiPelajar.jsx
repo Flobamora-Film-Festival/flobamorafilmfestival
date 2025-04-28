@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
+import { useLanguage } from "../../context/LanguageProvider"; // Update import
 import InputField from "../../components/form/InputField";
 import SelectField from "../../components/form/SelectField";
 import FormAgreementSection from "../../components/form/FormAgreementSection";
@@ -11,18 +11,17 @@ import FileUploadField from "../../components/form/FileUploadField";
 import initialFormData from "../../utils/initialFormData";
 import validateAllFields from "../../utils/validateField";
 import formLabels from "../../utils/formLabels";
+import texts from "../../texts/textsKompetisiPelajar";
 import SubmitButton from "../../components/form/SubmitButton";
 import GoogleSignIn from "../../components/form/GoogleSignIn";
-import textsKompetisiPelajar from "../../texts/textsKompetisiPelajar";
 
 const FormKompetisiPelajar = () => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useLanguage(); // Access the language context
+  const { language } = useLanguage(); // Use the custom hook `useLanguage`
   const langText = {
-    ...(textsKompetisiPelajar[language] || textsKompetisiPelajar.ID), // Fallback ke 'ID' jika undefined
-    ...(formLabels[language] || formLabels.ID), // Fallback ke 'ID' jika undefined
+    ...(texts[language] || texts.ID),
+    ...(formLabels[language] || formLabels.ID),
   };
-  console.log(langText);
 
   const [formData, setFormData] = useState(() => {
     const saved = localStorage.getItem("formKompetisiPelajar");
@@ -87,8 +86,8 @@ const FormKompetisiPelajar = () => {
     console.log("Google login success!", token);
     // Process the token (store in state, send to server, etc.)
   };
+  console.log(langText);
 
-  const introText = langText?.introText || {};
   return (
     <div className={`max-w-2xl mx-auto my-16 p-6 rounded-xl shadow-lg border border-gray-700 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"}`}>
       <div className="mb-6">
