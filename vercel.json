@@ -14,8 +14,29 @@
   ],
   "rewrites": [
     {
-      "source": "/:path*",
-      "destination": "/"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ]
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "trailingSlash": false
 }
