@@ -15,7 +15,7 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "destination": "/"
+      "destination": "/index.html"
     }
   ],
   "trailingSlash": false
