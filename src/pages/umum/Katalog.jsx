@@ -1,134 +1,67 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
-import { useLanguage } from "../../context/LanguageProvider";
-import textsKatalog from "../../texts/textsKatalog";
-import HTMLFlipBook from "react-pageflip";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+import React, { useState } from "react";
+import { Document, Page } from "react-pdf";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 const Katalog = () => {
   const [numPages, setNumPages] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [scale, setScale] = useState(1.2);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [mode, setMode] = useState("scroll"); // scroll or flipbook
-  const [isMobile, setIsMobile] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
 
-  const flipBookRef = useRef();
-  const { language } = useLanguage();
-  const texts = textsKatalog[language];
-
-  const pdfFile = "/katalog/Flobamora Film Festival-2025.pdf";
-
-  // Responsiveness
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3));
-  const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.6));
-  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-  const toggleMode = () => setMode((prev) => (prev === "scroll" ? "flipbook" : "scroll"));
-
-  const onDocumentLoadSuccess = ({ numPages }) => {
+  // Fungsi untuk menangani perubahan jumlah halaman dalam dokumen
+  function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
-  };
+  }
 
   return (
-    <div className="h-screen flex flex-col dark:bg-gray-900">
-      {/* Header */}
-      <header className="p-4 flex justify-between items-center bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-        <h1 className="text-lg font-bold text-gray-900 dark:text-white">{texts.title}</h1>
-        <div className="flex gap-2 items-center">
-          <button onClick={zoomOut} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">
-            ➖
+    <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 transition-all">
+      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Katalog Film Festival</h1>
+
+      {/* Katalog Festival Saat Ini */}
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Katalog Festival 2025</h2>
+        <div className="flex justify-center">
+          <Document
+            file="/katalog-2025.pdf" // Ganti dengan path file PDF yang sesuai
+            onLoadSuccess={onDocumentLoadSuccess}
+            className="border shadow-lg"
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
+        </div>
+        <p className="text-center mt-4">
+          Halaman {pageNumber} dari {numPages}
+        </p>
+        <div className="flex justify-center gap-4 mt-2">
+          <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded" disabled={pageNumber <= 1} onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}>
+            Sebelumnya
           </button>
-          <button onClick={zoomIn} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">
-            ➕
-          </button>
-          <button onClick={toggleSidebar} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">
-            {sidebarOpen ? "⟨" : "☰"}
-          </button>
-          <button onClick={toggleMode} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">
-            {mode === "scroll" ? "📖" : "🖱️"}
+          <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded" disabled={pageNumber >= numPages} onClick={() => setPageNumber((prev) => Math.min(prev + 1, numPages))}>
+            Selanjutnya
           </button>
         </div>
-      </header>
-
-      {/* Body */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        {sidebarOpen && (
-          <aside className="w-28 border-r dark:border-gray-700 overflow-y-auto bg-white dark:bg-gray-800 p-2">
-            {Array.from(new Array(numPages), (el, index) => (
-              <div key={index} className={`cursor-pointer p-2 text-center ${currentPage === index + 1 ? "bg-gray-300 dark:bg-gray-700" : ""}`} onClick={() => setCurrentPage(index + 1)}>
-                {index + 1}
-              </div>
-            ))}
-          </aside>
-        )}
-
-        {/* Main Viewer */}
-        <main className="flex-1 overflow-hidden p-4">
-          {mode === "scroll" ? (
-            <div className="h-full overflow-y-scroll">
-              <Document file={pdfFile} onLoadSuccess={onDocumentLoadSuccess} loading="Loading...">
-                {Array.from(new Array(numPages), (el, index) => (
-                  <div key={index} className="flex justify-center my-2">
-                    <Page pageNumber={index + 1} scale={scale} />
-                  </div>
-                ))}
-              </Document>
-            </div>
-          ) : (
-            <div className="h-full w-full flex justify-center items-center">
-              <HTMLFlipBook
-                width={800}
-                height={600}
-                size="stretch"
-                minWidth={315}
-                maxWidth={1600}
-                minHeight={400}
-                maxHeight={1600}
-                maxShadowOpacity={0.5}
-                showCover={false}
-                mobileScrollSupport={true}
-                drawShadow={true}
-                ref={flipBookRef}
-                onFlip={(e) => setCurrentPage(e.data + 1)}
-                className="shadow-lg transition-all duration-300"
-                flippingTime={500}
-                usePortrait={true}
-                startZIndex={0}
-                autoSize={true}
-                clickEventForward={true}
-                disableFlipByClick={false}
-                swipeDistance={30}
-                swipeHint={true}
-                singlePage={isMobile}
-                key={isMobile ? "mobile" : "desktop"}
-              >
-                {/* FlipBook Content */}
-                {Array.from(new Array(numPages), (el, index) => (
-                  <div key={index} className="flex justify-center items-center bg-white">
-                    <Document file={pdfFile} loading="">
-                      <Page pageNumber={index + 1} scale={isMobile ? 0.5 : 1} />
-                    </Document>
-                  </div>
-                ))}
-              </HTMLFlipBook>
-            </div>
-          )}
-        </main>
       </div>
 
-      {/* Footer */}
-      <footer className="p-3 bg-white dark:bg-gray-800 border-t dark:border-gray-700 text-center text-sm text-gray-700 dark:text-gray-300">
-        {texts.page} {currentPage} / {numPages}
-      </footer>
+      {/* Katalog Festival Sebelumnya */}
+      <div>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Katalog Festival Sebelumnya</h2>
+        <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
+          <li>
+            <a href="/katalog-2024.pdf" target="_blank" className="text-blue-500">
+              Katalog Festival 2024
+            </a>
+          </li>
+          <li>
+            <a href="/katalog-2023.pdf" target="_blank" className="text-blue-500">
+              Katalog Festival 2023
+            </a>
+          </li>
+          <li>
+            <a href="/katalog-2022.pdf" target="_blank" className="text-blue-500">
+              Katalog Festival 2022
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
