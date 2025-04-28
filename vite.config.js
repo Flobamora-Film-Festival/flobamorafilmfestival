@@ -23,6 +23,8 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 1000,
+    // Pengaturan base untuk SPA
+    base: "/",
   },
   assetsInclude: ["**/*.pdf", "**/*.js"],
 });
