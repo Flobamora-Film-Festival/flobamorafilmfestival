@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Flobamora Film Festival</title>
 
     <!-- ✅ Basic SEO -->
@@ -41,7 +40,29 @@
   <body class="overflow-x-hidden font-Outfit leading-8 dark:bg-darkTheme dark:text-white">
     <div id="root"></div>
 
+    <!-- Tempat untuk menampilkan peta -->
+    <div id="map" style="height: 500px; width: 100%"></div>
+
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=6LfFkRwrAAAAAJS2M1Sd3Qz2NRbfkrlzGCZsR29h"></script>
+
+    <!-- Fungsi initMap -->
+    <script>
+      function initMap() {
+        const mapOptions = {
+          center: { lat: -8.5833, lng: 118.6667 }, // Ganti dengan koordinat yang sesuai
+          zoom: 12,
+        };
+
+        const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        // Menambahkan marker
+        new google.maps.Marker({
+          position: { lat: -8.5833, lng: 118.6667 }, // Ganti dengan koordinat yang sesuai
+          map: map,
+          title: "Lokasi Flobamora Film Festival",
+        });
+      }
+    </script>
   </body>
 </html>
