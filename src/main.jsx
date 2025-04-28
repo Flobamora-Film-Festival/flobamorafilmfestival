@@ -5,6 +5,7 @@ import { ThemeProvider } from "./context/ThemeProvider";
 import { LanguageProvider } from "./context/LanguageProvider";
 import { AuthProvider } from "./context/AuthContext"; // Pastikan AuthContext sudah ada
 import { HelmetProvider } from "react-helmet-async";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -15,7 +16,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         {/* Membungkus aplikasi dengan AuthProvider */}
         <ThemeProvider>
           <LanguageProvider>
-            <App /> {/* Pastikan App di sini */}
+            <GoogleReCaptchaProvider
+              reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              scriptProps={{
+                async: true,
+                defer: true,
+                appendTo: "head",
+                nonce: undefined,
+              }}
+            >
+              <App />
+            </GoogleReCaptchaProvider>
           </LanguageProvider>
         </ThemeProvider>
       </AuthProvider>
