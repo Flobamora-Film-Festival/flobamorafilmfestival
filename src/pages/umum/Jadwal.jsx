@@ -128,23 +128,23 @@ const Jadwal = () => {
         {Object.keys(groupedBioskopPasiar).map((date, index) => (
           <div key={index} className="mb-8">
             <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{formatDate(date)}</h3>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto w-full">
               <table className="w-full border-collapse border border-gray-300 text-sm md:text-base">
                 <thead>
                   <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.time}</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[35%]">{headers.program}</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[25%]">{headers.route}</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.location}</th>
+                    <th className="border border-gray-300 px-4 py-3 min-w-[100px]">{headers.time}</th>
+                    <th className="border border-gray-300 px-4 py-3 min-w-[200px]">{headers.program}</th>
+                    <th className="border border-gray-300 px-4 py-3 min-w-[150px]">{headers.route}</th>
+                    <th className="border border-gray-300 px-4 py-3 min-w-[150px]">{headers.location}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {groupedBioskopPasiar[date].map((event, index) => (
                     <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                      <td className="border border-gray-300 px-6 py-3">{event.time}</td>
-                      <td className="border border-gray-300 px-6 py-3 font-semibold">{event.title}</td>
-                      <td className="border border-gray-300 px-6 py-3">{event.route}</td>
-                      <td className="border border-gray-300 px-6 py-3">{event.location}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{event.time}</td>
+                      <td className="border border-gray-300 px-4 py-3 font-semibold">{event.title}</td>
+                      <td className="border border-gray-300 px-4 py-3">{event.route}</td>
+                      <td className="border border-gray-300 px-4 py-3">{event.location}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -163,23 +163,23 @@ const Jadwal = () => {
       {Object.keys(groupedFestivalEvents).map((date, index) => (
         <div key={index} className="mb-8">
           <h3 className="text-lg lg:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{formatDate(date)}</h3>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto w-full">
             <table className="w-full border-collapse border border-gray-300 text-sm md:text-base">
               <thead>
                 <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-                  <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.time}</th>
-                  <th className="border border-gray-300 px-6 py-3 w-[35%]">{headers.program}</th>
-                  <th className="border border-gray-300 px-6 py-3 w-[25%]">{headers.category}</th>
-                  <th className="border border-gray-300 px-6 py-3 w-[20%]">{headers.location}</th>
+                  <th className="border border-gray-300 px-4 py-3 min-w-[100px]">{headers.time}</th>
+                  <th className="border border-gray-300 px-4 py-3 min-w-[200px]">{headers.program}</th>
+                  <th className="border border-gray-300 px-4 py-3 min-w-[150px]">{headers.category}</th>
+                  <th className="border border-gray-300 px-4 py-3 min-w-[150px]">{headers.location}</th>
                 </tr>
               </thead>
               <tbody>
                 {groupedFestivalEvents[date].map((event, index) => (
                   <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <td className="border border-gray-300 px-6 py-3">{event.time}</td>
-                    <td className="border border-gray-300 px-6 py-3 font-semibold">{event.title}</td>
-                    <td className="border border-gray-300 px-6 py-3">{event.category}</td>
-                    <td className="border border-gray-300 px-6 py-3">{event.location}</td>
+                    <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{event.time}</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold">{event.title}</td>
+                    <td className="border border-gray-300 px-4 py-3">{event.category}</td>
+                    <td className="border border-gray-300 px-4 py-3">{event.location}</td>
                   </tr>
                 ))}
               </tbody>
