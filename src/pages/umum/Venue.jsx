@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import GoogleMapComponent from "../../components/GoogleMapComponent";
+import LeafletMapComponent from "../../components/LeafletMapComponent";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useLanguage } from "../../context/LanguageProvider"; // ✅ Use the custom hook
 
@@ -36,7 +36,7 @@ const Venue = () => {
         </div>
 
         <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
-          <GoogleMapComponent />
+          <LeafletMapComponent />
         </div>
       </div>
     </div>

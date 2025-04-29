@@ -1,4 +1,3 @@
-// pages/api/send-email.js
 import nodemailer from "nodemailer";
 
 export default async function handler(req, res) {
@@ -6,36 +5,63 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, message: "Method Not Allowed" });
   }
 
-  const { name, email, message, recaptchaToken, website = "", lang = "ID" } = req.body;
+  const { name, email, message, turnstileToken, website = "", lang = "ID" } = req.body;
 
   // Honeypot check
   if (website !== "") {
-    return res.status(400).json({ success: false, message: lang === "ID" ? "Spam terdeteksi." : "Spam detected." });
+    return res.status(400).json({
+      success: false,
+      message: lang === "ID" ? "Spam terdeteksi." : "Spam detected.",
+    });
   }
 
   // Validate input
-  if (!name || !email || !message || !recaptchaToken) {
-    return res.status(400).json({ success: false, message: lang === "ID" ? "Data tidak lengkap." : "Incomplete data." });
+  if (!name || !email || !message || !turnstileToken) {
+    return res.status(400).json({
+      success: false,
+      message: lang === "ID" ? "Data tidak lengkap." : "Incomplete data.",
+    });
   }
 
-  // Verify reCAPTCHA token
-  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-  const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: lang === "ID" ? "Format email tidak valid." : "Invalid email format.",
+    });
+  }
+
+  // Verify Turnstile token
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
   try {
-    const recaptchaRes = await fetch(verifyUrl, { method: "POST" });
-    const recaptchaData = await recaptchaRes.json();
+    const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        secret: secretKey,
+        response: turnstileToken,
+        remoteip: ip,
+      }),
+    });
 
-    if (!recaptchaData.success || recaptchaData.score < 0.5) {
-      // score bisa disesuaikan, biasanya 0.5 cukup
-      return res.status(400).json({ success: false, message: lang === "ID" ? "Verifikasi reCAPTCHA gagal." : "reCAPTCHA verification failed." });
+    const data = await verifyRes.json();
+
+    if (!data.success) {
+      return res.status(400).json({
+        success: false,
+        message: lang === "ID" ? "Verifikasi Turnstile gagal. Silakan coba lagi." : "Turnstile verification failed. Please try again.",
+      });
     }
   } catch (error) {
-    console.error("reCAPTCHA verification error:", error);
-    return res.status(500).json({ success: false, message: lang === "ID" ? "Gagal verifikasi reCAPTCHA." : "Failed to verify reCAPTCHA." });
+    console.error("Turnstile verification error:", error.message || error);
+    return res.status(500).json({
+      success: false,
+      message: lang === "ID" ? "Gagal memverifikasi keamanan. Silakan coba beberapa saat lagi." : "Failed to verify security. Please try again later.",
+    });
   }
 
-  // Continue with sending email
+  // Kirim email
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -52,9 +78,15 @@ export default async function handler(req, res) {
       text: message,
     });
 
-    return res.status(200).json({ success: true, message: lang === "ID" ? "Pesan berhasil dikirim." : "Message sent successfully." });
+    return res.status(200).json({
+      success: true,
+      message: lang === "ID" ? "Pesan berhasil dikirim." : "Message sent successfully.",
+    });
   } catch (error) {
-    console.error("Email send error:", error);
-    return res.status(500).json({ success: false, message: lang === "ID" ? "Gagal mengirim pesan." : "Failed to send message." });
+    console.error("Email send error:", error.message || error);
+    return res.status(500).json({
+      success: false,
+      message: lang === "ID" ? "Gagal mengirim pesan." : "Failed to send message.",
+    });
   }
 }

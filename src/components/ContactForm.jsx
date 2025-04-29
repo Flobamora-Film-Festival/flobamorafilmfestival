@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GoogleReCaptcha } from "react-google-recaptcha-v3";
+import Turnstile from "react-cloudflare-turnstile"; // Menggunakan Turnstile
 import { useLanguage } from "../context/LanguageProvider";
 import { ThemeContext } from "../context/ThemeContext";
 import textsContactForm from "../texts/textsContactForm";
@@ -14,22 +14,26 @@ const ContactForm = ({ formData, handleInputChange, handleSubmit }) => {
   const isDarkMode = theme === "dark";
   const selectedText = textsContactForm[language];
 
+  // Callback untuk menangani verifikasi Turnstile
   const onVerify = (token) => {
-    console.log("reCAPTCHA Token:", token);
+    console.log("Turnstile Token:", token); // Debugging token
     setCaptchaToken(token);
     setCaptchaError(null);
   };
 
+  // Callback untuk submit form
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
     if (!captchaToken) {
       setCaptchaError(language === "ID" ? "Harap verifikasi bahwa Anda bukan robot" : "Please verify you are not a robot");
-      return;
+      return; // Hentikan proses jika token belum ada
     }
 
-    handleSubmit(e); // Kirim event ke parent
+    handleSubmit(e, captchaToken); // Kirim event dan token ke parent
   };
+
+  console.log("Turnstile Site Key:", import.meta.env.VITE_TURNSTILE_SITE_KEY);
 
   return (
     <motion.section
@@ -81,12 +85,17 @@ const ContactForm = ({ formData, handleInputChange, handleSubmit }) => {
                 required
               ></textarea>
 
-              <GoogleReCaptcha sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} onVerify={onVerify} />
+              {/* Turnstile */}
+              <Turnstile
+                sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "default-site-key"} // Ganti "default-site-key" dengan nilai default
+                onVerify={onVerify}
+              />
 
+              {/* Error Messages */}
               {captchaError && <p className="text-red-500 text-sm mt-2">{captchaError}</p>}
-
               {formData.isError && <p className="text-red-500 text-sm mt-2">{language === "ID" ? "Harap isi semua bidang dengan benar" : "Please fill all fields correctly"}</p>}
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full sm:w-auto px-6 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white mt-4 hover:opacity-90 focus:ring-2 focus:ring-[#b820e6]"

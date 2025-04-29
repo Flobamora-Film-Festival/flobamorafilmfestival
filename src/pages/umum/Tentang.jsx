@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLanguage } from "../../context/LanguageProvider"; // ✅ Correct path for the custom hook
 import { Helmet } from "react-helmet-async";
-import GoogleMapComponent from "../../components/GoogleMapComponent";
+import LeafletMapComponent from "../../components/LeafletMapComponent";
 
 const Tentang = () => {
   const { language } = useLanguage(); // ✅ Use custom hook instead of context
@@ -135,7 +135,7 @@ const Tentang = () => {
       <section className="space-y-2">
         <h2 className="text-lg sm:text-xl font-semibold mb-2">{language === "ID" ? "Lokasi Festival" : "Festival Location"}</h2>
         <div className="w-full h-[400px] rounded-lg overflow-hidden">
-          <GoogleMapComponent />
+          <LeafletMapComponent />
         </div>
       </section>
     </div>

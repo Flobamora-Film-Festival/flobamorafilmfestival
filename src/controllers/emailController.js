@@ -6,8 +6,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "info@flobamorafestival.com",
-    pass: "yanguruswebsitef3", // Ganti dengan password asli kamu
+    user: process.env.EMAIL_USER, // Ganti dengan variabel environment
+    pass: process.env.EMAIL_PASS, // Jangan simpan password langsung di kode
   },
 });
 
@@ -34,11 +34,11 @@ const sendEmail = (req, res) => {
     },
   };
 
-  const t = texts[lang] || texts.id; // default to Indonesian
+  const t = texts[lang] || texts.id;
 
   const mailOptions = {
-    from: "info@flobamorafestival.com",
-    to: "info@flobamorafestival.com",
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_TO || process.env.EMAIL_USER,
     subject: t.subject,
     text: `${t.labelName}: ${name}\n${t.labelEmail}: ${email}\n${t.labelMessage}: ${message}`,
   };

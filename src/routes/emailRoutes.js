@@ -1,3 +1,4 @@
+// src/routes/emailRouter.js
 const express = require("express");
 const { sendEmail } = require("../controllers/emailController"); // Path ke controller
 const router = express.Router();

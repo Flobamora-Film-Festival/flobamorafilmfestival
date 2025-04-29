@@ -4,8 +4,8 @@ const sendEmail = async ({
   name,
   email,
   message,
-  recaptchaToken,
-  website = "", // honeypot
+  turnstileToken, // Menggunakan turnstileToken
+  website = "", // Honeypot
   lang = "ID",
 }) => {
   // Honeypot sederhana
@@ -26,7 +26,7 @@ const sendEmail = async ({
         name,
         email,
         message,
-        recaptchaToken,
+        turnstileToken, // Kirimkan turnstileToken ke backend
         lang,
       }),
     });
