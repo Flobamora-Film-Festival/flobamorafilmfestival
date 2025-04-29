@@ -43,7 +43,7 @@ flobamorafilmfestival
 ├─ backend
 │  ├─ api
 │  │  ├─ send-email.js
-│  │  └─ verify-recaptcha.js
+│  │  └─ verify-turnstile.js
 │  ├─ package-lock.json
 │  ├─ package.json
 │  └─ server.js
@@ -204,9 +204,10 @@ flobamorafilmfestival
 │  │  ├─ BackToTop.jsx
 │  │  ├─ ContactForm.jsx
 │  │  ├─ Footer.jsx
-│  │  ├─ GoogleMapComponent.jsx
+│  │  ├─ LeafletMapComponent.jsx
 │  │  ├─ Navbar.jsx
 │  │  ├─ PrivateRoute.jsx
+│  │  ├─ ScheduleSection.jsx
 │  │  ├─ ScrollToTop.jsx
 │  │  └─ form
 │  │     ├─ CheckboxField.jsx
@@ -230,8 +231,7 @@ flobamorafilmfestival
 │  ├─ firebase
 │  │  └─ firebase-config.jsx
 │  ├─ hooks
-│  │  ├─ useAuth.js
-│  │  └─ useRecaptcha.js
+│  │  └─ useAuth.js
 │  ├─ index.css
 │  ├─ main.jsx
 │  ├─ pages
@@ -292,6 +292,7 @@ flobamorafilmfestival
 │  │  ├─ textsKompetisiPelajar.jsx
 │  │  ├─ textsLayarNusantara.jsx
 │  │  ├─ textsMedia.jsx
+│  │  ├─ textsSchedule.jsx
 │  │  └─ textsTiket.jsx
 │  └─ utils
 │     ├─ formLabels.js

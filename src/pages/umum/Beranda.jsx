@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
 import { ThemeContext } from "../../context/ThemeContext";
 import previousFestivals from "../../texts/previousFestivals";
-import sendEmail from "../../utils/sendEmail";
 import { motion } from "framer-motion";
 import artworkId from "../../assets/artwork-id.png";
 import artworkEn from "../../assets/artwork-en.png";
@@ -35,7 +34,10 @@ const Beranda = () => {
     isSubmitted: false,
     isError: false,
     loading: false,
+    captchaToken: null,
   });
+
+  const [captchaError, setCaptchaError] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,10 +47,22 @@ const Beranda = () => {
     }));
   };
 
+  const handleCaptchaSuccess = (token) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      captchaToken: token,
+    }));
+    setCaptchaError(null);
+  };
+
+  const handleCaptchaError = () => {
+    setCaptchaError(language === "ID" ? "Gagal memuat Turnstile. Silakan coba lagi." : "Failed to load Turnstile. Please try again.");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Cek validasi input dulu
+    // Validasi input
     if (!formData.name || !formData.email || !formData.message || !/\S+@\S+\.\S+/.test(formData.email)) {
       setFormData((prevData) => ({
         ...prevData,
@@ -57,13 +71,13 @@ const Beranda = () => {
       return;
     }
 
-    // Cek apakah turnstileToken sudah ada
-    if (!turnstileToken) {
-      setTurnstileError(language === "ID" ? "Harap verifikasi Turnstile terlebih dahulu" : "Please complete the Turnstile verification");
+    // Validasi captcha
+    if (!formData.captchaToken) {
+      setCaptchaError(language === "ID" ? "Harap verifikasi Turnstile terlebih dahulu" : "Please complete the Turnstile verification");
       return;
     }
 
-    // Lanjutkan loading state
+    // Set loading state
     setFormData((prevData) => ({
       ...prevData,
       isError: false,
@@ -71,16 +85,16 @@ const Beranda = () => {
     }));
 
     try {
-      // Kirim email
+      // Kirim data ke server
       const result = await sendEmail({
         ...formData,
-        captchaToken: turnstileToken, // Gunakan turnstileToken dari Turnstile
+        captchaToken: formData.captchaToken,
       });
 
-      // Tampilkan alert dari server
+      // Tampilkan pesan dari server
       alert(result.message);
 
-      // Kalau sukses, reset form
+      // Reset form jika berhasil
       if (result.success) {
         setFormData({
           name: "",
@@ -89,6 +103,7 @@ const Beranda = () => {
           isSubmitted: true,
           isError: false,
           loading: false,
+          captchaToken: null,
         });
       } else {
         setFormData((prevData) => ({
@@ -97,7 +112,7 @@ const Beranda = () => {
         }));
       }
     } catch (error) {
-      console.error("Gagal kirim:", error);
+      console.error("Gagal mengirim:", error);
       alert(language === "ID" ? "Gagal mengirim pesan." : "Failed to send message.");
 
       setFormData((prevData) => ({
@@ -256,7 +271,15 @@ const Beranda = () => {
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
           <p className="mt-4 text-lg w-full px-4 lg:px-0 lg:w-auto text-gray-700 dark:text-gray-300">{selectedText.joinDesc}</p>
 
-          <ContactForm formData={formData} handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
+          <ContactForm
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleCaptchaSuccess={handleCaptchaSuccess}
+            handleCaptchaError={handleCaptchaError}
+            captchaError={captchaError}
+            language={language}
+            selectedText={selectedText}
+          />
         </motion.section>
       </div>
     </div>

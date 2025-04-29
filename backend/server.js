@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import asyncHandler from "express-async-handler";
 import sendEmail from "../api/send-email.js";
-import verifyRecaptcha from "../api/verify-recaptcha.js";
+import verifyTurnstile from "../api/verify-turnstile.js";
 
 dotenv.config();
 
@@ -18,6 +18,7 @@ app.use(morgan("dev"));
 // Endpoint untuk mengirim email
 app.post(
   "/api/send-email",
+  verifyTurnstile, // Tambahkan middleware verifikasi Turnstile sebelum melanjutkan
   asyncHandler(async (req, res) => {
     const { name, email, message } = req.body;
 
@@ -30,9 +31,6 @@ app.post(
     res.status(200).json({ success: true, info });
   })
 );
-
-// Endpoint untuk verifikasi Turnstile
-app.post("/api/verify-turnstile", verifyRecaptcha);
 
 // Endpoint default
 app.get("/", (req, res) => {

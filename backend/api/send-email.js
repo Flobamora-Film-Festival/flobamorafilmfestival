@@ -1,4 +1,6 @@
 import nodemailer from "nodemailer";
+import fetch from "node-fetch"; // Import fetch untuk verifikasi Turnstile
+import validator from "validator"; // Import validator untuk validasi email
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -7,7 +9,7 @@ export default async function handler(req, res) {
 
   const { name, email, message, turnstileToken, website = "", lang = "ID" } = req.body;
 
-  // Honeypot check
+  // Honeypot check (Spam detection)
   if (website !== "") {
     return res.status(400).json({
       success: false,
@@ -23,7 +25,8 @@ export default async function handler(req, res) {
     });
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  // Validate email format using validator
+  if (!validator.isEmail(email)) {
     return res.status(400).json({
       success: false,
       message: lang === "ID" ? "Format email tidak valid." : "Invalid email format.",
@@ -61,7 +64,7 @@ export default async function handler(req, res) {
     });
   }
 
-  // Kirim email
+  // Send email
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
