@@ -5,9 +5,11 @@ import textsTiket from "../../texts/textsTiket"; // File teks multibahasa
 const Tiket = () => {
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
-  const [program, setProgram] = useState("Bioskop Pasiar");
-  const [kategoriTiket, setKategoriTiket] = useState("Reguler");
+  const [program, setProgram] = useState(""); // Program yang dipilih
+  const [kategoriTiket, setKategoriTiket] = useState(""); // Kategori tiket yang dipilih
   const [jumlahTiket, setJumlahTiket] = useState(1);
+  const [rute, setRute] = useState(""); // Rute untuk program "Bioskop Pasiar"
+  const [slot, setSlot] = useState(""); // Slot untuk program "Kompetisi" dan "Non-Kompetisi"
   const [pesanTerkirim, setPesanTerkirim] = useState(false);
 
   const { language } = useLanguage(); // Mendapatkan bahasa yang dipilih
@@ -22,10 +24,42 @@ const Tiket = () => {
       setPesanTerkirim(false);
       setNama("");
       setEmail("");
-      setProgram("Bioskop Pasiar");
-      setKategoriTiket("Reguler");
+      setProgram("");
+      setKategoriTiket("");
       setJumlahTiket(1);
+      setRute(""); // Reset rute
+      setSlot(""); // Reset slot
     }, 5000); // Form akan kembali ke awal setelah 5 detik
+  };
+
+  // Menentukan opsi rute atau slot berdasarkan pilihan program
+  const getDynamicOptions = () => {
+    if (program === "Bioskop Pasiar") {
+      return (
+        <div className="mb-4">
+          <label className="block font-medium mb-2">{texts.route}</label>
+          <select value={rute} onChange={(e) => setRute(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700" required>
+            <option value="">{texts.route}</option>
+            <option value="1">{texts.route1}</option>
+            <option value="2">{texts.route2}</option>
+            <option value="3">{texts.route3}</option>
+          </select>
+        </div>
+      );
+    } else if (program === "Kompetisi" || program === "Non-Kompetisi") {
+      return (
+        <div className="mb-4">
+          <label className="block font-medium mb-2">{texts.slot}</label>
+          <select value={slot} onChange={(e) => setSlot(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700" required>
+            <option value="">{texts.slot}</option>
+            <option value="1">{texts.slot1}</option>
+            <option value="2">{texts.slot2}</option>
+            <option value="3">{texts.slot3}</option>
+          </select>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -52,6 +86,7 @@ const Tiket = () => {
           <div className="mb-4">
             <label className="block font-medium mb-2">{texts.program}</label>
             <select value={program} onChange={(e) => setProgram(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700" required>
+              <option value="">{texts.programPlaceholder}</option>
               {Object.entries(texts.programOptions).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -60,10 +95,14 @@ const Tiket = () => {
             </select>
           </div>
 
+          {/* Opsi Dinamis: Rute atau Slot */}
+          {getDynamicOptions()}
+
           {/* Pilih Kategori Tiket */}
           <div className="mb-4">
             <label className="block font-medium mb-2">{texts.ticketCategory}</label>
             <select value={kategoriTiket} onChange={(e) => setKategoriTiket(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700" required>
+              <option value="">{texts.ticketCategoryPlaceholder}</option>
               {Object.entries(texts.ticketCategoryOptions).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}

@@ -53,7 +53,7 @@ const Footer = () => {
           </div>
 
           {/* Navigasi */}
-          <div>
+          <div className="flex-1 ml-10 lg:ml-20">
             <h4 className="font-bold mb-3">{isIndonesian ? "Navigasi" : "Navigation"}</h4>
             <ul className="space-y-2">
               <li>
@@ -76,7 +76,7 @@ const Footer = () => {
           </div>
 
           {/* Acara */}
-          <div>
+          <div className="flex-1 ml-10 lg:ml-20">
             <h4 className="font-bold mb-3">{isIndonesian ? "Acara" : "Event"}</h4>
             <ul className="space-y-2">
               <li>
@@ -103,7 +103,7 @@ const Footer = () => {
           </div>
 
           {/* Program */}
-          <div>
+          <div className="flex-1 ml-10 lg:ml-20">
             <h4 className="font-bold mb-3">{isIndonesian ? "Program" : "Programs"}</h4>
             <ul className="space-y-2">
               <li>
