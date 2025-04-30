@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Turnstile from "react-turnstile";
-
 import { useLanguage } from "../context/LanguageProvider";
 import { ThemeContext } from "../context/ThemeContext";
 import textsContactForm from "../texts/textsContactForm";

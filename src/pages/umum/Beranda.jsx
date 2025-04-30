@@ -13,6 +13,7 @@ import artworkIdmobile from "../../assets/artwork-id-mobile.png";
 import artworkEnmobile from "../../assets/artwork-en-mobile.png";
 import textsBeranda from "../../texts/textsBeranda";
 import ContactForm from "../../components/ContactForm";
+import sendEmail from "../../utils/sendEmail";
 import { Link } from "react-router-dom";
 
 const mainSponsors = ["/assets/sponsors/sponsor-logo.png"];
@@ -87,8 +88,12 @@ const Beranda = () => {
     try {
       // Kirim data ke server
       const result = await sendEmail({
-        ...formData,
-        captchaToken: formData.captchaToken,
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        turnstileToken: formData.captchaToken,
+        website: "", // honeypot kosong
+        lang: language,
       });
 
       // Tampilkan pesan dari server
@@ -178,7 +183,6 @@ const Beranda = () => {
             {/* Deskripsi */}
             <p className="mt-3 max-w-2xl font-Outfit text-gray-700 dark:text-gray-300 leading-relaxed text-justify">{selectedText.aboutFestival}</p>
 
-            {/* Statistik Festival */}
             {/* Statistik Festival */}
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-gray-800 dark:text-gray-200">
               {(selectedText.statistics || []).map((stat, index) => (
@@ -277,6 +281,7 @@ const Beranda = () => {
             handleCaptchaSuccess={handleCaptchaSuccess}
             handleCaptchaError={handleCaptchaError}
             captchaError={captchaError}
+            handleSubmit={handleSubmit} // ⬅️ ini penting!
             language={language}
             selectedText={selectedText}
           />

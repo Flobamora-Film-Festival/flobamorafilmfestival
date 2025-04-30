@@ -40,13 +40,8 @@ This website is built with ❤️ using HTML, CSS, JavaScript, and version-contr
 flobamorafilmfestival
 ├─ .eslintrc.cjs
 ├─ README.md
-├─ backend
-│  ├─ api
-│  │  ├─ send-email.js
-│  │  └─ verify-turnstile.js
-│  ├─ package-lock.json
-│  ├─ package.json
-│  └─ server.js
+├─ api
+│  └─ send-email.js
 ├─ index.html
 ├─ package-lock.json
 ├─ package.json

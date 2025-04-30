@@ -31,4 +31,9 @@ export default defineConfig({
     base: "/",
   },
   assetsInclude: ["**/*.pdf"],
+  server: {
+    proxy: {
+      "/api": "http://localhost:3001",
+    },
+  },
 });
