@@ -1,4 +1,3 @@
-// src/utils/sendEmail.js
 const sendEmail = async (data) => {
   try {
     const response = await fetch("/api/send-email", {
@@ -7,13 +6,17 @@ const sendEmail = async (data) => {
       body: JSON.stringify(data),
     });
 
+    const result = await response.json();
+
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new Error(result.message || "There was a problem sending the email.");
     }
 
-    return await response.json();
+    return result;
   } catch (error) {
     console.error("Error sending email:", error);
     throw new Error("There was an issue sending your email. Please try again.");
   }
 };
+
+export default sendEmail;

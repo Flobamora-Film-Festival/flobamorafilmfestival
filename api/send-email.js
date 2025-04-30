@@ -1,60 +1,89 @@
 import nodemailer from "nodemailer";
-import fetch from "node-fetch"; // pastikan node-fetch terinstal
+import fetch from "node-fetch";
 
-// Fungsi untuk verifikasi Turnstile
-const verifyTurnstile = async (req, res) => {
-  const { turnstileToken, lang } = req.body;
-  const language = lang === "EN" ? "EN" : "ID"; // fallback ke ID
+// Fungsi untuk menangani CORS
+const handleCors = (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://www.flobamorafilmfestival.com/"); // domain Anda di produksi
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (!turnstileToken) {
-    return res.status(400).json({
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return true;
+  }
+  return false;
+};
+
+// Verifikasi Turnstile token
+const verifyTurnstile = async (token, ip, lang) => {
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+  const language = lang === "EN" ? "EN" : "ID";
+
+  if (!token) {
+    return {
       success: false,
-      message: language === "ID" ? "Token Turnstile tidak ditemukan." : "Turnstile token not found.",
-    });
+      message: language === "EN" ? "Turnstile token not found." : "Token Turnstile tidak ditemukan.",
+    };
   }
 
-  const secretKey = process.env.TURNSTILE_SECRET_KEY;
-  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-
   try {
-    const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         secret: secretKey,
-        response: turnstileToken,
+        response: token,
         remoteip: ip,
       }),
     });
 
-    const data = await verifyRes.json();
+    const data = await response.json();
 
     if (!data.success) {
-      return res.status(400).json({
+      return {
         success: false,
-        message: language === "ID" ? "Verifikasi Turnstile gagal. Silakan coba lagi." : "Turnstile verification failed. Please try again.",
-      });
+        message: language === "EN" ? "Turnstile verification failed. Please try again." : "Verifikasi Turnstile gagal. Silakan coba lagi.",
+      };
     }
+
+    return { success: true };
   } catch (error) {
     console.error("Turnstile verification error:", error.message);
-    return res.status(500).json({
+    return {
       success: false,
-      message: language === "ID" ? "Gagal memverifikasi Turnstile. Silakan coba lagi." : "Failed to verify Turnstile. Please try again.",
-    });
+      message: language === "EN" ? "Failed to verify Turnstile. Please try again." : "Gagal memverifikasi Turnstile. Silakan coba lagi.",
+    };
   }
 };
 
-// Fungsi untuk mengirim email
-const sendEmailHandler = async (req, res) => {
-  const { name, email, message, lang } = req.body;
+// API handler
+export default async function handler(req, res) {
+  // CORS check
+  if (handleCors(req, res)) return;
 
-  if (!name || !email || !message) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Method Not Allowed" });
+  }
+
+  const { name, email, message, turnstileToken, lang } = req.body;
+  const language = lang === "EN" ? "EN" : "ID";
+
+  // Validasi input
+  if (!name || !email || !message || !turnstileToken) {
     return res.status(400).json({
       success: false,
-      message: lang === "EN" ? "All fields are required." : "Semua kolom wajib diisi.",
+      message: language === "EN" ? "All fields are required." : "Semua kolom wajib diisi.",
     });
   }
 
+  // Verifikasi Turnstile
+  const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "";
+  const verification = await verifyTurnstile(turnstileToken, ip, language);
+  if (!verification.success) {
+    return res.status(400).json({ success: false, message: verification.message });
+  }
+
+  // Kirim Email
   const transporter = nodemailer.createTransport({
     host: "smtp.hostinger.com",
     port: 465,
@@ -65,35 +94,22 @@ const sendEmailHandler = async (req, res) => {
     },
   });
 
-  const successMessage = lang === "EN" ? "Your message has been successfully sent. We will get back to you soon." : "Pesan Anda telah berhasil dikirim. Kami akan segera menghubungi Anda.";
+  const successMessage = language === "EN" ? "Your message has been successfully sent. We will get back to you soon." : "Pesan Anda telah berhasil dikirim. Kami akan segera menghubungi Anda.";
 
-  const errorMessage = lang === "EN" ? "There was an error sending your message. Please try again later." : "Terjadi kesalahan saat mengirim pesan. Silakan coba lagi nanti.";
+  const errorMessage = language === "EN" ? "There was an error sending your message. Please try again later." : "Terjadi kesalahan saat mengirim pesan. Silakan coba lagi nanti.";
 
   try {
     await transporter.sendMail({
       from: `"${name}" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO || process.env.EMAIL_USER,
-      subject: `Pesan dari form Website Flobamora Film Festival (${name})`,
+      subject: `Pesan dari Website Flobamora Film Festival (${name})`,
       text: message,
       replyTo: email,
     });
 
-    res.status(200).json({ success: true, message: successMessage });
+    return res.status(200).json({ success: true, message: successMessage });
   } catch (error) {
     console.error("Error sending email:", error);
-    res.status(500).json({ success: false, message: errorMessage });
+    return res.status(500).json({ success: false, message: errorMessage });
   }
-};
-
-// Fungsi utama untuk API handler
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ success: false, message: "Method Not Allowed" });
-  }
-
-  // Verifikasi Turnstile
-  await verifyTurnstile(req, res);
-
-  // Kirim email jika verifikasi berhasil
-  await sendEmailHandler(req, res);
 }
