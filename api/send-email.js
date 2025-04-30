@@ -1,18 +1,8 @@
 import nodemailer from "nodemailer";
 import fetch from "node-fetch"; // pastikan node-fetch terinstal
 
-// Middleware untuk verifikasi Turnstile
-const verifyTurnstile = async (req, res, next) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      message: {
-        ID: "Metode tidak diizinkan. Hanya POST yang diizinkan.",
-        EN: "Method not allowed. Only POST is permitted.",
-      },
-    });
-  }
-
+// Fungsi untuk verifikasi Turnstile
+const verifyTurnstile = async (req, res) => {
   const { turnstileToken, lang } = req.body;
   const language = lang === "EN" ? "EN" : "ID"; // fallback ke ID
 
@@ -45,8 +35,6 @@ const verifyTurnstile = async (req, res, next) => {
         message: language === "ID" ? "Verifikasi Turnstile gagal. Silakan coba lagi." : "Turnstile verification failed. Please try again.",
       });
     }
-
-    next(); // Verifikasi berhasil
   } catch (error) {
     console.error("Turnstile verification error:", error.message);
     return res.status(500).json({
@@ -103,8 +91,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, message: "Method Not Allowed" });
   }
 
-  // Jalankan middleware secara manual (karena bukan Express)
-  await verifyTurnstile(req, res, async () => {
-    await sendEmailHandler(req, res);
-  });
+  // Verifikasi Turnstile
+  await verifyTurnstile(req, res);
+
+  // Kirim email jika verifikasi berhasil
+  await sendEmailHandler(req, res);
 }
