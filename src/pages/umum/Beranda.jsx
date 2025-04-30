@@ -31,6 +31,7 @@ const Beranda = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    subject: "", // Tambahkan subject di sini
     message: "",
     isSubmitted: false,
     isError: false,
@@ -91,6 +92,7 @@ const Beranda = () => {
         name: formData.name,
         email: formData.email,
         message: formData.message,
+        subject: formData.subject, // Make sure this is included
         turnstileToken: formData.captchaToken,
         website: "", // honeypot kosong
         lang: language,

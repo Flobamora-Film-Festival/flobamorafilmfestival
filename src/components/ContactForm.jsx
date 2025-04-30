@@ -32,6 +32,7 @@ const ContactForm = ({ formData, handleInputChange, handleCaptchaSuccess, handle
         ) : (
           <motion.form key="form" onSubmit={handleSubmit} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 0.5 }} className="mt-8 w-full px-4 max-w-xl mx-auto">
             <div className="flex flex-col space-y-4">
+              {/* Input Name */}
               <input
                 type="text"
                 name="name"
@@ -42,6 +43,8 @@ const ContactForm = ({ formData, handleInputChange, handleCaptchaSuccess, handle
                 onChange={handleInputChange}
                 required
               />
+
+              {/* Input Email */}
               <input
                 type="email"
                 name="email"
@@ -52,6 +55,20 @@ const ContactForm = ({ formData, handleInputChange, handleCaptchaSuccess, handle
                 onChange={handleInputChange}
                 required
               />
+
+              {/* Subject (Topik Pesan) */}
+              <input
+                type="text"
+                name="subject"
+                placeholder={selectedText.subjectPlaceholder}
+                aria-label="Message Topic"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+                value={formData.subject}
+                onChange={handleInputChange}
+                required
+              />
+
+              {/* Message */}
               <textarea
                 name="message"
                 placeholder={selectedText.messagePlaceholder}
@@ -66,7 +83,7 @@ const ContactForm = ({ formData, handleInputChange, handleCaptchaSuccess, handle
               {/* Honeypot Field */}
               <input type="text" name="website" style={{ display: "none" }} aria-label="Honeypot" />
 
-              {/* Turnstile */}
+              {/* Turnstile CAPTCHA */}
               <Turnstile sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY} onVerify={handleCaptchaSuccess} onError={handleCaptchaError} />
               {/* Error Messages */}
               {captchaError && <p className="text-red-500 text-sm mt-2">{captchaError}</p>}

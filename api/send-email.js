@@ -1,20 +1,53 @@
 import nodemailer from "nodemailer";
 import fetch from "node-fetch";
 
-// Fungsi untuk menangani CORS
-const handleCors = (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://www.flobamorafilmfestival.com/"); // domain Anda di produksi
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+// --- Rate limiter (berbasis IP lokal) ---
+const rateLimitCache = new Map();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 menit
+const MAX_REQUESTS_PER_WINDOW = 3;
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
+const checkRateLimit = (ip) => {
+  const now = Date.now();
+  const record = rateLimitCache.get(ip) || { count: 0, timestamp: now };
+
+  if (now - record.timestamp > RATE_LIMIT_WINDOW_MS) {
+    rateLimitCache.set(ip, { count: 1, timestamp: now });
     return true;
   }
+
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+
+  rateLimitCache.set(ip, { count: record.count + 1, timestamp: record.timestamp });
+  return true;
+};
+
+// --- Fungsi untuk menangani CORS ---
+const handleCors = (req, res) => {
+  const allowedOrigins = [
+    "https://www.flobamorafilmfestival.com/", // domain yang diizinkan
+    // bisa tambahkan domain lain jika perlu di sini.
+  ];
+
+  const origin = req.headers.origin;
+
+  // Mengecek apakah origin request ada dalam allowedOrigins
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    if (req.method === "OPTIONS") {
+      res.status(200).end(); // Menanggapi permintaan preflight
+      return true;
+    }
+  }
+
   return false;
 };
 
-// Verifikasi Turnstile token
+// --- Verifikasi Turnstile ---
 const verifyTurnstile = async (token, ip, lang) => {
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
   const language = lang === "EN" ? "EN" : "ID";
@@ -56,19 +89,27 @@ const verifyTurnstile = async (token, ip, lang) => {
   }
 };
 
-// API handler
+// --- API Handler ---
 export default async function handler(req, res) {
-  // CORS check
   if (handleCors(req, res)) return;
 
   if (req.method !== "POST") {
     return res.status(405).json({ success: false, message: "Method Not Allowed" });
   }
 
-  const { name, email, message, turnstileToken, lang } = req.body;
+  const { name, email, subject, message, turnstileToken, lang } = req.body;
   const language = lang === "EN" ? "EN" : "ID";
+  const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "";
 
-  // Validasi input
+  // 🚨 Rate limit check
+  if (!checkRateLimit(ip)) {
+    return res.status(429).json({
+      success: false,
+      message: language === "EN" ? "Too many requests. Please wait a moment before trying again." : "Terlalu banyak permintaan. Silakan tunggu sebentar sebelum mencoba lagi.",
+    });
+  }
+
+  // 🚨 Validasi input
   if (!name || !email || !message || !turnstileToken) {
     return res.status(400).json({
       success: false,
@@ -76,14 +117,13 @@ export default async function handler(req, res) {
     });
   }
 
-  // Verifikasi Turnstile
-  const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "";
+  // ✅ Verifikasi Turnstile
   const verification = await verifyTurnstile(turnstileToken, ip, language);
   if (!verification.success) {
     return res.status(400).json({ success: false, message: verification.message });
   }
 
-  // Kirim Email
+  // ✅ Kirim Email
   const transporter = nodemailer.createTransport({
     host: "smtp.hostinger.com",
     port: 465,
@@ -102,7 +142,7 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: `"${name}" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO || process.env.EMAIL_USER,
-      subject: `Pesan dari Website Flobamora Film Festival (${name})`,
+      subject: subject || `Pesan dari Website Flobamora Film Festival (${name})`,
       text: message,
       replyTo: email,
     });
