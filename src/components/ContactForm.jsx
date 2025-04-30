@@ -84,7 +84,8 @@ const ContactForm = ({ formData, handleInputChange, handleCaptchaSuccess, handle
               <input type="text" name="website" style={{ display: "none" }} aria-label="Honeypot" />
 
               {/* Turnstile CAPTCHA */}
-              <Turnstile sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY} onVerify={handleCaptchaSuccess} onError={handleCaptchaError} />
+              <Turnstile sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY} onVerify={handleCaptchaSuccess} onError={handleCaptchaError} language={language === "EN" ? "en" : "id"} />
+
               {/* Error Messages */}
               {captchaError && <p className="text-red-500 text-sm mt-2">{captchaError}</p>}
               {formData.isError && <p className="text-red-500 text-sm mt-2">{language === "ID" ? "Harap isi semua bidang dengan benar" : "Please fill all fields correctly"}</p>}
