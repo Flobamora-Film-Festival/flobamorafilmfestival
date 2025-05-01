@@ -20,9 +20,13 @@ const SubmitFilm = () => {
         <h4 className="mb-2 text-lg font-Outfit">Flobamora Film Festival</h4>
         <h2 className="text-4xl lg:text-5xl font-bold font-Outfit">{language === "ID" ? "Submit Film Anda" : "Submit Your Film"}</h2>
         <p className="mt-6 mb-12 text-base lg:text-lg font-Outfit">
-          {language === "ID"
+          {/* (dinonaktifkan sementara) */}
+          {/*  {language === "ID"
             ? "Silakan pilih kategori yang sesuai untuk film yang Anda kirim. Klik kategori untuk melihat persyaratannya."
             : "Please choose the appropriate category for your film submission. Click a category to view its requirements."}
+            */}
+
+          {language === "ID" ? "Silakan pilih kategori yang sesuai untuk film yang Anda kirim." : "Please choose the appropriate category for your film submission."}
         </p>
       </div>
 
