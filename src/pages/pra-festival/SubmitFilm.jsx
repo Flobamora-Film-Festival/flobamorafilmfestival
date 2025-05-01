@@ -36,10 +36,24 @@ const SubmitFilm = () => {
             {language === "ID" ? "Kompetisi untuk pelajar SMA/SMK di NTT. Tunjukkan bakat sinema lewat film pendekmu." : "Competition for high school students in NTT. Show your talent through a short film."}
           </p>
 
+          {/* Link internal (dinonaktifkan sementara) */}
+          {/* 
           <Link to="/submit/form-kompetisi-pelajar-2025" className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400">
+         {language === "ID" ? "Kirim Film Anda" : "Submit Your Film"}
+          <FaArrowRight />
+         </Link> 
+        */}
+
+          {/* Link eksternal ke Google Form, buka tab baru */}
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfG7i-tDph9TMV3MDdIr8GzpuWAakGdXs_ucDBTHfbwJFw0lQ/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400"
+          >
             {language === "ID" ? "Kirim Film Anda" : "Submit Your Film"}
             <FaArrowRight />
-          </Link>
+          </a>
         </div>
 
         {/* Umum */}
@@ -50,11 +64,22 @@ const SubmitFilm = () => {
               ? "Terbuka untuk sineas dari seluruh wilayah NTT. Ekspresikan cerita lokal lewat film pendekmu yang unik dan kreatif."
               : "Open to filmmakers from across NTT. Express local stories through your creative and unique short films."}
           </p>
-
+          {/* Link internal (dinonaktifkan sementara) */}
+          {/* 
           <Link to="/submit/form-kompetisi-ntt-2025" className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400">
             {language === "ID" ? "Kirim Film Anda" : "Submit Your Film"}
             <FaArrowRight />
           </Link>
+          */}
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSejZuBYF2045S0M1sg4iuoEC2aFDyofSlyhgrFZRhPgmSxANA/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400"
+          >
+            {language === "ID" ? "Kirim Film Anda" : "Submit Your Film"}
+            <FaArrowRight />
+          </a>
         </div>
 
         {/* Layar Nusantara */}
@@ -66,10 +91,23 @@ const SubmitFilm = () => {
               : "A screening program for films from across Indonesia. Share diverse cultures and unique perspectives through cinema."}
           </p>
 
+          {/* Link internal (dinonaktifkan sementara) */}
+          {/* 
           <Link to="/submit/form-layar-nusantara-2025" className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400">
             {language === "ID" ? "Kirim Film Anda" : "Submit Your Film"}
             <FaArrowRight />
           </Link>
+          */}
+
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSe_TCRZT1puRP9X8EvCMLaCxsCT9WB29lt-fsV-C8NTho9B3A/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400"
+          >
+            {language === "ID" ? "Kirim Film Anda" : "Submit Your Film"}
+            <FaArrowRight />
+          </a>
         </div>
 
         {/* KFK Film Lab */}
@@ -81,10 +119,24 @@ const SubmitFilm = () => {
               : "Fiction script lab for NTT filmmakers. Open to individuals and communities with national mentors and pitching forum."}
           </p>
 
+          {/* Link internal (dinonaktifkan sementara) */}
+          {/*
           <Link to="/submit/form-kfk-film-lab-2025" className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400">
             {language === "ID" ? "Kirim Naskah Anda" : "Submit Your Script"}
             <FaArrowRight />
           </Link>
+          */}
+
+          {/* Link eksternal ke Google Form, buka tab baru */}
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLScjRGUKsEUup8Dko-ozbXApZtAv5Y3eFrcASnX5P-dbLfAzyQ/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer flex items-center justify-center gap-2 text-sm mt-3 font-Outfit font-medium hover:text-red-600 dark:hover:text-red-400"
+          >
+            {language === "ID" ? "Kirim Naskah Anda" : "Submit Your Script"}
+            <FaArrowRight />
+          </a>
         </div>
       </div>
     </div>
