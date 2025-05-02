@@ -93,7 +93,8 @@ flobamorafilmfestival
 │  │  ├─ SCS (1).png
 │  │  └─ logo cinema poetica - cp sc.png
 │  ├─ uploads
-│  │  └─ AudiensidenganwakilwalikotaKupang-Serena.jpeg
+│  │  └─ artikel-images
+│  │     └─ AudiensidenganwakilwalikotaKupang-Serena.jpeg
 │  ├─ vite.svg
 │  └─ worker
 │     └─ pdf.worker.mjs
@@ -203,11 +204,16 @@ flobamorafilmfestival
 │  │  ├─ BackToTop.jsx
 │  │  ├─ ContactForm.jsx
 │  │  ├─ Footer.jsx
+│  │  ├─ LanguageToggle.jsx
 │  │  ├─ LeafletMapComponent.jsx
 │  │  ├─ Navbar.jsx
 │  │  ├─ PrivateRoute.jsx
 │  │  ├─ ScheduleSection.jsx
 │  │  ├─ ScrollToTop.jsx
+│  │  ├─ Sidebar
+│  │  │  ├─ SidebarItem.jsx
+│  │  │  └─ SidebarMenu.jsx
+│  │  ├─ ThemeToggle.jsx
 │  │  ├─ artikel
 │  │  │  ├─ ArticleCard.jsx
 │  │  │  ├─ ArticleForm.jsx
@@ -241,10 +247,16 @@ flobamorafilmfestival
 │  │  ├─ admin
 │  │  │  ├─ AdminDashboard.jsx
 │  │  │  ├─ AdminLogin.jsx
-│  │  │  └─ artikel
-│  │  │     ├─ ArtikelAdminList.jsx
-│  │  │     ├─ ArtikelCreate.jsx
-│  │  │     └─ ArtikelEdit.jsx
+│  │  │  ├─ EditProfile.jsx
+│  │  │  ├─ artikel
+│  │  │  │  ├─ ArtikelAdminList.jsx
+│  │  │  │  ├─ ArtikelCreate.jsx
+│  │  │  │  └─ ArtikelEdit.jsx
+│  │  │  └─ components
+│  │  │     ├─ AdminContent.jsx
+│  │  │     ├─ AdminFooter.jsx
+│  │  │     ├─ AdminHeader.jsx
+│  │  │     └─ AdminSidebar.jsx
 │  │  ├─ auth
 │  │  │  ├─ ForgotPassword.jsx
 │  │  │  ├─ Login.jsx
@@ -289,6 +301,7 @@ flobamorafilmfestival
 │  │     └─ UserDashboard.jsx
 │  ├─ routes
 │  │  ├─ AdminRoute.jsx
+│  │  ├─ ProtectedRoute.jsx
 │  │  └─ emailRoutes.js
 │  ├─ texts
 │  │  ├─ previousFestivals.jsx
