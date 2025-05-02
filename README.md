@@ -39,8 +39,10 @@ This website is built with ❤️ using HTML, CSS, JavaScript, and version-contr
 ```
 flobamorafilmfestival
 ├─ .eslintrc.cjs
+├─ Press
 ├─ README.md
 ├─ api
+│  ├─ articles.js
 │  └─ send-email.js
 ├─ index.html
 ├─ package-lock.json
@@ -90,6 +92,8 @@ flobamorafilmfestival
 │  │  ├─ Logo-FFP.png
 │  │  ├─ SCS (1).png
 │  │  └─ logo cinema poetica - cp sc.png
+│  ├─ uploads
+│  │  └─ AudiensidenganwakilwalikotaKupang-Serena.jpeg
 │  ├─ vite.svg
 │  └─ worker
 │     └─ pdf.worker.mjs
@@ -204,6 +208,10 @@ flobamorafilmfestival
 │  │  ├─ PrivateRoute.jsx
 │  │  ├─ ScheduleSection.jsx
 │  │  ├─ ScrollToTop.jsx
+│  │  ├─ artikel
+│  │  │  ├─ ArticleCard.jsx
+│  │  │  ├─ ArticleForm.jsx
+│  │  │  └─ ArticlePreview.jsx
 │  │  └─ form
 │  │     ├─ CheckboxField.jsx
 │  │     ├─ DurationInputField.jsx
@@ -232,7 +240,11 @@ flobamorafilmfestival
 │  ├─ pages
 │  │  ├─ admin
 │  │  │  ├─ AdminDashboard.jsx
-│  │  │  └─ AdminLogin.jsx
+│  │  │  ├─ AdminLogin.jsx
+│  │  │  └─ artikel
+│  │  │     ├─ ArtikelAdminList.jsx
+│  │  │     ├─ ArtikelCreate.jsx
+│  │  │     └─ ArtikelEdit.jsx
 │  │  ├─ auth
 │  │  │  ├─ ForgotPassword.jsx
 │  │  │  ├─ Login.jsx
@@ -251,6 +263,8 @@ flobamorafilmfestival
 │  │  │  ├─ LayarKompetisiFilmNTT.jsx
 │  │  │  └─ LayarKompetisiFilmPelajarNTT.jsx
 │  │  ├─ media
+│  │  │  ├─ ArtikelDetail.jsx
+│  │  │  ├─ ArtikelList.jsx
 │  │  │  └─ Media.jsx
 │  │  ├─ non-kompetisi
 │  │  │  ├─ LayarInternasional.jsx

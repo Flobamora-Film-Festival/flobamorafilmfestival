@@ -1,15 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
 
 const AdminRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const token = localStorage.getItem("adminToken"); // Periksa token admin
 
-  if (!isAuthenticated) {
-    return <Navigate to="/admin/login" />;
+  if (!token) {
+    // Jika tidak ada token admin, arahkan ke halaman login admin
+    return <Navigate to="/admin/login" replace />;
   }
 
-  return children;
+  return children; // Jika ada token admin, tampilkan konten yang diakses
 };
 
 export default AdminRoute;

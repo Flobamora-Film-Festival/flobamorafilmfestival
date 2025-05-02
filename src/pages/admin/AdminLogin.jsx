@@ -1,43 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/firebase-config";
+import { useLanguage } from "../../context/LanguageProvider";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const AdminLogin = () => {
+  const [email, setEmail] = useState(""); // Email sekarang pakai state
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const { language } = useLanguage();
+  const { theme } = useContext(ThemeContext);
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken")) {
+      navigate("/admin");
+    }
+  }, [navigate]);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Dummy check
-    if (password === "admin123") {
-      localStorage.setItem("adminToken", "dummyToken");
-      navigate("/admin");
-    } else {
-      alert("Password salah!");
+    if (!email || !password) {
+      setError(language === "ID" ? "Email dan password wajib diisi!" : "Email and password are required!");
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (user.email === email) {
+        localStorage.setItem("adminToken", user.uid);
+        navigate("/admin");
+      } else {
+        setError(language === "ID" ? "Anda bukan admin!" : "You are not an admin!");
+      }
+    } catch (err) {
+      setError(language === "ID" ? "Login gagal!" : "Login failed!");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-md"
-      >
-        <h2 className="text-xl font-bold mb-4 text-center">Admin Login</h2>
-        <input
-          type="password"
-          className="w-full px-4 py-2 border rounded mb-4 bg-gray-100 dark:bg-gray-700 dark:text-white"
-          placeholder="Masukkan password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Login
-        </button>
-      </form>
+    <div className={`min-h-screen flex flex-col justify-center items-center px-4 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
+      <div className={`w-full max-w-md rounded-lg p-8 shadow-lg border ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}>
+        <h2 className="text-2xl font-bold mb-6 text-center">{language === "ID" ? "Masuk Admin" : "Admin Login"}</h2>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input type="email" placeholder="Email" className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            type="password"
+            placeholder={language === "ID" ? "Kata Sandi" : "Password"}
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 dark:bg-red-800 dark:hover:bg-red-700">
+            {language === "ID" ? "Masuk" : "Log In"}
+          </button>
+        </form>
+        {error && <p className="text-red-500 mt-4 text-sm text-center">{error}</p>}
+      </div>
     </div>
   );
 };

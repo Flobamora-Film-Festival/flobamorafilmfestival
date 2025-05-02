@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+// src/context/ThemeProvider.jsx
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "./ThemeContext"; // Pastikan ini
 
 const getInitialTheme = () => {
   const storedTheme = localStorage.getItem("theme");
   if (storedTheme) return storedTheme;
-
   const hour = new Date().getHours();
-  const isNight = hour < 6 || hour >= 18;
-  return isNight ? "dark" : "light";
+  return hour < 6 || hour >= 18 ? "dark" : "light";
 };
 
 export const ThemeProvider = ({ children }) => {
@@ -17,12 +16,7 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("theme", theme);
     const root = document.documentElement;
-
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+    root.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
   const toggleTheme = () => {

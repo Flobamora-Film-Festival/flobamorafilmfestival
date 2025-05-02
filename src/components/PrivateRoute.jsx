@@ -1,11 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 const PrivateRoute = ({ children }) => {
-  const { currentUser } = useAuth();
+  const token = localStorage.getItem("userToken"); // Periksa token user
 
-  return currentUser ? children : <Navigate to="/login" />;
+  if (!token) {
+    // Jika tidak ada token, arahkan ke halaman login
+    return <Navigate to="/login" replace />;
+  }
+
+  return children; // Jika ada token, tampilkan konten yang diakses
 };
 
 export default PrivateRoute;

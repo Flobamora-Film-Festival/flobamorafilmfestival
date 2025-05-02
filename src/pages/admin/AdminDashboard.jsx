@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
+import AdminSidebar from "./components/AdminSidebar";
+import AdminHeader from "./components/AdminHeader";
+import AdminContent from "./components/AdminContent";
+import AdminFooter from "./components/AdminFooter";
 
 const AdminDashboard = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
   return (
-    <div className="min-h-screen p-10 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
-      <p>Selamat datang, Admin!</p>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+
+      {/* Konten Utama */}
+      <div className="flex flex-col flex-1">
+        <AdminHeader isSidebarOpen={isSidebarOpen} />
+        <main className="flex-1 overflow-y-auto">
+          <AdminContent isSidebarOpen={isSidebarOpen} />
+        </main>
+        <AdminFooter isSidebarOpen={isSidebarOpen} />
+      </div>
     </div>
   );
 };

@@ -1,19 +1,25 @@
 // src/firebase/firebase-config.js
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCir2oWQuRDXtwD0EAsUHGgBDSUfW6EQ-Q",
-  authDomain: "flobamorafilmfestival-72150.firebaseapp.com",
-  projectId: "flobamorafilmfestival-72150",
-  storageBucket: "flobamorafilmfestival-72150.firebasestorage.app",
-  messagingSenderId: "142664997370",
-  appId: "1:142664997370:web:4a33a0b01be0aae9d52c43",
-  measurementId: "G-0SWH4CQSJP",
+  apiKey: "AIzaSyATS45Vmx8aC-Ge-JzjcSaaur4H_0jVrHc",
+  authDomain: "flobamorafilmfestival-c48c9.firebaseapp.com",
+  projectId: "flobamorafilmfestival-c48c9",
+  storageBucket: "flobamorafilmfestival-c48c9.firebasestorage.app",
+  messagingSenderId: "221899610294",
+  appId: "1:221899610294:web:636fde8229224f5b986e17",
+  measurementId: "G-MDRWR9109F",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+export { auth };
