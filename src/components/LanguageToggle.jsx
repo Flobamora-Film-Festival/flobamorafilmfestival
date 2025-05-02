@@ -16,10 +16,6 @@ const LanguageToggle = ({ toggleTheme, isDarkMode, toggleMenu, isMenuOpen }) => 
           EN
         </button>
       </div>
-
-      <button onClick={toggleMenu} className="md:hidden">
-        <img src={isMenuOpen ? (isDarkMode ? "/path/to/close_white.svg" : "/path/to/close_black.svg") : isDarkMode ? "/path/to/menu_white.svg" : "/path/to/menu_black.svg"} alt="Menu Icon" className="w-6" />
-      </button>
     </div>
   );
 };
