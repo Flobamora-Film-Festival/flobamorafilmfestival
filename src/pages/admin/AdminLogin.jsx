@@ -9,6 +9,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState(""); // Email sekarang pakai state
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Tambahkan loading state
   const navigate = useNavigate();
 
   const { language } = useLanguage();
@@ -22,11 +23,21 @@ const AdminLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(""); // Reset error on new login attempt
 
     if (!email || !password) {
       setError(language === "ID" ? "Email dan password wajib diisi!" : "Email and password are required!");
       return;
     }
+
+    // Validasi format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError(language === "ID" ? "Email tidak valid!" : "Invalid email format!");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -40,6 +51,8 @@ const AdminLogin = () => {
       }
     } catch (err) {
       setError(language === "ID" ? "Login gagal!" : "Login failed!");
+    } finally {
+      setLoading(false); // Stop loading after login attempt
     }
   };
 
@@ -57,8 +70,12 @@ const AdminLogin = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 dark:bg-red-800 dark:hover:bg-red-700">
-            {language === "ID" ? "Masuk" : "Log In"}
+          <button
+            type="submit"
+            className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 dark:bg-red-800 dark:hover:bg-red-700"
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? (language === "ID" ? "Memuat..." : "Loading...") : language === "ID" ? "Masuk" : "Log In"}
           </button>
         </form>
         {error && <p className="text-red-500 mt-4 text-sm text-center">{error}</p>}

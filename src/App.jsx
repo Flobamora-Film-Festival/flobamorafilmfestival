@@ -40,16 +40,12 @@ import FormKfkFilmLab from "./pages/pra-festival/FormKfkFilmLab";
 
 // Media
 import Media from "./pages/media/Media";
-import ArtikelList from "./pages/media/ArtikelList";
-import ArtikelDetail from "./pages/media/ArtikelDetail";
 
 // Auth & Admin
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import UserDashboard from "./pages/user/UserDashboard";
 import AdminLogin from "./pages/admin/AdminLogin";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import EditProfile from "./pages/admin/EditProfile";
 
 // Protected Routes
 import PrivateRoute from "./components/PrivateRoute";
@@ -113,8 +109,6 @@ const App = () => {
 
                 {/* Media */}
                 <Route path="/media" element={<Media />} />
-                <Route path="/media/artikel" element={<ArtikelList />} />
-                <Route path="/media/artikel/:id" element={<ArtikelDetail />} />
 
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />
@@ -127,16 +121,14 @@ const App = () => {
 
         {/* Auth/Admin tanpa Navbar/Footer */}
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/profile" element={<EditProfile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Protected Routes */}
         <Route
-          path="/admin"
+          path="/admin/*"
           element={
             <AdminRoute>
-              <AdminDashboard />
               <AdminRoutes />
             </AdminRoute>
           }

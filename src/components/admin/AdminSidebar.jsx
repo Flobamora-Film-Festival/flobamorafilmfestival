@@ -1,15 +1,16 @@
+// AdminSidebar.jsx
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { HomeIcon, FileTextIcon, ImageIcon, UsersIcon, SettingsIcon, FolderPlusIcon, TagIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { HomeIcon, FileTextIcon, ImageIcon, UsersIcon, SettingsIcon, FolderPlusIcon, TagIcon, ChevronLeft, ChevronRight, NewspaperIcon } from "lucide-react";
 
 import { ThemeContext } from "../../context/ThemeContext";
-import { useLanguage } from "../../context/LanguageProvider"; // Import useLanguage
+import { useLanguage } from "../../context/LanguageProvider";
 import logoLight from "../../assets/logo.png";
 import logoDark from "../../assets/logo_dark.png";
 
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useLanguage(); // Mengakses bahasa yang aktif
+  const { language } = useLanguage();
   const logoSrc = theme === "dark" ? logoDark : logoLight;
 
   return (
@@ -41,6 +42,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
       <nav className="flex-1 overflow-y-auto mt-2 pt-4">
         <ul className="space-y-1 px-2">
           <SidebarItem icon={<HomeIcon size={18} />} label={language === "ID" ? "Dasbor" : "Dashboard"} to="/admin" isOpen={isOpen} />
+          <SidebarItem icon={<NewspaperIcon size={18} />} label={language === "ID" ? "Berita" : "News"} to="/admin/news" isOpen={isOpen} />
           <SidebarItem icon={<FileTextIcon size={18} />} label={language === "ID" ? "Postingan" : "Posts"} to="/admin/posts" isOpen={isOpen} />
           <SidebarItem icon={<FolderPlusIcon size={18} />} label={language === "ID" ? "Kategori" : "Categories"} to="/admin/categories" isOpen={isOpen} />
           <SidebarItem icon={<TagIcon size={18} />} label={language === "ID" ? "Tag" : "Tags"} to="/admin/tags" isOpen={isOpen} />
@@ -83,7 +85,7 @@ const SidebarItem = ({ icon, label, to, isOpen }) => (
   <li>
     <NavLink
       to={to}
-      title={label} // Fallback title
+      title={label}
       className={({ isActive }) =>
         `
           flex items-center py-2 rounded transition-all duration-300
@@ -93,8 +95,6 @@ const SidebarItem = ({ icon, label, to, isOpen }) => (
       }
     >
       <div className="w-5 flex-shrink-0">{icon}</div>
-
-      {/* Teks hanya tampil saat sidebar terbuka */}
       <span
         className={`ml-2 transition-all duration-200 overflow-hidden whitespace-nowrap
           ${isOpen ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}
@@ -103,19 +103,6 @@ const SidebarItem = ({ icon, label, to, isOpen }) => (
         {label}
       </span>
     </NavLink>
-
-    {/* Tooltip muncul saat sidebar collapse */}
-    {!isOpen && (
-      <div
-        className={`
-          absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 rounded-md text-sm whitespace-nowrap z-50
-          opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none
-          ${window.matchMedia("(prefers-color-scheme: dark)").matches ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}
-        `}
-      >
-        {label}
-      </div>
-    )}
   </li>
 );
 

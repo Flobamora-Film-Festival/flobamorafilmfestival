@@ -42,7 +42,7 @@ flobamorafilmfestival
 ├─ Press
 ├─ README.md
 ├─ api
-│  ├─ articles.js
+│  ├─ news.js
 │  └─ send-email.js
 ├─ index.html
 ├─ package-lock.json
@@ -50,6 +50,10 @@ flobamorafilmfestival
 ├─ postcss.config.js
 ├─ public
 │  ├─ assets
+│  │  ├─ Flobamora-Film-Festival-2022-thumbnail.jpg
+│  │  ├─ Flobamora-Film-Festival-2023-thumbnail.jpg
+│  │  ├─ Flobamora-Film-Festival-2024-thumbnail.jpg
+│  │  ├─ Flobamora-Film-Festival-2025-thumbnail.jpg
 │  │  ├─ artwork-en-mobile.png
 │  │  ├─ artwork-en.png
 │  │  ├─ artwork-id-mobile.png
@@ -76,10 +80,10 @@ flobamorafilmfestival
 │  │  ├─ ComicHelvetic_Light.otf
 │  │  └─ ComicHelvetic_Medium.otf
 │  ├─ katalog
-│  │  ├─ Flobamora Film Festival-2022.pdf
-│  │  ├─ Flobamora Film Festival-2023.pdf
-│  │  ├─ Flobamora Film Festival-2024.pdf
-│  │  └─ Flobamora Film Festival-2025.pdf
+│  │  ├─ Flobamora-Film-Festival-2022.pdf
+│  │  ├─ Flobamora-Film-Festival-2023.pdf
+│  │  ├─ Flobamora-Film-Festival-2024.pdf
+│  │  └─ Flobamora-Film-Festival-2025.pdf
 │  ├─ logo.png
 │  ├─ partners
 │  │  ├─ Goldilock.png
@@ -95,9 +99,7 @@ flobamorafilmfestival
 │  ├─ uploads
 │  │  └─ artikel-images
 │  │     └─ AudiensidenganwakilwalikotaKupang-Serena.jpeg
-│  ├─ vite.svg
-│  └─ worker
-│     └─ pdf.worker.mjs
+│  └─ vite.svg
 ├─ src
 │  ├─ App.jsx
 │  ├─ assets
@@ -201,8 +203,10 @@ flobamorafilmfestival
 │  │  ├─ work-3.png
 │  │  └─ work-4.png
 │  ├─ components
+│  │  ├─ AdminRoute.jsx
 │  │  ├─ BackToTop.jsx
 │  │  ├─ ContactForm.jsx
+│  │  ├─ Flipbook.jsx
 │  │  ├─ Footer.jsx
 │  │  ├─ LanguageToggle.jsx
 │  │  ├─ LeafletMapComponent.jsx
@@ -210,25 +214,28 @@ flobamorafilmfestival
 │  │  ├─ PrivateRoute.jsx
 │  │  ├─ ScheduleSection.jsx
 │  │  ├─ ScrollToTop.jsx
-│  │  ├─ Sidebar
-│  │  │  ├─ SidebarItem.jsx
-│  │  │  └─ SidebarMenu.jsx
 │  │  ├─ ThemeToggle.jsx
-│  │  ├─ artikel
-│  │  │  ├─ ArticleCard.jsx
-│  │  │  ├─ ArticleForm.jsx
-│  │  │  └─ ArticlePreview.jsx
-│  │  └─ form
-│  │     ├─ CheckboxField.jsx
-│  │     ├─ DurationInputField.jsx
-│  │     ├─ FileUploadField.jsx
-│  │     ├─ FormAgreementSection.jsx
-│  │     ├─ GoogleSignIn.jsx
-│  │     ├─ InputField.jsx
-│  │     ├─ MultiCheckboxField.jsx
-│  │     ├─ SelectField.jsx
-│  │     ├─ SubmitButton.jsx
-│  │     └─ TextareaField.jsx
+│  │  ├─ admin
+│  │  │  ├─ AdminContent.jsx
+│  │  │  ├─ AdminFooter.jsx
+│  │  │  ├─ AdminHeader.jsx
+│  │  │  ├─ AdminLayout.jsx
+│  │  │  └─ AdminSidebar.jsx
+│  │  ├─ form
+│  │  │  ├─ CheckboxField.jsx
+│  │  │  ├─ DurationInputField.jsx
+│  │  │  ├─ FileUploadField.jsx
+│  │  │  ├─ FormAgreementSection.jsx
+│  │  │  ├─ GoogleSignIn.jsx
+│  │  │  ├─ InputField.jsx
+│  │  │  ├─ MultiCheckboxField.jsx
+│  │  │  ├─ SelectField.jsx
+│  │  │  ├─ SubmitButton.jsx
+│  │  │  └─ TextareaField.jsx
+│  │  └─ news
+│  │     ├─ NewsCard.jsx
+│  │     ├─ NewsForm.jsx
+│  │     └─ NewsPreview.jsx
 │  ├─ context
 │  │  ├─ AuthContext.jsx
 │  │  ├─ LanguageProvider.jsx
@@ -248,15 +255,10 @@ flobamorafilmfestival
 │  │  │  ├─ AdminDashboard.jsx
 │  │  │  ├─ AdminLogin.jsx
 │  │  │  ├─ EditProfile.jsx
-│  │  │  ├─ artikel
-│  │  │  │  ├─ ArtikelAdminList.jsx
-│  │  │  │  ├─ ArtikelCreate.jsx
-│  │  │  │  └─ ArtikelEdit.jsx
-│  │  │  └─ components
-│  │  │     ├─ AdminContent.jsx
-│  │  │     ├─ AdminFooter.jsx
-│  │  │     ├─ AdminHeader.jsx
-│  │  │     └─ AdminSidebar.jsx
+│  │  │  └─ news
+│  │  │     ├─ NewsAdminList.jsx
+│  │  │     ├─ NewsCreate.jsx
+│  │  │     └─ NewsEdit.jsx
 │  │  ├─ auth
 │  │  │  ├─ ForgotPassword.jsx
 │  │  │  ├─ Login.jsx
@@ -275,9 +277,9 @@ flobamorafilmfestival
 │  │  │  ├─ LayarKompetisiFilmNTT.jsx
 │  │  │  └─ LayarKompetisiFilmPelajarNTT.jsx
 │  │  ├─ media
-│  │  │  ├─ ArtikelDetail.jsx
-│  │  │  ├─ ArtikelList.jsx
-│  │  │  └─ Media.jsx
+│  │  │  ├─ Media.jsx
+│  │  │  ├─ NewsDetail.jsx
+│  │  │  └─ NewsList.jsx
 │  │  ├─ non-kompetisi
 │  │  │  ├─ LayarInternasional.jsx
 │  │  │  ├─ LayarNusantara.jsx
@@ -300,7 +302,7 @@ flobamorafilmfestival
 │  │  └─ user
 │  │     └─ UserDashboard.jsx
 │  ├─ routes
-│  │  ├─ AdminRoute.jsx
+│  │  ├─ AdminRoutes.jsx
 │  │  ├─ ProtectedRoute.jsx
 │  │  └─ emailRoutes.js
 │  ├─ texts

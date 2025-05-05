@@ -1,7 +1,8 @@
+// AdminContent.jsx
 import React, { useContext } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
 import { ThemeContext } from "../../context/ThemeContext";
-import { BarChart3, Users, FileText } from "lucide-react";
+import { FileText, Users, BarChart3 } from "lucide-react";
 
 const AdminContent = ({ isSidebarOpen }) => {
   const { theme } = useContext(ThemeContext);
@@ -10,9 +11,9 @@ const AdminContent = ({ isSidebarOpen }) => {
 
   const stats = [
     {
-      title: language === "ID" ? "Artikel" : "Articles",
+      title: language === "ID" ? "Berita" : "News",
       value: 10,
-      description: language === "ID" ? "Jumlah artikel yang dipublikasikan" : "Number of published articles",
+      description: language === "ID" ? "Jumlah berita yang dipublikasikan" : "Number of published news",
       icon: <FileText className="w-8 h-8 text-blue-500" />,
     },
     {

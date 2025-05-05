@@ -1,6 +1,6 @@
 import React from "react";
 
-const ArticlePreview = ({ title, content, image }) => {
+const NewsPreview = ({ title, content, image }) => {
   return (
     <div className="bg-white p-4 shadow-md rounded-lg">
       <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
@@ -12,4 +12,4 @@ const ArticlePreview = ({ title, content, image }) => {
   );
 };
 
-export default ArticlePreview;
+export default NewsPreview;
