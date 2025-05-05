@@ -10,12 +10,11 @@ const Katalog = () => {
   const [selectedCatalog, setSelectedCatalog] = useState(null);
   const { language } = useLanguage();
 
-  const handleOpenModal = (catalog) => {
+  const handleOpenCatalog = (year) => {
     if (isMobile) {
-      // Di mobile, buka langsung di tab baru
-      window.open(`/katalog/Flobamora-Film-Festival-${catalog}.pdf`, "_blank");
+      window.open(`/katalog/Flobamora-Film-Festival-${year}.pdf`, "_blank");
     } else {
-      setSelectedCatalog(catalog);
+      setSelectedCatalog(year);
       setIsModalOpen(true);
     }
   };
@@ -54,12 +53,13 @@ const Katalog = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="cursor-pointer p-5 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-200 dark:hover:bg-gray-700 flex flex-col items-center justify-center text-center transition-all duration-300 hover:scale-[1.02]"
-            onClick={() => handleOpenModal(year)}
+            className="p-5 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-200 dark:hover:bg-gray-700 flex flex-col items-center justify-center text-center transition-all duration-300 hover:scale-[1.02]"
           >
             <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-4">Flobamora Film Festival {year}</h3>
             <img src={`/assets/Flobamora-Film-Festival-${year}-thumbnail.jpg`} alt={`Thumbnail Flobamora Film Festival ${year}`} className="w-full h-auto rounded-md mb-4" />
-            <button className="text-gray-500 dark:text-white hover:underline transform transition-all duration-200 hover:scale-105 hover:text-red-600 dark:hover:text-red-300">{text[language].button}</button>
+            <button onClick={() => handleOpenCatalog(year)} className="text-gray-500 dark:text-white hover:underline transform transition-all duration-200 hover:scale-105 hover:text-red-600 dark:hover:text-red-300">
+              {text[language].button}
+            </button>
           </motion.div>
         ))}
       </section>

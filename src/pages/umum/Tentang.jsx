@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useLanguage } from "../../context/LanguageProvider"; // ✅ Correct path for the custom hook
 import { Helmet } from "react-helmet-async";
-import LeafletMapComponent from "../../components/LeafletMapComponent";
 
 const Tentang = () => {
   const { language } = useLanguage(); // ✅ Use custom hook instead of context
@@ -130,13 +129,6 @@ const Tentang = () => {
             ? "Festival ini diinisiasi oleh Komunitas Film Kupang (KFK), dan didukung oleh berbagai komunitas film lokal, nasional, serta mitra kultural yang percaya pada kekuatan sinema untuk membangun koneksi antarwilayah."
             : "The festival was initiated by Komunitas Film Kupang (KFK), with support from local, national, and international film communities and cultural partners who believe in the power of cinema to build connections across regions."}
         </p>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-lg sm:text-xl font-semibold mb-2">{language === "ID" ? "Lokasi Festival" : "Festival Location"}</h2>
-        <div className="w-full h-[400px] rounded-lg overflow-hidden">
-          <LeafletMapComponent />
-        </div>
       </section>
     </div>
   );
