@@ -53,7 +53,8 @@ import EditProfile from "./pages/admin/EditProfile";
 
 // Protected Routes
 import PrivateRoute from "./components/PrivateRoute";
-import AdminRoute from "./routes/AdminRoute";
+import AdminRoute from "./components/AdminRoute"; // Pastikan komponen ini ada dan benar
+import AdminRoutes from "./routes/AdminRoutes"; // Mengimpor AdminRoutes.jsx
 
 const App = () => {
   const location = useLocation();
@@ -130,11 +131,13 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        {/* Protected Routes */}
         <Route
           path="/admin"
           element={
             <AdminRoute>
               <AdminDashboard />
+              <AdminRoutes />
             </AdminRoute>
           }
         />

@@ -1,65 +1,104 @@
 import React, { useState } from "react";
-import { Document, Page } from "react-pdf"; // Menggunakan react-pdf untuk menampilkan PDF
+import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "../../context/LanguageProvider";
+import { Helmet } from "react-helmet-async";
 
 const Katalog = () => {
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCatalog, setSelectedCatalog] = useState(null);
+  const [iframeError, setIframeError] = useState(false);
+  const { language } = useLanguage();
 
-  // Fungsi untuk menangani perubahan jumlah halaman dalam dokumen
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
+  const handleOpenModal = (catalog) => {
+    setSelectedCatalog(catalog);
+    setIframeError(false); // reset error saat buka modal baru
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedCatalog(null);
+    setIframeError(false);
+  };
+
+  const text = {
+    ID: {
+      title: "Katalog Festival",
+      description: "Kumpulan katalog Flobamora Film Festival dari tahun ke tahun yang menampilkan program film, acara, dan dokumentasi festival.",
+      button: "Lihat Selengkapnya",
+      openTab: "Buka di Tab Baru",
+      mobileNotice: "PDF tidak bisa dimuat. Silakan buka di tab baru.",
+    },
+    EN: {
+      title: "Festival Catalogue",
+      description: "A collection of Flobamora Film Festival catalogues over the years, featuring film programs, events, and festival documentation.",
+      button: "See More",
+      openTab: "Open in New Tab",
+      mobileNotice: "PDF could not be displayed. Please open it in a new tab.",
+    },
+  };
 
   return (
-    <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 transition-all">
-      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Katalog Film Festival</h1>
+    <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 transition-all font-Outfit">
+      <Helmet>
+        <title>{text[language].title} | Flobamora Film Festival</title>
+      </Helmet>
 
-      {/* Katalog Festival Saat Ini */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Katalog Festival 2025</h2>
-        <div className="flex justify-center">
-          <Document
-            file="/katalog-2025.pdf" // Ganti dengan path file PDF yang sesuai
-            onLoadSuccess={onDocumentLoadSuccess}
-            className="border shadow-lg"
+      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">{text[language].title}</h1>
+      <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">{text[language].description}</p>
+
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        {["2025", "2024", "2023", "2022"].map((year, index) => (
+          <motion.div
+            key={year}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="cursor-pointer p-5 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-200 dark:hover:bg-gray-700 flex flex-col items-center justify-center text-center transition-all duration-300 hover:scale-[1.02]"
+            onClick={() => handleOpenModal(year)}
           >
-            <Page pageNumber={pageNumber} />
-          </Document>
-        </div>
-        <p className="text-center mt-4">
-          Halaman {pageNumber} dari {numPages}
-        </p>
-        <div className="flex justify-center gap-4 mt-2">
-          <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded" disabled={pageNumber <= 1} onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}>
-            Sebelumnya
-          </button>
-          <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded" disabled={pageNumber >= numPages} onClick={() => setPageNumber((prev) => Math.min(prev + 1, numPages))}>
-            Selanjutnya
-          </button>
-        </div>
-      </div>
+            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-4">Flobamora Film Festival {year}</h3>
+            <img src={`/assets/Flobamora-Film-Festival-${year}-thumbnail.jpg`} alt={`Thumbnail Flobamora Film Festival ${year}`} className="w-full h-auto rounded-md mb-4" />
+            <button className="text-gray-500 dark:text-white hover:underline transform transition-all duration-200 hover:scale-105 hover:text-red-600 dark:hover:text-red-300">{text[language].button}</button>
+          </motion.div>
+        ))}
+      </section>
 
-      {/* Katalog Festival Sebelumnya */}
-      <div>
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Katalog Festival Sebelumnya</h2>
-        <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
-          <li>
-            <a href="/katalog-2024.pdf" target="_blank" className="text-blue-500">
-              Katalog Festival 2024
-            </a>
-          </li>
-          <li>
-            <a href="/katalog-2023.pdf" target="_blank" className="text-blue-500">
-              Katalog Festival 2023
-            </a>
-          </li>
-          <li>
-            <a href="/katalog-2022.pdf" target="_blank" className="text-blue-500">
-              Katalog Festival 2022
-            </a>
-          </li>
-        </ul>
-      </div>
+      {/* Modal PDF */}
+      <AnimatePresence>
+        {isModalOpen && selectedCatalog && (
+          <motion.div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div
+              className="bg-white dark:bg-gray-800 rounded-lg p-4 pt-10 w-full sm:w-11/12 md:w-5/6 lg:w-4/5 xl:w-3/4 max-w-screen-xl relative"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {/* Tombol Close */}
+              <button onClick={handleCloseModal} className="absolute top-4 right-4 z-10 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white" aria-label="Close modal">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Iframe PDF */}
+              <div className="relative w-full">
+                <iframe src={`/katalog/Flobamora-Film-Festival-${selectedCatalog}.pdf`} title={`Katalog Festival ${selectedCatalog}`} className="w-full h-[80vh] rounded" loading="lazy" onError={() => setIframeError(true)} />
+
+                {iframeError && (
+                  <div className="absolute inset-0 flex flex-col justify-center items-center bg-white dark:bg-gray-800 text-center p-4">
+                    <p className="text-gray-700 dark:text-gray-300 mb-4">{text[language].mobileNotice}</p>
+                    <a href={`/katalog/Flobamora-Film-Festival-${selectedCatalog}.pdf`} target="_blank" rel="noopener noreferrer" className="inline-block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                      {text[language].openTab}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

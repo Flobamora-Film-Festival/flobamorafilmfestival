@@ -30,12 +30,7 @@ const Venue = () => {
         <h1 className="text-3xl lg:text-4xl font-bold text-center mb-6">{t.title}</h1>
         <p className="text-center mb-4 text-lg">{t.description}</p>
 
-        <div className="text-center mb-10 text-sm lg:text-base">
-          <p className="font-medium">{t.addressLabel}</p>
-          <p>{t.address}</p>
-        </div>
-
-        <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 relative z-0">
           <LeafletMapComponent />
         </div>
       </div>

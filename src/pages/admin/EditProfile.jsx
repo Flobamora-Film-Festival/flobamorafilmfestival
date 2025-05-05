@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { updateProfile, updateEmail, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase/firebase-config";
 import { useNavigate } from "react-router-dom";
+import AdminHeader from "../../components/admin/AdminHeader";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -67,30 +68,30 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold text-center mb-6">Edit Profile</h2>
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+      <h2 className="text-2xl font-semibold text-center mb-6 text-gray-900 dark:text-white">Edit Profile</h2>
 
       {message && <p className={`text-center mb-4 text-sm ${message.includes("berhasil") ? "text-green-600" : "text-red-600"}`}>{message}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-1">Name</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Name</label>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Email</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Email</label>
+          <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Biography</label>
-          <textarea name="bio" rows="4" value={formData.bio} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Biography</label>
+          <textarea name="bio" rows="4" value={formData.bio} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">New Password (optional)</label>
-          <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">New Password (optional)</label>
+          <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
         </div>
 
         <div className="text-center">
@@ -101,7 +102,7 @@ const EditProfile = () => {
       </form>
 
       <div className="mt-6 text-center">
-        <button onClick={() => navigate("/admin")} className="text-sm text-blue-600 hover:underline focus:outline-none">
+        <button onClick={() => navigate("/admin")} className="text-sm text-blue-600 hover:underline focus:outline-none dark:text-blue-400">
           Cancel
         </button>
       </div>

@@ -22,3 +22,97 @@
   font-weight: 300;
   font-style: normal;
 }
+
+.leaflet-top.leaflet-left .leaflet-control-zoom:first-child {
+  display: block !important;
+}
+
+/* Ubah ikon LayersControl seperti Google Maps */
+.leaflet-control-layers-toggle {
+  background-image: url("https://img.icons8.com/ios-filled/50/layers.png") !important;
+  background-size: 20px 20px !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  width: 34px !important;
+  height: 34px !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Panel Layer style */
+.leaflet-control-layers {
+  font-size: 14px !important;
+  padding: 6px 8px !important;
+  background-color: white !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Tooltip mode dark */
+.tooltip-dark {
+  background-color: #333 !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Tooltip untuk mencegah tumpang tindih dengan ikon */
+.leaflet-tooltip {
+  z-index: 9999 !important; /* Atur agar tooltip berada di atas elemen lain */
+}
+
+.leaflet-control-layers {
+  z-index: 1000; /* Pastikan Layer Control tidak mengganggu elemen lain */
+}
+
+.leaflet-control-zoom {
+  z-index: 1001; /* Menempatkan tombol zoom di atas layer control */
+}
+
+/* Custom zoom control */
+.leaflet-control-zoom {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  line-height: 30px;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background-color: #e0e0e0;
+}
+
+/* src/components/flipbook.css */
+.flipbook {
+  width: 800px; /* total lebar: 2 x 400px */
+  height: 500px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.page {
+  width: 400px;
+  height: 500px;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip, LayersControl, LayerGroup, ZoomControl } from "react-leaflet";
 import { ThemeContext } from "../context/ThemeContext";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// Fix marker icon path issue in Leaflet with Webpack/Vite
+// Fix icon paths
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -23,30 +23,46 @@ const venues = [
   },
 ];
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "500px",
-};
-
 const LeafletMapComponent = () => {
   const { theme } = useContext(ThemeContext);
 
-  const tileUrl =
-    theme === "dark"
-      ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" // Gunakan tema light untuk mode dark
-      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-
-  const attribution = theme === "dark" ? '&copy; <a href="https://carto.com/">CARTO</a> contributors' : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+  const centerPosition = [venues.reduce((sum, v) => sum + v.position[0], 0) / venues.length, venues.reduce((sum, v) => sum + v.position[1], 0) / venues.length];
 
   return (
-    <div style={mapContainerStyle}>
-      <MapContainer center={venues[0].position} zoom={16} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
-        <TileLayer url={tileUrl} attribution={attribution} />
-        {venues.map((venue, index) => (
-          <Marker key={index} position={venue.position}>
-            <Popup>{venue.name}</Popup>
-          </Marker>
-        ))}
+    <div className="w-full h-[500px] bg-gray-100 dark:bg-gray-900 relative rounded-2xl overflow-hidden">
+      <MapContainer center={centerPosition} zoom={15} scrollWheelZoom={false} zoomControl={false} style={{ height: "100%", width: "100%" }}>
+        {/* Custom Zoom Control */}
+        <ZoomControl position="topleft" />
+
+        <LayersControl position="bottomleft">
+          {/* Light Map */}
+          <LayersControl.BaseLayer name="Peta Terang" checked={theme !== "dark"}>
+            <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" attribution='&copy; <a href="https://carto.com/">CARTO</a>' />
+          </LayersControl.BaseLayer>
+
+          {/* Dark Map */}
+          <LayersControl.BaseLayer name="Peta Gelap" checked={theme === "dark"}>
+            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution='&copy; <a href="https://carto.com/">CARTO</a>' />
+          </LayersControl.BaseLayer>
+
+          {/* Satellite Map */}
+          <LayersControl.BaseLayer name="Satelit">
+            <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" attribution="Tiles &copy; Esri &mdash; Sources: Esri, USGS, etc." />
+          </LayersControl.BaseLayer>
+
+          {/* Venue Markers */}
+          <LayersControl.Overlay name="Venue" checked>
+            <LayerGroup>
+              {venues.map((venue, index) => (
+                <Marker key={index} position={venue.position}>
+                  <Tooltip permanent direction="top" offset={[0, -10]} className={theme === "dark" ? "tooltip-dark" : ""}>
+                    {venue.name}
+                  </Tooltip>
+                </Marker>
+              ))}
+            </LayerGroup>
+          </LayersControl.Overlay>
+        </LayersControl>
       </MapContainer>
     </div>
   );

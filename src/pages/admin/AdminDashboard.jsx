@@ -1,30 +1,20 @@
 import React, { useState } from "react";
-import AdminSidebar from "./components/AdminSidebar";
-import AdminHeader from "./components/AdminHeader";
-import AdminContent from "./components/AdminContent";
-import AdminFooter from "./components/AdminFooter";
+import AdminLayout from "../../components/admin/AdminLayout";
+import AdminContent from "../../components/admin/AdminContent";
 
 const AdminDashboard = () => {
+  // Menyimpan state apakah sidebar terbuka atau tertutup
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  // Fungsi untuk toggle sidebar
   const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-      {/* Konten Utama */}
-      <div className="flex flex-col flex-1">
-        <AdminHeader isSidebarOpen={isSidebarOpen} />
-        <main className="flex-1 overflow-y-auto">
-          <AdminContent isSidebarOpen={isSidebarOpen} />
-        </main>
-        <AdminFooter isSidebarOpen={isSidebarOpen} />
-      </div>
-    </div>
+    <AdminLayout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+      <AdminContent isSidebarOpen={isSidebarOpen} />
+    </AdminLayout>
   );
 };
 
