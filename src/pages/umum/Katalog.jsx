@@ -3,22 +3,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../../context/LanguageProvider";
 import { Helmet } from "react-helmet-async";
 
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 const Katalog = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCatalog, setSelectedCatalog] = useState(null);
-  const [iframeError, setIframeError] = useState(false);
   const { language } = useLanguage();
 
   const handleOpenModal = (catalog) => {
-    setSelectedCatalog(catalog);
-    setIframeError(false); // reset error saat buka modal baru
-    setIsModalOpen(true);
+    if (isMobile) {
+      // Di mobile, buka langsung di tab baru
+      window.open(`/katalog/Flobamora-Film-Festival-${catalog}.pdf`, "_blank");
+    } else {
+      setSelectedCatalog(catalog);
+      setIsModalOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedCatalog(null);
-    setIframeError(false);
   };
 
   const text = {
@@ -26,15 +30,11 @@ const Katalog = () => {
       title: "Katalog Festival",
       description: "Kumpulan katalog Flobamora Film Festival dari tahun ke tahun yang menampilkan program film, acara, dan dokumentasi festival.",
       button: "Lihat Selengkapnya",
-      openTab: "Buka di Tab Baru",
-      mobileNotice: "PDF tidak bisa dimuat. Silakan buka di tab baru.",
     },
     EN: {
       title: "Festival Catalogue",
       description: "A collection of Flobamora Film Festival catalogues over the years, featuring film programs, events, and festival documentation.",
       button: "See More",
-      openTab: "Open in New Tab",
-      mobileNotice: "PDF could not be displayed. Please open it in a new tab.",
     },
   };
 
@@ -64,7 +64,7 @@ const Katalog = () => {
         ))}
       </section>
 
-      {/* Modal PDF */}
+      {/* Modal PDF untuk desktop */}
       <AnimatePresence>
         {isModalOpen && selectedCatalog && (
           <motion.div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -84,16 +84,7 @@ const Katalog = () => {
 
               {/* Iframe PDF */}
               <div className="relative w-full">
-                <iframe src={`/katalog/Flobamora-Film-Festival-${selectedCatalog}.pdf`} title={`Katalog Festival ${selectedCatalog}`} className="w-full h-[80vh] rounded" loading="lazy" onError={() => setIframeError(true)} />
-
-                {iframeError && (
-                  <div className="absolute inset-0 flex flex-col justify-center items-center bg-white dark:bg-gray-800 text-center p-4">
-                    <p className="text-gray-700 dark:text-gray-300 mb-4">{text[language].mobileNotice}</p>
-                    <a href={`/katalog/Flobamora-Film-Festival-${selectedCatalog}.pdf`} target="_blank" rel="noopener noreferrer" className="inline-block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
-                      {text[language].openTab}
-                    </a>
-                  </div>
-                )}
+                <iframe src={`/katalog/Flobamora-Film-Festival-${selectedCatalog}.pdf`} title={`Katalog Festival ${selectedCatalog}`} className="w-full h-[80vh] rounded" loading="lazy" />
               </div>
             </motion.div>
           </motion.div>
