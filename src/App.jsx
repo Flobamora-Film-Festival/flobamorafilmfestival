@@ -77,8 +77,10 @@ const App = () => {
 
   // Call refreshToken on App load
   React.useEffect(() => {
-    refreshToken();
-  }, []); // Hanya dipanggil sekali saat aplikasi dimuat
+    if (location.pathname.startsWith("/admin") && location.pathname !== "/admin/login") {
+      refreshToken();
+    }
+  }, [location.pathname]);
 
   // Cek apakah halaman yang diakses adalah halaman login atau register
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/admin/login";
