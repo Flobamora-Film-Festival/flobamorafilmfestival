@@ -41,107 +41,122 @@ import FormKfkFilmLab from "./pages/pra-festival/FormKfkFilmLab";
 // Media
 import Media from "./pages/media/Media";
 
-// Auth & Admin
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import UserDashboard from "./pages/user/UserDashboard";
-import AdminLogin from "./pages/admin/AdminLogin";
+// News
+import NewsPage from "./pages/news/NewsPage";
+import NewsDetailPage from "./pages/news/NewsDetailPage";
 
-// Protected Routes
-import PrivateRoute from "./components/PrivateRoute";
-import AdminRoute from "./components/AdminRoute"; // Pastikan komponen ini ada dan benar
-import AdminRoutes from "./routes/AdminRoutes"; // Mengimpor AdminRoutes.jsx
+// Users
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+
+// Admin
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+
+// Komponen Wordpress
+import Posts from "./components/Posts";
 
 const App = () => {
   const location = useLocation();
-  const showToggles = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/admin/login";
+
+  // Ambil token dari localStorage
+  const token = localStorage.getItem("adminToken");
+
+  // Function to logout and remove token
+  const logout = () => {
+    localStorage.removeItem("adminToken");
+    window.location.href = "/admin/login"; // Redirect ke halaman login setelah logout
+  };
+
+  // Function to check token validity and refresh it (if needed)
+  const refreshToken = () => {
+    if (!token) {
+      logout();
+    }
+  };
+
+  // Call refreshToken on App load
+  React.useEffect(() => {
+    refreshToken();
+  }, []); // Hanya dipanggil sekali saat aplikasi dimuat
+
+  // Cek apakah halaman yang diakses adalah halaman login atau register
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/admin/login";
 
   return (
     <>
       <ScrollToTop />
 
-      {showToggles && (
-        <div className="fixed top-4 right-4 z-50 flex gap-2">
-          <LanguageToggle />
-          <ThemeToggle />
-        </div>
+      {isAuthPage ? (
+        <>
+          <div className="fixed top-4 right-4 z-50 flex gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+          <Routes>
+            {/* user */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+
+            {/* admin */}
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            {/* Proteksi halaman dashboard, hanya dapat diakses jika ada token */}
+            <Route path="/admin/dashboard" element={token ? <AdminDashboard /> : <AdminLoginPage />} />
+          </Routes>
+        </>
+      ) : (
+        <>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Beranda />} />
+            <Route path="/jadwal" element={<Jadwal />} />
+            <Route path="/tiket" element={<Tiket />} />
+            <Route path="/venue" element={<Venue />} />
+            <Route path="/katalog" element={<Katalog />} />
+            <Route path="/tentang" element={<Tentang />} />
+
+            {/* Program */}
+            <Route path="/bioskop-pasiar" element={<BioskopPasiar />} />
+            <Route path="/kompetisi" element={<Kompetisi />} />
+            <Route path="/kompetisi-film-ntt" element={<LayarKompetisiFilmNTT />} />
+            <Route path="/kompetisi-film-pelajar-ntt" element={<LayarKompetisiFilmPelajarNTT />} />
+            <Route path="/non-kompetisi" element={<NonKompetisi />} />
+            <Route path="/layar-nusantara" element={<LayarNusantara />} />
+            <Route path="/layar-internasional" element={<LayarInternasional />} />
+
+            {/* Forum & Workshop */}
+            <Route path="/kfk-film-lab" element={<KFKFilmLab />} />
+            <Route path="/bakumpul-komunitas" element={<BakumpulKomunitas />} />
+            <Route path="/baomong-film" element={<BaomongFilm />} />
+
+            {/* Prafestival */}
+            <Route path="/submit-film" element={<SubmitFilm />} />
+            <Route path="/submit/kompetisi-pelajar" element={<SubmitFilm />} />
+            <Route path="/submit/kompetisi-ntt" element={<SubmitFilm />} />
+            <Route path="/submit/layar-nusantara" element={<SubmitFilm />} />
+            <Route path="/submit/kfk-film-lab" element={<SubmitFilm />} />
+            <Route path="/submit/form-kompetisi-pelajar-2025" element={<FormKompetisiPelajar />} />
+            <Route path="/submit/form-kompetisi-ntt-2025" element={<FormKompetisiNTT />} />
+            <Route path="/submit/form-layar-nusantara-2025" element={<FormLayarNusantara />} />
+            <Route path="/submit/form-kfk-film-lab-2025" element={<FormKfkFilmLab />} />
+
+            {/* Media */}
+            <Route path="/media" element={<Media />} />
+
+            {/* News */}
+            <Route path="/news" element={<NewsPage />} />
+            <Route path="/news/:id" element={<NewsDetailPage />} />
+
+            {/* WordPress Posts */}
+            <Route path="/posts" element={<Posts />} />
+
+            {/* Fallback */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+          <BackToTop />
+        </>
       )}
-
-      <Routes>
-        {/* Halaman dengan Navbar & Footer */}
-        <Route
-          path="*"
-          element={
-            <>
-              <Navbar />
-              <Routes>
-                <Route path="/" element={<Beranda />} />
-                <Route path="/jadwal" element={<Jadwal />} />
-                <Route path="/tiket" element={<Tiket />} />
-                <Route path="/venue" element={<Venue />} />
-                <Route path="/katalog" element={<Katalog />} />
-                <Route path="/tentang" element={<Tentang />} />
-
-                {/* Program */}
-                <Route path="/bioskop-pasiar" element={<BioskopPasiar />} />
-                <Route path="/kompetisi" element={<Kompetisi />} />
-                <Route path="/kompetisi-film-ntt" element={<LayarKompetisiFilmNTT />} />
-                <Route path="/kompetisi-film-pelajar-ntt" element={<LayarKompetisiFilmPelajarNTT />} />
-                <Route path="/non-kompetisi" element={<NonKompetisi />} />
-                <Route path="/layar-nusantara" element={<LayarNusantara />} />
-                <Route path="/layar-internasional" element={<LayarInternasional />} />
-
-                {/* Forum & Workshop */}
-                <Route path="/kfk-film-lab" element={<KFKFilmLab />} />
-                <Route path="/bakumpul-komunitas" element={<BakumpulKomunitas />} />
-                <Route path="/baomong-film" element={<BaomongFilm />} />
-
-                {/* Prafestival */}
-                <Route path="/submit-film" element={<SubmitFilm />} />
-                <Route path="/submit/kompetisi-pelajar" element={<SubmitFilm />} />
-                <Route path="/submit/kompetisi-ntt" element={<SubmitFilm />} />
-                <Route path="/submit/layar-nusantara" element={<SubmitFilm />} />
-                <Route path="/submit/kfk-film-lab" element={<SubmitFilm />} />
-                <Route path="/submit/form-kompetisi-pelajar-2025" element={<FormKompetisiPelajar />} />
-                <Route path="/submit/form-kompetisi-ntt-2025" element={<FormKompetisiNTT />} />
-                <Route path="/submit/form-layar-nusantara-2025" element={<FormLayarNusantara />} />
-                <Route path="/submit/form-kfk-film-lab-2025" element={<FormKfkFilmLab />} />
-
-                {/* Media */}
-                <Route path="/media" element={<Media />} />
-
-                {/* 404 */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Footer />
-              <BackToTop />
-            </>
-          }
-        />
-
-        {/* Auth/Admin tanpa Navbar/Footer */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-        {/* Protected Routes */}
-        <Route
-          path="/admin/*"
-          element={
-            <AdminRoute>
-              <AdminRoutes />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <UserDashboard />
-            </PrivateRoute>
-          }
-        />
-      </Routes>
     </>
   );
 };

@@ -1,7 +1,6 @@
 import React from "react";
 import { useLanguage } from "../../context/LanguageProvider"; // Gunakan custom hook untuk bahasa
 import textsMedia from "../../texts/textsMedia"; // Import teks multibahasa
-import NewsList from "../admin/news/NewsList";
 
 const Media = () => {
   const { language } = useLanguage(); // Ambil bahasa dari context
@@ -15,16 +14,6 @@ const Media = () => {
         <div className="text-lg max-w-7xl mx-auto">
           <p className="mb-4 text-justify">{texts.pressReleaseText}</p>
           {/* ... Other press release content ... */}
-        </div>
-      </section>
-
-      {/* Section: News */}
-      <section className="mb-16">
-        <h3 className="text-center text-3xl font-semibold mb-8">{texts.newsTitle}</h3>
-        <div className="text-lg max-w-full sm:max-w-2xl lg:max-w-7xl mx-auto">
-          <p className="mb-8 text-center">{texts.newsText}</p>
-          {/* Tambahkan list artikel di bawah paragraf */}
-          <NewsList />
         </div>
       </section>
 

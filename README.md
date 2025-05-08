@@ -42,6 +42,7 @@ flobamorafilmfestival
 ├─ Press
 ├─ README.md
 ├─ api
+│  ├─ adminApi.js
 │  ├─ news.js
 │  └─ send-email.js
 ├─ index.html
@@ -203,24 +204,24 @@ flobamorafilmfestival
 │  │  ├─ work-3.png
 │  │  └─ work-4.png
 │  ├─ components
-│  │  ├─ AdminRoute.jsx
 │  │  ├─ BackToTop.jsx
 │  │  ├─ ContactForm.jsx
-│  │  ├─ Flipbook.jsx
 │  │  ├─ Footer.jsx
 │  │  ├─ LanguageToggle.jsx
 │  │  ├─ LeafletMapComponent.jsx
 │  │  ├─ Navbar.jsx
-│  │  ├─ PrivateRoute.jsx
+│  │  ├─ Posts.jsx
 │  │  ├─ ScheduleSection.jsx
 │  │  ├─ ScrollToTop.jsx
 │  │  ├─ ThemeToggle.jsx
 │  │  ├─ admin
-│  │  │  ├─ AdminContent.jsx
-│  │  │  ├─ AdminFooter.jsx
-│  │  │  ├─ AdminHeader.jsx
-│  │  │  ├─ AdminLayout.jsx
-│  │  │  └─ AdminSidebar.jsx
+│  │  │  ├─ Header.jsx
+│  │  │  ├─ NewsForm.jsx
+│  │  │  ├─ Sidebar.jsx
+│  │  │  └─ SubmissionTable.jsx
+│  │  ├─ comments
+│  │  │  ├─ CommentForm.jsx
+│  │  │  └─ ProtectedCommentForm.jsx
 │  │  ├─ form
 │  │  │  ├─ CheckboxField.jsx
 │  │  │  ├─ DurationInputField.jsx
@@ -234,35 +235,46 @@ flobamorafilmfestival
 │  │  │  └─ TextareaField.jsx
 │  │  └─ news
 │  │     ├─ NewsCard.jsx
-│  │     ├─ NewsForm.jsx
-│  │     └─ NewsPreview.jsx
+│  │     ├─ NewsDetail.jsx
+│  │     └─ NewsList.jsx
 │  ├─ context
+│  │  ├─ AdminAuthContext.jsx
 │  │  ├─ AuthContext.jsx
 │  │  ├─ LanguageProvider.jsx
 │  │  ├─ ThemeContext.jsx
 │  │  └─ ThemeProvider.jsx
 │  ├─ controllers
 │  │  └─ emailController.js
-│  ├─ data
 │  ├─ firebase
 │  │  └─ firebase-config.jsx
 │  ├─ hooks
+│  │  ├─ useAdminAuth.js
 │  │  └─ useAuth.js
 │  ├─ index.css
 │  ├─ main.jsx
 │  ├─ pages
 │  │  ├─ admin
 │  │  │  ├─ AdminDashboard.jsx
-│  │  │  ├─ AdminLogin.jsx
-│  │  │  ├─ EditProfile.jsx
-│  │  │  └─ news
-│  │  │     ├─ NewsAdminList.jsx
-│  │  │     ├─ NewsCreate.jsx
-│  │  │     └─ NewsEdit.jsx
+│  │  │  ├─ AdminLoginPage.jsx
+│  │  │  ├─ BakumpulKomunitasManager.jsx
+│  │  │  ├─ BaomongFilmManager.jsx
+│  │  │  ├─ BioskopPasiarManager.jsx
+│  │  │  ├─ CatalogManager.jsx
+│  │  │  ├─ KfkFilmLabManager.jsx
+│  │  │  ├─ KompetisiManager.jsx
+│  │  │  ├─ MediaManager.jsx
+│  │  │  ├─ NewsManager.jsx
+│  │  │  ├─ NonKompetisiManager.jsx
+│  │  │  ├─ ScheduleManager.jsx
+│  │  │  ├─ Submissions
+│  │  │  │  ├─ KfkFilmLabSubmissions.jsx
+│  │  │  │  ├─ KompetisiNTTSubmissions.jsx
+│  │  │  │  ├─ KompetisiPelajarSubmissions.jsx
+│  │  │  │  └─ NonKompetisiSubmissions.jsx
+│  │  │  └─ UserManagement.jsx
 │  │  ├─ auth
-│  │  │  ├─ ForgotPassword.jsx
-│  │  │  ├─ Login.jsx
-│  │  │  └─ Register.jsx
+│  │  │  ├─ LoginPage.jsx
+│  │  │  └─ RegisterPage.jsx
 │  │  ├─ bioskop-pasiar
 │  │  │  └─ BioskopPasiar.jsx
 │  │  ├─ forum-workshop
@@ -277,9 +289,10 @@ flobamorafilmfestival
 │  │  │  ├─ LayarKompetisiFilmNTT.jsx
 │  │  │  └─ LayarKompetisiFilmPelajarNTT.jsx
 │  │  ├─ media
-│  │  │  ├─ Media.jsx
-│  │  │  ├─ NewsDetail.jsx
-│  │  │  └─ NewsList.jsx
+│  │  │  └─ Media.jsx
+│  │  ├─ news
+│  │  │  ├─ NewsDetailPage.jsx
+│  │  │  └─ NewsPage.jsx
 │  │  ├─ non-kompetisi
 │  │  │  ├─ LayarInternasional.jsx
 │  │  │  ├─ LayarNusantara.jsx
@@ -290,20 +303,16 @@ flobamorafilmfestival
 │  │  │  ├─ FormKompetisiPelajar.jsx
 │  │  │  ├─ FormLayarNusantara.jsx
 │  │  │  └─ SubmitFilm.jsx
-│  │  ├─ umum
-│  │  │  ├─ Beranda.jsx
-│  │  │  ├─ Contact.jsx
-│  │  │  ├─ Jadwal.jsx
-│  │  │  ├─ Katalog.jsx
-│  │  │  ├─ NotFound.jsx
-│  │  │  ├─ Tentang.jsx
-│  │  │  ├─ Tiket.jsx
-│  │  │  └─ Venue.jsx
-│  │  └─ user
-│  │     └─ UserDashboard.jsx
+│  │  └─ umum
+│  │     ├─ Beranda.jsx
+│  │     ├─ Contact.jsx
+│  │     ├─ Jadwal.jsx
+│  │     ├─ Katalog.jsx
+│  │     ├─ NotFound.jsx
+│  │     ├─ Tentang.jsx
+│  │     ├─ Tiket.jsx
+│  │     └─ Venue.jsx
 │  ├─ routes
-│  │  ├─ AdminRoutes.jsx
-│  │  ├─ ProtectedRoute.jsx
 │  │  └─ emailRoutes.js
 │  ├─ texts
 │  │  ├─ previousFestivals.jsx
@@ -316,6 +325,7 @@ flobamorafilmfestival
 │  │  ├─ textsKompetisiPelajar.jsx
 │  │  ├─ textsLayarNusantara.jsx
 │  │  ├─ textsMedia.jsx
+│  │  ├─ textsNews.jsx
 │  │  ├─ textsSchedule.jsx
 │  │  └─ textsTiket.jsx
 │  └─ utils

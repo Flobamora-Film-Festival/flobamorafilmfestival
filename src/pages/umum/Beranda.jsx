@@ -1,3 +1,4 @@
+// src/pages/umum/Beranda.jsx
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
@@ -15,6 +16,8 @@ import textsBeranda from "../../texts/textsBeranda";
 import ContactForm from "../../components/ContactForm";
 import sendEmail from "../../utils/sendEmail";
 import { Link } from "react-router-dom";
+import NewsList from "../../components/news/NewsList"; // Import NewsList
+import textsNews from "../../texts/textsNews"; // Import teks untuk berita
 
 const mainSponsors = ["/assets/sponsors/sponsor-logo.png"];
 
@@ -211,6 +214,32 @@ const Beranda = () => {
       </motion.section>
 
       <div className="border-t border-gray-300 dark:border-gray-700 my-0"></div>
+      {/* News Section */}
+      <motion.section
+        id="news"
+        className="w-full px-6 sm:px-12 lg:px-[8%] py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-[#e9ecef] to-[#f8f9fa] dark:from-[#1f2937] dark:to-[#111827]"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+      >
+        <div className="text-center mb-12">
+          <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide">{language === "ID" ? "Berita Terkini" : "Latest News"}</h4>
+          <p className="mt-3 max-w-3xl mx-auto text-gray-700 dark:text-gray-300 leading-relaxed">
+            {language === "ID" ? "Temukan informasi terbaru, pengumuman, dan pembaruan dari kami di bawah ini." : "Find the latest updates, announcements, and information from us below."}
+          </p>
+        </div>
+        {/* Daftar Berita */}
+        <NewsList /> {/* Berisi layout dinamis berdasarkan jumlah berita */}
+        <div className="mt-10 text-center">
+          <Link to="/news" className="inline-block bg-red-600 hover:bg-red-700 text-white text-sm sm:text-base font-medium py-3 px-6 rounded-full transition-all">
+            {language === "ID" ? "Lihat Semua Berita" : "View All News"}
+          </Link>
+        </div>
+      </motion.section>
+
+      <div className="border-t border-gray-300 dark:border-gray-700 my-0"></div>
+
       <motion.section
         id="festival-sebelumnya"
         className="w-full px-6 sm:px-12 lg:px-[8%] py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-[#e9ecef] to-[#f8f9fa] dark:from-[#1f2937] dark:to-[#111827]"
