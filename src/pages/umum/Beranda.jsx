@@ -31,6 +31,36 @@ const Beranda = () => {
   const artworkMobile = language === "ID" ? artworkIdmobile : artworkEnmobile;
   const artworkDesktop = language === "ID" ? artworkId : artworkEn;
 
+  const [latestNews, setLatestNews] = useState([]);
+  const [isLoadingNews, setIsLoadingNews] = useState(true);
+
+  useEffect(() => {
+    const fetchNewsByCategorySlug = async () => {
+      try {
+        const categoryRes = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/categories?slug=news");
+        const categoryData = await categoryRes.json();
+
+        if (categoryData.length === 0) {
+          console.warn("Kategori 'news' tidak ditemukan");
+          return;
+        }
+
+        const categoryId = categoryData[0].id;
+
+        const postsRes = await fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?categories=${categoryId}&per_page=3&_embed`);
+        const postsData = await postsRes.json();
+
+        setLatestNews(postsData); // ✅ ini yang benar
+        setIsLoadingNews(false); // ✅ ini juga
+      } catch (error) {
+        console.error("Gagal mengambil berita:", error);
+        setIsLoadingNews(false); // ✅ juga di sini
+      }
+    };
+
+    fetchNewsByCategorySlug();
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -67,7 +97,7 @@ const Beranda = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
+    // Validasi input form
     if (!formData.name || !formData.email || !formData.message || !/\S+@\S+\.\S+/.test(formData.email)) {
       setFormData((prevData) => ({
         ...prevData,
@@ -225,12 +255,39 @@ const Beranda = () => {
       >
         <div className="text-center mb-12">
           <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide">{language === "ID" ? "Berita Terkini" : "Latest News"}</h4>
-          <p className="mt-3 max-w-3xl mx-auto text-gray-700 dark:text-gray-300 leading-relaxed">
-            {language === "ID" ? "Temukan informasi terbaru, pengumuman, dan pembaruan dari kami di bawah ini." : "Find the latest updates, announcements, and information from us below."}
-          </p>
         </div>
         {/* Daftar Berita */}
-        <NewsList /> {/* Berisi layout dinamis berdasarkan jumlah berita */}
+        {isLoadingNews ? (
+          <p className="text-center text-gray-500 dark:text-gray-400">Memuat berita...</p>
+        ) : latestNews.length === 0 ? (
+          <p className="text-center text-gray-500 dark:text-gray-400">Tidak ada berita terbaru.</p>
+        ) : (
+          <div className={`grid ${latestNews.length === 1 ? "place-items-center" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"}`}>
+            {latestNews.map((news) => {
+              const title = news.title.rendered;
+              const excerpt =
+                news.excerpt.rendered
+                  .replace(/<[^>]+>/g, "")
+                  .replace(/&nbsp;/g, " ")
+                  .split(".")[0] + ".";
+
+              const image = news._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+              return (
+                <div key={news.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition-all max-w-sm">
+                  {image && <img src={image} alt={title} className="w-full h-48 object-cover rounded-md mb-4" />}
+                  <h5 className="font-semibold text-lg text-gray-800 dark:text-white mb-2" dangerouslySetInnerHTML={{ __html: title }} />
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{excerpt}</p>
+                  <div className="mt-4">
+                    <Link to={`/news/${news.id}`} className="text-red-600 hover:underline font-medium">
+                      {language === "ID" ? "Baca Selengkapnya" : "Read More"}
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         <div className="mt-10 text-center">
           <Link to="/news" className="inline-block bg-red-600 hover:bg-red-700 text-white text-sm sm:text-base font-medium py-3 px-6 rounded-full transition-all">
             {language === "ID" ? "Lihat Semua Berita" : "View All News"}
@@ -280,13 +337,15 @@ const Beranda = () => {
         {/* Sponsor Kami */}
         <div className="text-center">
           <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide mb-4">{selectedText.sponsorsTitle}</h4>
-          <p className="mt-3 max-w-3xl mx-auto text-gray-700 dark:text-gray-300 leading-relaxed text-lg">{selectedText.sponsorsDescription}</p>
+          <p className="mt-3 max-w-full mx-auto text-gray-700 dark:text-gray-300 leading-relaxed text-lg" style={{ whiteSpace: "nowrap" }}>
+            {selectedText.sponsorsDescription}
+          </p>
         </div>
         {/* Sponsor Utama */}
         {mainSponsors.length > 0 && (
-          <div className="mb-12">
+          <div className="mb-12 py-6 px-8">
             <div className="flex justify-center">
-              <div className="flex flex-wrap justify-center gap-8">
+              <div className="flex flex-wrap justify-center gap-12">
                 {mainSponsors.map((logo, index) => (
                   <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
                     <img src={logo} alt={`Sponsor Utama ${index + 1}`} className="w-36 h-auto object-contain shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:shadow-gray-800" />
@@ -309,10 +368,10 @@ const Beranda = () => {
           <ContactForm
             formData={formData}
             handleInputChange={handleInputChange}
-            handleCaptchaSuccess={handleCaptchaSuccess}
+            handleCaptchaSuccess={handleCaptchaSuccess} // Panggil hanya setelah verifikasi
             handleCaptchaError={handleCaptchaError}
             captchaError={captchaError}
-            handleSubmit={handleSubmit} // ⬅️ ini penting!
+            handleSubmit={handleSubmit}
             language={language}
             selectedText={selectedText}
           />

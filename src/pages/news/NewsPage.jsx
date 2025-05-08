@@ -1,16 +1,15 @@
 import React, { useContext } from "react";
-import NewsList from "../../components/news/NewsList"; // Import NewsList
-import textsNews from "../../texts/textsNews"; // Import teks untuk berita
-import { LanguageContext } from "../../context/LanguageProvider"; // Menggunakan context untuk bahasa
+import NewsList from "../../components/news/NewsList";
+import textsNews from "../../texts/textsNews";
+import { LanguageContext } from "../../context/LanguageProvider";
 
 const NewsPage = () => {
   const { language } = useContext(LanguageContext); // Mengambil bahasa dari context
 
   return (
     <div>
-      <h1>{textsNews[language].title}</h1> {/* Judul berita berdasarkan bahasa */}
-      <p>{textsNews[language].description}</p> {/* Deskripsi berita berdasarkan bahasa */}
-      <NewsList /> {/* Menampilkan daftar berita */}
+      <p>{textsNews[language].description}</p> {/* Deskripsi berita */}
+      <NewsList language={language} /> {/* Mengirimkan prop language ke NewsList */}
     </div>
   );
 };
