@@ -31,6 +31,13 @@ const AdminLoginPage = () => {
 
   const t = translations[language] || translations.ID;
 
+  React.useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    if (token) {
+      navigate("/admin/dashboard");
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
