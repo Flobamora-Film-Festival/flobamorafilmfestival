@@ -6,7 +6,7 @@ const textsContactForm = {
     namePlaceholder: "Nama Anda",
     emailPlaceholder: "Email Anda",
     subjectPlaceholder: "Topik Pesan", // ✅ Perubahan di sini
-    messagePlaceholder: "Pesan Anda",
+    messagePlaceholder: "Tulis pesan Anda di sini, seperti saat mengirim email...",
     thankYouMessage: "Terima kasih atas pesan Anda!",
     successConfirmation: "Kami akan segera menghubungi Anda.",
     buttonText: "Kirim",
@@ -17,7 +17,7 @@ const textsContactForm = {
     namePlaceholder: "Your Name",
     emailPlaceholder: "Your Email",
     subjectPlaceholder: "Message Topic", // ✅ Padanan dalam bahasa Inggris
-    messagePlaceholder: "Your Message",
+    messagePlaceholder: "Write your message here as if sending an email...",
     thankYouMessage: "Thank you for your message!",
     successConfirmation: "We will get back to you soon.",
     buttonText: "Submit",
