@@ -117,7 +117,7 @@ const Jadwal = () => {
 
   return (
     <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 transition-all">
-      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">{textContent.scheduleTitle}</h1>
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-Outfit font-bold text-gray-900 dark:text-white mb-6 text-center">{textContent.scheduleTitle}</h1>
 
       {/* Bioskop Pasiar Section */}
       <ScheduleSection title={textContent.bioskopPasiarTitle} groupedEvents={groupedBioskopPasiar} headers={textContent.headers} formatDate={formatDate} type="pasiar" />

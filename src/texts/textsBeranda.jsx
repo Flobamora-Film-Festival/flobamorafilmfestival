@@ -1,9 +1,9 @@
-// src/texts/textsBeranda.jsx
 const textsBeranda = {
   ID: {
     date: "5-9 Agustus 2025",
     aboutHeader: "Tentang Festival",
     festivalName: "Flobamora Film Festival",
+    parade: "Parade Film NTT",
     description:
       "Flobamora Film Festival adalah festival film pendek berskala nasional pertama di Nusa Tenggara Timur (NTT). Kami hadir untuk memberikan ruang bagi para pembuat film, khususnya sineas muda, agar dapat menampilkan karya terbaik mereka.",
     aboutFestival:
@@ -41,18 +41,19 @@ const textsBeranda = {
     date: "5-9 August 2025",
     aboutHeader: "About the Festival",
     festivalName: "Flobamora Film Festival",
-    description: "Flobamora Film Festival is the first national-scale short film festival in East Nusa Tenggara (NTT). We provide a space for filmmakers, especially young directors, to showcase their best works.",
+    parade: "Parade Film NTT",
+    description: "Flobamora Film Festival is the first national-scale short film festival in East Nusa Tenggara (NTT). We provide a platform for filmmakers, especially young filmmakers, to showcase their best works.",
     aboutFestival:
       "The Flobamora Film Festival is the first national-scale short film festival in East Nusa Tenggara (NTT). This festival originated from the NTT Film Parade in 2021 and was first held from October 27 to 30, 2023, by the Kupang Film Community (KFK). Since then, the Flobamora Film Festival has become an annual event. From the beginning, the Flobamora Film Festival has been committed to providing a space for film appreciation and education in NTT while also fostering national and international networks across individual, community, organizational, and festival levels.",
     submitfilm: "Submit Your Film",
     festivalOverview: "Flobamora Film Festival has reached over 2,000 audiences...",
     learnMore: "Learn More",
     competition: "Film Competition",
-    competitionDesc: "A platform for young filmmakers to showcase their best work.",
+    competitionDesc: "A platform for young filmmakers to showcase their best works.",
     workshop: "Workshops & Discussions",
     workshopDesc: "Intensive training and discussions with film industry professionals.",
     network: "Networking & Collaboration",
-    networkDesc: "Build connections with local and national filmmakers.",
+    networkDesc: "Building connections with local and national filmmakers.",
     targetTitle: "Festival Targets",
     shortFilms: "Showcasing 60+ short films from various filmmakers.",
     audience: "More than 2,000 audiences of all ages attended the festival.",

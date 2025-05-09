@@ -83,7 +83,7 @@ const BakumpulKomunitas = () => {
   return (
     <div className={`w-full px-4 py-10 scroll-mt-20 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"} transition-all`}>
       <section className="text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4">{language === "ID" ? "Bakumpul Komunitas" : "Community Gathering"}</h2>
+        <h1 className="text-4xl font-bold mb-4">{language === "ID" ? "Bakumpul Komunitas" : "Community Gathering"}</h1>
         <p className="text-lg max-w-3xl mx-auto">
           {language === "ID" ? "Bakumpul Komunitas mempertemukan komunitas kreatif NTT untuk berbagi ide dan rencana bersama." : "Community Gathering brings together creative communities in NTT to share ideas and plans together."}
         </p>

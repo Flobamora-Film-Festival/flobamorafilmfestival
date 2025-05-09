@@ -64,7 +64,7 @@ const Tiket = () => {
 
   return (
     <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 text-gray-900 dark:text-white">
-      <h1 className="text-2xl lg:text-3xl font-bold text-center mb-6">{texts.title}</h1>
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-Outfit font-bold text-gray-800 dark:text-gray-200 text-center mb-6">{texts.title}</h1>
 
       {pesanTerkirim ? (
         <div className="text-center text-green-500 font-semibold">{texts.successMessage}</div>

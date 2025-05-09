@@ -43,7 +43,8 @@ const Katalog = () => {
         <title>{text[language].title} | Flobamora Film Festival</title>
       </Helmet>
 
-      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">{text[language].title}</h1>
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-Outfit font-bold text-gray-900 dark:text-white text-center mb-6">{text[language].title}</h1>
+
       <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">{text[language].description}</p>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">

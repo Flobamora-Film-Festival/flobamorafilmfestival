@@ -16,8 +16,6 @@ import textsBeranda from "../../texts/textsBeranda";
 import ContactForm from "../../components/ContactForm";
 import sendEmail from "../../utils/sendEmail";
 import { Link } from "react-router-dom";
-import NewsList from "../../components/news/NewsList"; // Import NewsList
-import textsNews from "../../texts/textsNews"; // Import teks untuk berita
 
 const mainSponsors = ["/assets/sponsors/sponsor-logo.png"];
 
@@ -213,17 +211,17 @@ const Beranda = () => {
           {/* Konten */}
           <div className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left">
             {/* Judul */}
-            <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide">{selectedText.aboutHeader}</h4>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-Outfit font-bold text-gray-800 dark:text-gray-200 tracking-wide mb-4">{selectedText.aboutHeader}</h1>
 
             {/* Deskripsi */}
-            <p className="mt-3 max-w-2xl font-Outfit text-gray-700 dark:text-gray-300 leading-relaxed text-justify">{selectedText.aboutFestival}</p>
+            <p className="mt-3 max-w-2xl mx-auto font-Outfit text-gray-700 dark:text-gray-300 leading-relaxed text-justify">{selectedText.aboutFestival}</p>
 
             {/* Statistik Festival */}
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-gray-800 dark:text-gray-200">
               {(selectedText.statistics || []).map((stat, index) => (
-                <div key={index} className="textsBeranda-center flex flex-col items-center">
-                  <p className="text-3xl font-bold">{stat.number}</p>
-                  <p className="text-sm max-w-[180px]">{stat.text}</p>
+                <div key={index} className="textsBeranda-center flex flex-col items-center text-center">
+                  <p className="text-3xl font-Outfit font-bold">{stat.number}</p>
+                  <p className="text-sm max-w-[180px] mx-auto text-center">{stat.text}</p>
                 </div>
               ))}
             </div>
@@ -254,7 +252,7 @@ const Beranda = () => {
         viewport={{ once: true }}
       >
         <div className="text-center mb-12">
-          <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide">{language === "ID" ? "Berita Terkini" : "Latest News"}</h4>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-Outfit font-bold text-gray-800 dark:text-gray-200 tracking-wide">{language === "ID" ? "Berita Terkini" : "Latest News"}</h1>
         </div>
 
         {isLoadingNews ? (
@@ -262,7 +260,7 @@ const Beranda = () => {
         ) : latestNews.length === 0 ? (
           <p className="text-center text-gray-500 dark:text-gray-400">Tidak ada berita terbaru.</p>
         ) : (
-          <div className={`grid ${latestNews.length === 1 ? "place-items-center" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"}`}>
+          <div className={`grid ${latestNews.length === 1 ? "place-items-center grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"}`}>
             {latestNews.map((news) => {
               const title = news.title.rendered;
               const excerpt =
@@ -279,7 +277,7 @@ const Beranda = () => {
                   <h5 className="font-semibold text-lg text-gray-800 dark:text-white mb-2" dangerouslySetInnerHTML={{ __html: title }} />
                   <p className="text-sm text-gray-600 dark:text-gray-300">{excerpt}</p>
                   <div className="mt-4">
-                    <Link to={`/news/${news.id}`} className="text-red-600 hover:underline font-medium">
+                    <Link to={`/news/${news.slug}`} className="text-red-600 hover:underline font-medium">
                       {language === "ID" ? "Baca Selengkapnya" : "Read More"}
                     </Link>
                   </div>
@@ -307,7 +305,8 @@ const Beranda = () => {
         viewport={{ once: true }}
       >
         <div className="text-center">
-          <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide">{language === "ID" ? "Festival Sebelumnya" : "Previous Festivals"}</h4>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-Outfit font-bold text-gray-800 dark:text-gray-200 tracking-wide">{language === "ID" ? "Festival Sebelumnya" : "Previous Festivals"}</h1>
+
           <p className="mt-3 max-w-3xl mx-auto text-gray-700 dark:text-gray-300 leading-relaxed">
             {language === "ID" ? "Berikut adalah highlights dari Flobamora Film Festival tahun-tahun sebelumnya." : "Here are some highlights from previous editions of the Flobamora Film Festival."}
           </p>
@@ -315,20 +314,48 @@ const Beranda = () => {
 
         {/* Daftar Tahun Festival Sebelumnya */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {previousFestivals.map((festival, index) => (
-            <motion.div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all flex flex-col" whileHover={{ scale: 1.05 }}>
-              <img src={festival.image} alt={`Flobamora Film Festival ${festival.year}`} className="w-full h-48 object-cover rounded-lg mb-4 transition-all duration-300 dark:brightness-75 dark:hover:brightness-100" />
-              <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{`${selectedText.festivalName} ${festival.year}`}</h5>
-              <p className="text-sm lg:text-xs font-normal text-gray-600 dark:text-gray-400 leading-tight mt-2">{festival.desc[language]}</p>
+          {previousFestivals.map((festival, index) => {
+            console.log(festival.year); // Debugging the year of each festival
 
-              {/* Teks "Baca Selengkapnya" sebagai Link */}
-              <div className="mt-4">
-                <Link to={`/tentang#festival-${festival.year}`} className="text-sm font-medium text-red-600 dark:text-red-400 hover:underline">
-                  {selectedText.readMore}
-                </Link>
-              </div>
-            </motion.div>
-          ))}
+            // Check if the festival is from 2021
+            if (festival.year === "2021") {
+              console.log("Displaying special 2021 festival"); // Debugging 2021 condition
+              return (
+                <motion.div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all flex flex-col" whileHover={{ scale: 1.05 }}>
+                  <img src={festival.image} alt={`Parade Film NTT ${festival.year}`} className="w-full h-48 object-cover rounded-lg mb-4 transition-all duration-300 dark:brightness-75 dark:hover:brightness-100" />
+                  <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                    {`Parade Film NTT ${festival.year}`} {/* Special text for 2021 */}
+                  </h5>
+                  <p className="text-sm lg:text-xs font-normal text-gray-600 dark:text-gray-400 leading-tight mt-2">{festival.desc[language]}</p>
+
+                  {/* Teks "Baca Selengkapnya" sebagai Link */}
+                  <div className="mt-4">
+                    <Link to={`/tentang#festival-${festival.year}`} className="text-sm font-medium text-red-600 dark:text-red-400 hover:underline">
+                      {selectedText.readMore}
+                    </Link>
+                  </div>
+                </motion.div>
+              );
+            }
+
+            // For other years, use the default name
+            console.log("Displaying regular festival"); // Debugging regular festival display
+            return (
+              <motion.div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all flex flex-col" whileHover={{ scale: 1.05 }}>
+                <img src={festival.image} alt={`Flobamora Film Festival ${festival.year}`} className="w-full h-48 object-cover rounded-lg mb-4 transition-all duration-300 dark:brightness-75 dark:hover:brightness-100" />
+                <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                  {`${selectedText.festivalName} ${festival.year}`} {/* Default name for other years */}
+                </h5>
+                <p className="text-sm lg:text-xs font-normal text-gray-600 dark:text-gray-400 leading-tight mt-2">{festival.desc[language]}</p>
+
+                <div className="mt-4">
+                  <Link to={`/tentang#festival-${festival.year}`} className="text-sm font-medium text-red-600 dark:text-red-400 hover:underline">
+                    {selectedText.readMore}
+                  </Link>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.section>
 
@@ -336,7 +363,8 @@ const Beranda = () => {
 
       <section className="relative py-20 text-center bg-gray-50 dark:bg-gray-900 flex flex-col items-center">
         <div className="text-center max-w-3xl px-4">
-          <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide mb-4">{selectedText.sponsorsTitle}</h4>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-Outfit font-bold text-gray-800 dark:text-gray-200 tracking-wide mb-4">{selectedText.sponsorsTitle}</h1>
+
           <p className="mt-3 text-gray-700 dark:text-gray-300 leading-relaxed text-lg break-words">{selectedText.sponsorsDescription}</p>
         </div>
 
@@ -360,7 +388,8 @@ const Beranda = () => {
       {/* Bergabung dalam Festival */}
       <div className="w-full">
         <motion.section className="w-full py-16 bg-gray-50 dark:bg-gray-900 text-center" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} viewport={{ once: true }}>
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.joinFestival}</h2>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-Outfit font-bold text-gray-800 dark:text-gray-200 tracking-wide mb-4">{selectedText.joinFestival}</h1>
+
           <p className="mt-4 text-lg w-full px-4 lg:px-0 lg:w-auto text-gray-700 dark:text-gray-300">{selectedText.joinDesc}</p>
 
           <ContactForm

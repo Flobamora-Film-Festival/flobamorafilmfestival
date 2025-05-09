@@ -4,41 +4,36 @@ import { useLanguage } from "../../context/LanguageProvider";
 import ProtectedCommentForm from "../../components/comments/ProtectedCommentForm";
 
 const NewsDetailPage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { language } = useLanguage();
   const [newsItem, setNewsItem] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts/${id}?_embed&_lang=${language === "ID" ? "id" : "en"}&categories=news`)
+    // Ambil data berita berdasarkan slug
+    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&_lang=${language === "ID" ? "id" : "en"}`)
       .then((res) => res.json())
       .then((data) => {
-        setNewsItem(data);
+        if (data.length > 0) {
+          const post = data[0];
+          setNewsItem(post);
+
+          // Ambil komentar berdasarkan ID post
+          fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/comments?post=${post.id}`)
+            .then((res) => res.json())
+            .then((commentsData) => setComments(commentsData))
+            .catch((error) => console.error("Gagal mengambil komentar:", error));
+        } else {
+          setNewsItem(null);
+        }
         setLoading(false);
       })
       .catch((error) => {
         console.error("Gagal mengambil detail berita:", error);
         setLoading(false);
       });
-
-    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/comments?post=${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setComments(data);
-      })
-      .catch((error) => {
-        console.error("Gagal mengambil komentar:", error);
-      });
-  }, [id, language]);
-
-  if (loading) {
-    return <p className="text-center text-gray-500 dark:text-gray-300 my-10">{language === "ID" ? "Memuat berita..." : "Loading news..."}</p>;
-  }
-
-  if (!newsItem) {
-    return <p className="text-center text-gray-500 dark:text-gray-300 my-10">{language === "ID" ? "Berita tidak ditemukan." : "News not found."}</p>;
-  }
+  }, [slug, language]);
 
   const formatDate = (date) => {
     const options = {
@@ -52,6 +47,14 @@ const NewsDetailPage = () => {
     };
     return new Date(date).toLocaleString(language === "ID" ? "id-ID" : "en-US", options);
   };
+
+  if (loading) {
+    return <p className="text-center text-gray-500 dark:text-gray-300 my-10">{language === "ID" ? "Memuat berita..." : "Loading news..."}</p>;
+  }
+
+  if (!newsItem) {
+    return <p className="text-center text-gray-500 dark:text-gray-300 my-10">{language === "ID" ? "Berita tidak ditemukan." : "News not found."}</p>;
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -80,10 +83,9 @@ const NewsDetailPage = () => {
 
       <div className="mt-8">
         <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">{language === "ID" ? "Tinggalkan Komentar" : "Leave a Comment"}</h3>
-        <ProtectedCommentForm postId={id} />
+        <ProtectedCommentForm postId={newsItem.id} />
       </div>
 
-      {/* Link Kembali ke Daftar Berita */}
       <div className="mt-10 text-center">
         <Link to="/news" className="text-red-600 hover:text-red-800 font-medium">
           &larr; {language === "ID" ? "Kembali ke Daftar Berita" : "Back to News List"}

@@ -21,7 +21,7 @@ const ContactForm = ({ formData, handleInputChange, handleCaptchaSuccess, handle
       transition={{ duration: 0.8, ease: "easeOut" }}
       viewport={{ once: true }}
     >
-      <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{selectedText.contactForm}</h2>
+      <h1 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 tracking-wide mb-4">{selectedText.contactForm}</h1>
 
       <AnimatePresence mode="wait">
         {formData.isSubmitted ? (

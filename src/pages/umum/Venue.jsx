@@ -37,7 +37,8 @@ const Venue = () => {
       </Helmet>
 
       <motion.div className="max-w-4xl mx-auto" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-6">{t.title}</h1>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-Outfit font-bold text-gray-800 dark:text-gray-200 text-center mb-6">{t.title}</h1>
+
         <p className="text-center mb-4 text-base sm:text-lg">{t.description}</p>
         <p className="text-center mb-6 text-sm sm:text-base">
           <span className="font-semibold">{t.addressLabel}</span> {t.address}

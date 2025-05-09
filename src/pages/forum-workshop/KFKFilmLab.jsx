@@ -79,7 +79,7 @@ const KFKFilmLab = () => {
         <div className="relative w-full h-[400px] bg-cover bg-center rounded-xl overflow-hidden" style={{ backgroundImage: `url(/assets/kfk-film-lab.jpg)` }}>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center p-6">
             <div className="text-white text-center max-w-3xl">
-              <h2 className="text-4xl font-semibold mb-4">KFK Film Lab</h2>
+              <h1 className="text-4xl font-semibold mb-4">KFK Film Lab</h1>
               <p className="text-lg">{language === "ID" ? "KFK Film Lab adalah laboratorium naskah film pendek untuk sineas muda NTT." : "KFK Film Lab is a short film script lab for young filmmakers in East Nusa Tenggara."}</p>
             </div>
           </div>

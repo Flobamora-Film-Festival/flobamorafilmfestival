@@ -38,7 +38,7 @@ const BaomongFilm = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-center justify-center p-6">
             <div className="text-white text-center w-full max-w-3xl">
-              <h2 className="text-4xl font-semibold mb-4">Baomong Film</h2>
+              <h1 className="text-4xl font-semibold mb-4">Baomong Film</h1>
               <p className="text-lg max-w-2xl mx-auto">
                 {language === "ID"
                   ? "Baomong Film adalah sesi diskusi yang membahas tentang film, perempuan, dan hal-hal yang belum dibicarakan di dunia perfilman."

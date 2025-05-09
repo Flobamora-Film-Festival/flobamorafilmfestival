@@ -21,7 +21,7 @@ const Tentang = () => {
         <meta name="description" content="Flobamora Film Festival adalah festival film pendek nasional di NTT." />
       </Helmet>
 
-      <h1 className="text-2xl sm:text-3xl font-bold">{language === "ID" ? "Tentang Flobamora Film Festival" : "About Flobamora Film Festival"}</h1>
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-Outfit font-bold text-gray-800 dark:text-gray-200 tracking-wide">{language === "ID" ? "Tentang Flobamora Film Festival" : "About Flobamora Film Festival"}</h1>
 
       <section className="space-y-2">
         <h2 className="text-lg sm:text-xl font-semibold">{language === "ID" ? "Apa Itu Flobamora Film Festival?" : "What is Flobamora Film Festival?"}</h2>
