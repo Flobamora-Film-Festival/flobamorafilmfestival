@@ -256,7 +256,7 @@ const Beranda = () => {
         <div className="text-center mb-12">
           <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide">{language === "ID" ? "Berita Terkini" : "Latest News"}</h4>
         </div>
-        {/* Daftar Berita */}
+
         {isLoadingNews ? (
           <p className="text-center text-gray-500 dark:text-gray-400">Memuat berita...</p>
         ) : latestNews.length === 0 ? (
@@ -272,6 +272,7 @@ const Beranda = () => {
                   .split(".")[0] + ".";
 
               const image = news._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+
               return (
                 <div key={news.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition-all max-w-sm">
                   {image && <img src={image} alt={title} className="w-full h-48 object-cover rounded-md mb-4" />}
