@@ -335,21 +335,18 @@ const Beranda = () => {
       <div className="border-t border-gray-300 dark:border-gray-700 my-0"></div>
 
       <section className="relative py-20 text-center bg-gray-50 dark:bg-gray-900 flex flex-col items-center">
-        {/* Sponsor Kami */}
-        <div className="text-center">
+        <div className="text-center max-w-3xl px-4">
           <h4 className="text-lg sm:text-xl font-Outfit font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide mb-4">{selectedText.sponsorsTitle}</h4>
-          <p className="mt-3 max-w-full mx-auto text-gray-700 dark:text-gray-300 leading-relaxed text-lg" style={{ whiteSpace: "nowrap" }}>
-            {selectedText.sponsorsDescription}
-          </p>
+          <p className="mt-3 text-gray-700 dark:text-gray-300 leading-relaxed text-lg break-words">{selectedText.sponsorsDescription}</p>
         </div>
-        {/* Sponsor Utama */}
+
         {mainSponsors.length > 0 && (
-          <div className="mb-12 py-6 px-8">
+          <div className="mb-12 py-6 px-8 w-full">
             <div className="flex justify-center">
-              <div className="flex flex-wrap justify-center gap-12">
+              <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
                 {mainSponsors.map((logo, index) => (
                   <div key={index} className="flex justify-center items-center transform transition-transform duration-300 hover:scale-105">
-                    <img src={logo} alt={`Sponsor Utama ${index + 1}`} className="w-36 h-auto object-contain shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:shadow-gray-800" />
+                    <img src={logo} alt={`Sponsor Utama ${index + 1}`} className="w-32 sm:w-36 h-auto object-contain shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:shadow-gray-800" />
                   </div>
                 ))}
               </div>
