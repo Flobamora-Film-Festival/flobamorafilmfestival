@@ -1,84 +1,84 @@
-import React, { useContext } from "react";
-import { useLanguage } from "../../context/LanguageProvider"; // ✅ Gunakan custom hook
-import { ThemeContext } from "../../context/ThemeContext"; // Tetap gunakan useContext untuk ThemeContext
+import React, { useEffect, useState } from "react";
+import { useLanguage } from "../../context/LanguageProvider";
 
-const KFKFilmLab = () => {
-  const { language } = useLanguage(); // ✅ Ambil state language dengan useLanguage
-  const { theme } = useContext(ThemeContext); // ✅ Tetap gunakan useContext untuk ThemeContext
-
-  const mentors = [
-    {
-      name: "Mentor 1",
-      role: "Penulis Skenario",
-      img: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Mentor 2",
-      role: "Sutradara",
-      img: "https://via.placeholder.com/150",
-    },
-    {
-      name: "Mentor 3",
-      role: "Produser",
-      img: "https://via.placeholder.com/150",
-    },
-  ];
-
-  const scripts = [
-    {
-      title: "Laut yang Terlupakan",
-      author: "Ardi Meko",
-      photo: "https://via.placeholder.com/150",
-      description: {
-        ID: "Seorang anak nelayan harus memilih antara mengikuti jejak ayahnya atau merantau demi masa depan.",
-        EN: "A fisherman's son must choose between following in his father's footsteps or leaving to seek a better future.",
-      },
-    },
-    {
-      title: "Langkah di Atas Tanah Merah",
-      author: "Maria Delo",
-      photo: "https://via.placeholder.com/150",
-      description: {
-        ID: "Kisah anak muda yang berjuang menjaga identitas budaya di tengah modernisasi kampungnya.",
-        EN: "A youth struggles to preserve cultural identity amidst the modernization of their village.",
-      },
-    },
-    {
-      title: "Surat dari Timur",
-      author: "Davin Lede",
-      photo: "https://via.placeholder.com/150",
-      description: {
-        ID: "Seorang jurnalis menemukan surat dari masa lalu yang mengubah pandangannya tentang konflik di kampungnya.",
-        EN: "A journalist finds a letter from the past that changes his perspective on the conflict in his hometown.",
-      },
-    },
-    {
-      title: "Kisah dari Kaki Gunung",
-      author: "Sinta Ndolu",
-      photo: "https://via.placeholder.com/150",
-      description: {
-        ID: "Dua sahabat dari latar berbeda bersatu dalam impian yang sama: membuat film pertama mereka.",
-        EN: "Two friends from different backgrounds unite in the same dream: making their first film.",
-      },
-    },
-    {
-      title: "Bayang-Bayang di Atap Rumah",
-      author: "Yosua Seki",
-      photo: "https://via.placeholder.com/150",
-      description: {
-        ID: "Ketika rahasia lama keluarganya terungkap, seorang remaja menghadapi trauma yang telah lama tersembunyi.",
-        EN: "When his family's long-hidden secret is revealed, a teenager confronts a deeply buried trauma.",
-      },
-    },
-  ];
+// Komponen untuk Mentor
+const MentorCard = React.memo(({ mentor, language }) => {
+  const acf = mentor.acf || {};
+  const name = acf[`nama_mentor_${language.toLowerCase()}`] || mentor.title.rendered;
+  const bio = acf[`bio_mentor_${language.toLowerCase()}`] || (language === "ID" ? "Bio tidak tersedia." : "Bio is not available.");
+  const photo = acf.foto_mentor || "/default.jpg";
 
   return (
-    <div className={`w-full px-4 py-10 lg:px-20 xl:px-32 scroll-mt-20 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
-      {/* Hero Section */}
+    <div className="flex flex-col lg:flex-row w-full bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 mb-10">
+      {/* Foto Mentor */}
+      <div className="flex-shrink-0 mb-4 lg:mb-0">
+        <img src={photo} alt={`Foto mentor ${name}`} className="w-[200px] h-[260px] object-cover rounded-md border border-gray-300 dark:border-gray-700" />
+      </div>
+
+      {/* Nama + Bio */}
+      <div className="lg:ml-8 flex-1">
+        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{name}</h4>
+        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed text-justify">{bio}</p>
+      </div>
+    </div>
+  );
+});
+
+// Komponen untuk Skenario Terpilih
+const SelectedScriptCard = React.memo(({ script, language }) => {
+  const acf = script.acf || {};
+  const title = acf[`judul_skenario_${language.toLowerCase()}`] || script.title.rendered;
+  const description = acf[`deskripsi_skenario_${language.toLowerCase()}`] || "Deskripsi tidak tersedia.";
+  const photo = acf.foto_skenario || "/default-script.jpg";
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300">
+      <img src={photo} alt={`Foto skenario ${title}`} className="w-full h-48 object-cover rounded-md mb-4" />
+      <h4 className="font-semibold text-xl text-gray-900 dark:text-white mb-3">{title}</h4>
+      <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">{description}</p>
+    </div>
+  );
+});
+
+const KFKFilmLab = () => {
+  const { language } = useLanguage();
+  const [mentors, setMentors] = useState([]);
+  const [scripts, setScripts] = useState([]);
+
+  useEffect(() => {
+    const fetchMentors = async () => {
+      try {
+        const response = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/mentor_kfk_film_lab");
+        if (!response.ok) throw new Error("Failed to fetch mentors");
+        const data = await response.json();
+        setMentors(data);
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+      }
+    };
+
+    const fetchScripts = async () => {
+      try {
+        const response = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/script_kfk_film_lab");
+        if (!response.ok) throw new Error("Failed to fetch scripts");
+        const data = await response.json();
+        setScripts(data);
+      } catch (error) {
+        console.error("Error fetching scripts:", error);
+      }
+    };
+
+    fetchMentors();
+    fetchScripts();
+  }, []);
+
+  return (
+    <div className="w-full px-6 py-10 lg:px-16 xl:px-24">
+      {/* Hero */}
       <section className="relative text-center mb-16">
-        <div className="relative w-full h-[400px] bg-cover bg-center rounded-xl overflow-hidden" style={{ backgroundImage: `url(/assets/kfk-film-lab.jpg)` }}>
+        <div className="relative w-full h-[500px] bg-cover bg-center rounded-xl overflow-hidden" style={{ backgroundImage: `url(/assets/kfk-film-lab.jpg)` }}>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center p-6">
-            <div className="text-white text-center max-w-3xl">
+            <div className="text-white text-center max-w-4xl">
               <h1 className="text-4xl font-semibold mb-4">KFK Film Lab</h1>
               <p className="text-lg">{language === "ID" ? "KFK Film Lab adalah laboratorium naskah film pendek untuk sineas muda NTT." : "KFK Film Lab is a short film script lab for young filmmakers in East Nusa Tenggara."}</p>
             </div>
@@ -89,40 +89,29 @@ const KFKFilmLab = () => {
       {/* Tentang Program */}
       <section className="mb-16">
         <h3 className="text-2xl font-bold mb-4 text-center">{language === "ID" ? "Tentang Program" : "About the Program"}</h3>
-        <p className="text-lg text-center max-w-3xl mx-auto">
+        <p className="text-lg text-center max-w-4xl mx-auto">
           {language === "ID"
             ? "KFK Film Lab bertujuan mendukung pertumbuhan industri film lokal lewat pelatihan penulisan naskah, diskusi kreatif, dan pembinaan intensif bersama mentor berpengalaman."
             : "KFK Film Lab aims to support the growth of the local film industry through scriptwriting training, creative discussions, and intensive mentoring."}
         </p>
       </section>
 
-      {/* Mentor */}
-      <section className="mb-16">
-        <h3 className="text-2xl font-bold mb-6 text-center">{language === "ID" ? "Para Mentor" : "Mentors"}</h3>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {mentors.map((mentor, i) => (
-            <div key={i} className="flex flex-col items-center text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-              <img src={mentor.img} alt={mentor.name} className="w-24 h-24 rounded-full mb-3 object-cover border" />
-              <h4 className="font-semibold text-lg">{mentor.name}</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{mentor.role}</p>
-            </div>
+      {/* Skenario Terpilih */}
+      <section className="mb-16 px-4 lg:px-16 xl:px-24">
+        <h3 className="text-2xl font-bold mb-6 text-center">{language === "ID" ? "Skenario Terpilih" : "Selected Scripts"}</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {scripts.map((script) => (
+            <SelectedScriptCard key={script.id} script={script} language={language} />
           ))}
         </div>
       </section>
 
-      {/* 5 Naskah Terpilih */}
-      <section>
-        <h3 className="text-2xl font-bold mb-6 text-center">{language === "ID" ? "5 Naskah Terpilih" : "5 Selected Scripts"}</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          {scripts.map((script, i) => (
-            <div key={i} className="flex items-start gap-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow">
-              <img src={script.photo} alt={script.author} className="w-20 h-20 object-cover rounded-full border" />
-              <div>
-                <h4 className="text-lg font-bold">{script.title}</h4>
-                <p className="text-sm italic mb-1">{script.author}</p>
-                <p className="text-sm text-gray-700 dark:text-gray-300">{script.description[language]}</p>
-              </div>
-            </div>
+      {/* Mentor */}
+      <section className="mb-16 px-4 lg:px-16 xl:px-24">
+        <h3 className="text-2xl font-bold mb-8 text-center">{language === "ID" ? "Mentor" : "Mentors"}</h3>
+        <div className="flex flex-col w-full">
+          {mentors.map((mentor) => (
+            <MentorCard key={mentor.id} mentor={mentor} language={language} />
           ))}
         </div>
       </section>
