@@ -116,3 +116,9 @@
   border: 1px solid #ccc;
   box-sizing: border-box;
 }
+.text-justify {
+  word-spacing: normal; /* Atur jarak spasi antar kata yang lebih normal */
+}
+.card-style {
+  @apply bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300;
+}

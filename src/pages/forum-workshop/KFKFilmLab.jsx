@@ -10,15 +10,15 @@ const MentorCard = React.memo(({ mentor, language }) => {
 
   return (
     <div className="flex flex-col lg:flex-row w-full bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 mb-10">
-      {/* Foto Mentor */}
-      <div className="flex-shrink-0 mb-4 lg:mb-0">
+      {/* Foto Mentor di Kiri */}
+      <div className="flex-shrink-0 mb-4 lg:mb-0 lg:w-1/4 flex justify-center items-center p-4">
         <img src={photo} alt={`Foto mentor ${name}`} className="w-[200px] h-[260px] object-cover rounded-md border border-gray-300 dark:border-gray-700" />
       </div>
 
-      {/* Nama + Bio */}
-      <div className="lg:ml-8 flex-1">
+      {/* Nama + Bio di Kanan */}
+      <div className="lg:ml-8 flex-1 flex flex-col items-center lg:items-start text-center lg:text-left p-4">
         <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{name}</h4>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed text-justify">{bio}</p>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed lg:text-justify text-sm lg:text-base text-center">{bio}</p>
       </div>
     </div>
   );
@@ -46,30 +46,23 @@ const KFKFilmLab = () => {
   const [scripts, setScripts] = useState([]);
 
   useEffect(() => {
-    const fetchMentors = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/mentor_kfk_film_lab");
-        if (!response.ok) throw new Error("Failed to fetch mentors");
-        const data = await response.json();
-        setMentors(data);
+        const [mentorResponse, scriptResponse] = await Promise.all([
+          fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/mentor_kfk_film_lab"),
+          fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/script_kfk_film_lab"),
+        ]);
+        if (!mentorResponse.ok || !scriptResponse.ok) throw new Error("Failed to fetch data");
+        const mentorsData = await mentorResponse.json();
+        const scriptsData = await scriptResponse.json();
+        setMentors(mentorsData);
+        setScripts(scriptsData);
       } catch (error) {
-        console.error("Error fetching mentors:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    const fetchScripts = async () => {
-      try {
-        const response = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/script_kfk_film_lab");
-        if (!response.ok) throw new Error("Failed to fetch scripts");
-        const data = await response.json();
-        setScripts(data);
-      } catch (error) {
-        console.error("Error fetching scripts:", error);
-      }
-    };
-
-    fetchMentors();
-    fetchScripts();
+    fetchData();
   }, []);
 
   return (
