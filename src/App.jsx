@@ -49,41 +49,14 @@ import NewsDetailPage from "./pages/news/NewsDetailPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 
-// Admin
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-
 // Komponen Wordpress
 import Posts from "./components/Posts";
 
 const App = () => {
   const location = useLocation();
 
-  // Ambil token dari localStorage
-  const token = localStorage.getItem("adminToken");
-
-  // Function to logout and remove token
-  const logout = () => {
-    localStorage.removeItem("adminToken");
-    window.location.href = "/admin/login"; // Redirect ke halaman login setelah logout
-  };
-
-  // Function to check token validity and refresh it (if needed)
-  const refreshToken = () => {
-    if (!token) {
-      logout();
-    }
-  };
-
-  // Call refreshToken on App load
-  React.useEffect(() => {
-    if (location.pathname.startsWith("/admin") && location.pathname !== "/admin/login") {
-      refreshToken();
-    }
-  }, [location.pathname]);
-
   // Cek apakah halaman yang diakses adalah halaman login atau register
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/admin/login";
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <>
@@ -99,11 +72,6 @@ const App = () => {
             {/* user */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-
-            {/* admin */}
-            <Route path="/admin/login" element={<AdminLoginPage />} />
-            {/* Proteksi halaman dashboard, hanya dapat diakses jika ada token */}
-            <Route path="/admin/dashboard" element={token ? <AdminDashboard /> : <AdminLoginPage />} />
           </Routes>
         </>
       ) : (

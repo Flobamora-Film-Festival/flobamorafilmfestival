@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import fs from "fs";
 import path from "path";
 
 export default defineConfig({
@@ -31,4 +32,14 @@ export default defineConfig({
     base: "/",
   },
   assetsInclude: ["**/*.pdf"],
+
+  // Konfigurasi server untuk menggunakan HTTPS
+  server: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
+      cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
+    },
+    port: 5173,
+    // Port untuk server React
+  },
 });
