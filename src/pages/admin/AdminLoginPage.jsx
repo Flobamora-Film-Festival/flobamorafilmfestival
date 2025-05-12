@@ -5,6 +5,7 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import LanguageToggle from "../../components/LanguageToggle";
 import ThemeToggle from "../../components/ThemeToggle";
 import { useTheme } from "../../context/ThemeProvider";
+import { AdminApi } from "../../api/adminApi"; // Pastikan AdminApi telah sesuai dengan metode login dari plugin
 
 const translations = {
   ID: {
@@ -53,8 +54,11 @@ const AdminLoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login(username, password); // ini akan otomatis redirect di context
+      // Panggil API login dari AdminApi yang telah dikonfigurasi dengan Simple JWT Login
+      await AdminApi.login({ username, password });
+      navigate("/admin/dashboard"); // Setelah login berhasil, arahkan ke dashboard
     } catch (err) {
+      // Jika login gagal, tampilkan pesan error
       const message = err?.message?.includes("403") || err?.message?.includes("401") ? t.noAccess : t.loginFailed + ": " + (err.message || t.errorMessage);
       alert(message);
     }

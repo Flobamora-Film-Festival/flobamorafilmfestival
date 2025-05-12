@@ -10,14 +10,14 @@ export const AdminAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fungsi untuk memeriksa status login admin
+  // Fungsi untuk memeriksa status login admin dengan token JWT
   const checkAuth = useCallback(async () => {
     setLoading(true);
     try {
-      const user = await AdminApi.getCurrentAdmin();
+      const user = await AdminApi.getCurrentAdmin(); // Mengambil data admin menggunakan JWT
       setIsAuthenticated(true);
       setAdminInfo(user);
-    } catch {
+    } catch (error) {
       setIsAuthenticated(false);
       setAdminInfo(null);
     } finally {
@@ -25,32 +25,32 @@ export const AdminAuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Fungsi login, panggil login API lalu cek autentikasi
+  // Fungsi login, panggil login API dari plugin Simple JWT Login
   const login = async (username, password) => {
     try {
-      await AdminApi.login({ username, password });
-      await checkAuth();
+      await AdminApi.login({ username, password }); // Login dengan API dari plugin Simple JWT
+      await checkAuth(); // Verifikasi status login admin
       navigate("/admin/dashboard");
     } catch (err) {
       throw err;
     }
   };
 
-  // Fungsi logout
+  // Fungsi logout, hapus cookie JWT
   const logout = async () => {
     try {
-      await AdminApi.logout();
+      await AdminApi.logout(); // Hapus token dari cookie
     } catch (err) {
       console.warn("Logout error:", err);
     }
     setIsAuthenticated(false);
     setAdminInfo(null);
-    navigate("/admin/login");
+    navigate("/admin/login"); // Navigasi ke halaman login
   };
 
   // Cek status autentikasi saat komponen mount
   useEffect(() => {
-    checkAuth();
+    checkAuth(); // Periksa autentikasi saat komponen pertama kali di-render
   }, [checkAuth]);
 
   return (
