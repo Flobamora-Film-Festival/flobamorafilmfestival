@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { AdminApi } from "../../api/adminApi";
+import { AdminApi } from "../../api/adminApi"; // Pastikan AdminApi diatur untuk memanfaatkan cookie HttpOnly
 
 const AdminAuthContext = createContext();
 
@@ -10,13 +10,18 @@ export const AdminAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fungsi untuk memeriksa status login admin dengan token JWT
+  // Fungsi untuk memeriksa status login admin dengan token JWT dari cookie HttpOnly
   const checkAuth = useCallback(async () => {
     setLoading(true);
     try {
-      const user = await AdminApi.getCurrentAdmin(); // Mengambil data admin menggunakan JWT
-      setIsAuthenticated(true);
-      setAdminInfo(user);
+      const res = await AdminApi.getCurrentAdmin(); // Memanggil endpoint yang mengembalikan data admin jika token valid
+      if (res && res.data) {
+        setIsAuthenticated(true);
+        setAdminInfo(res.data); // Menyimpan informasi admin
+      } else {
+        setIsAuthenticated(false);
+        setAdminInfo(null);
+      }
     } catch (error) {
       setIsAuthenticated(false);
       setAdminInfo(null);
@@ -28,29 +33,30 @@ export const AdminAuthProvider = ({ children }) => {
   // Fungsi login, panggil login API dari plugin Simple JWT Login
   const login = async (username, password) => {
     try {
-      await AdminApi.login({ username, password }); // Login dengan API dari plugin Simple JWT
-      await checkAuth(); // Verifikasi status login admin
+      await AdminApi.login({ username, password }); // Mengirimkan data login dan biarkan plugin Simple JWT mengelola cookie HttpOnly
+      await checkAuth(); // Verifikasi status login admin setelah login berhasil
       navigate("/admin/dashboard");
     } catch (err) {
+      console.error("Login error:", err);
       throw err;
     }
   };
 
-  // Fungsi logout, hapus cookie JWT
+  // Fungsi logout, panggil endpoint logout dari plugin Simple JWT Login
   const logout = async () => {
     try {
-      await AdminApi.logout(); // Hapus token dari cookie
+      await AdminApi.logout(); // Hapus cookie JWT di server (server yang akan menghapusnya)
     } catch (err) {
       console.warn("Logout error:", err);
     }
     setIsAuthenticated(false);
     setAdminInfo(null);
-    navigate("/admin/login"); // Navigasi ke halaman login
+    navigate("/admin/login"); // Navigasi ke halaman login setelah logout
   };
 
   // Cek status autentikasi saat komponen mount
   useEffect(() => {
-    checkAuth(); // Periksa autentikasi saat komponen pertama kali di-render
+    checkAuth(); // Periksa status autentikasi saat komponen pertama kali di-render
   }, [checkAuth]);
 
   return (

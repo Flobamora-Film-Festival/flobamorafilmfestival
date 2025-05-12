@@ -20,25 +20,30 @@ export const AdminApi = {
       throw new Error(data?.message || "Login gagal");
     }
 
-    // At this point, the Simple JWT Login plugin automatically handles the cookie
+    // Tidak perlu melakukan apa-apa untuk token karena plugin akan mengatur cookie HttpOnly
     return data;
   },
 
   // Logout: Menghapus token dari cookie
   logout: async () => {
-    // The plugin handles this, you can simply clear the cookie manually if needed:
-    document.cookie = "token=; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    return { success: true };
+    // Gunakan endpoint logout dari plugin Simple JWT Login untuk menghapus cookie di server
+    const response = await fetch(`${API_BASE}/simple-jwt-login/v1/logout`, {
+      method: "POST",
+      credentials: "include", // Pastikan cookie dikirim bersama permintaan
+    });
+
+    if (!response.ok) {
+      throw new Error("Logout gagal");
+    }
+
+    return { success: true }; // Server akan menghapus cookie secara otomatis
   },
 
   // Get current logged-in admin info
   getCurrentAdmin: async () => {
     const response = await fetch(`${API_BASE}/wp/v2/users/me`, {
       method: "GET",
-      headers: {
-        // The HttpOnly cookie will be sent automatically with the request
-        Authorization: `Bearer ${getTokenFromCookie()}`, // Optional: this is just for demonstration if needed
-      },
+      credentials: "include", // Pastikan cookie dikirim bersama permintaan
     });
 
     if (!response.ok) {
@@ -47,7 +52,7 @@ export const AdminApi = {
 
     const user = await response.json();
 
-    // Make sure only admin roles can access
+    // Pastikan hanya akun dengan peran admin yang dapat mengakses
     if (!user.roles || !user.roles.includes("administrator")) {
       throw new Error("Akun ini tidak memiliki akses administrator");
     }
