@@ -14,14 +14,9 @@ export const AdminAuthProvider = ({ children }) => {
   const checkAuth = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await AdminApi.getCurrentAdmin(); // Memanggil endpoint yang mengembalikan data admin jika token valid
-      if (res && res.data) {
-        setIsAuthenticated(true);
-        setAdminInfo(res.data); // Menyimpan informasi admin
-      } else {
-        setIsAuthenticated(false);
-        setAdminInfo(null);
-      }
+      const user = await AdminApi.getCurrentAdmin(); // Mendapat objek user langsung
+      setIsAuthenticated(true);
+      setAdminInfo(user); // Simpan user langsung, bukan user.data
     } catch (error) {
       setIsAuthenticated(false);
       setAdminInfo(null);
