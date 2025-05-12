@@ -1,17 +1,7 @@
 const API_BASE = "https://backend.flobamorafilmfestival.com/wp-json";
 
-// Helper untuk mendapatkan token dari cookie
-const getTokenFromCookie = () => {
-  const cookies = document.cookie.split("; ");
-  const tokenCookie = cookies.find((cookie) => cookie.startsWith("token="));
-  if (tokenCookie) {
-    return tokenCookie.split("=")[1];
-  }
-  return null;
-};
-
 export const AdminApi = {
-  // Login: Kirim username dan password, simpan cookie JWT
+  // Login: Kirim username dan password
   login: async ({ username, password }) => {
     const response = await fetch(`${API_BASE}/simple-jwt-login/v1/auth`, {
       method: "POST",
@@ -30,28 +20,24 @@ export const AdminApi = {
       throw new Error(data?.message || "Login gagal");
     }
 
-    // Jika berhasil, token JWT akan disimpan di cookie (sudah diatur di server)
+    // At this point, the Simple JWT Login plugin automatically handles the cookie
     return data;
   },
 
-  // Logout: hapus cookie JWT (tidak ada endpoint logout di Simple JWT Login)
+  // Logout: Menghapus token dari cookie
   logout: async () => {
-    // Menghapus token dari cookie
+    // The plugin handles this, you can simply clear the cookie manually if needed:
     document.cookie = "token=; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    return { success: true }; // Tidak ada response spesifik dari server
+    return { success: true };
   },
 
-  // Ambil data admin yang sedang login
+  // Get current logged-in admin info
   getCurrentAdmin: async () => {
-    const token = getTokenFromCookie();
-    if (!token) {
-      throw new Error("Token tidak ditemukan. Harus login terlebih dahulu.");
-    }
-
     const response = await fetch(`${API_BASE}/wp/v2/users/me`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Menggunakan token JWT untuk otentikasi
+        // The HttpOnly cookie will be sent automatically with the request
+        Authorization: `Bearer ${getTokenFromCookie()}`, // Optional: this is just for demonstration if needed
       },
     });
 
@@ -61,7 +47,7 @@ export const AdminApi = {
 
     const user = await response.json();
 
-    // Pastikan hanya role administrator yang diizinkan
+    // Make sure only admin roles can access
     if (!user.roles || !user.roles.includes("administrator")) {
       throw new Error("Akun ini tidak memiliki akses administrator");
     }
