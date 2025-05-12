@@ -5,7 +5,7 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import LanguageToggle from "../../components/LanguageToggle";
 import ThemeToggle from "../../components/ThemeToggle";
 import { useTheme } from "../../context/ThemeProvider";
-import { AdminApi } from "../../../api/adminApi"; // AdminApi dengan Simple JWT Login
+import { AdminApi } from "../../../api/adminApi"; // AdminApi dengan plugin custom
 
 const translations = {
   ID: {
@@ -54,7 +54,7 @@ const AdminLoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // Panggil API login dari AdminApi yang sudah disesuaikan dengan Simple JWT Login
+      // Panggil API login dari AdminApi yang disesuaikan dengan plugin custom
       await AdminApi.login({ username, password });
       navigate("/admin/dashboard"); // Redirect ke dashboard setelah login berhasil
     } catch (err) {

@@ -3,15 +3,14 @@ const API_BASE = "https://backend.flobamorafilmfestival.com/wp-json";
 export const AdminApi = {
   // Login: Kirim username dan password
   login: async ({ username, password }) => {
-    const response = await fetch(`${API_BASE}/simple-jwt-login/v1/auth`, {
+    const response = await fetch(`${API_BASE}/custom-auth/v1/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        login: username,
+        username,
         password,
-        AUTH_KEY: process.env.SIMPLE_JWT_AUTH_KEY, // Mengambil AUTH_KEY dari variabel lingkungan
       }),
     });
 
@@ -20,14 +19,13 @@ export const AdminApi = {
       throw new Error(data?.message || "Login gagal");
     }
 
-    // Tidak perlu melakukan apa-apa untuk token karena plugin akan mengatur cookie HttpOnly
+    // Tidak perlu melakukan apa-apa untuk token karena plugin custom yang mengatur cookie HttpOnly
     return data;
   },
 
-  // Logout: Menghapus token dari cookie
+  // Logout: Menghapus cookie dari server
   logout: async () => {
-    // Gunakan endpoint logout dari plugin Simple JWT Login untuk menghapus cookie di server
-    const response = await fetch(`${API_BASE}/simple-jwt-login/v1/logout`, {
+    const response = await fetch(`${API_BASE}/custom-auth/v1/logout`, {
       method: "POST",
       credentials: "include", // Pastikan cookie dikirim bersama permintaan
     });
@@ -41,7 +39,7 @@ export const AdminApi = {
 
   // Get current logged-in admin info
   getCurrentAdmin: async () => {
-    const response = await fetch(`${API_BASE}/wp/v2/users/me`, {
+    const response = await fetch(`${API_BASE}/custom-auth/v1/me`, {
       method: "GET",
       credentials: "include", // Pastikan cookie dikirim bersama permintaan
     });

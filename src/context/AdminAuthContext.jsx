@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { AdminApi } from "../../api/adminApi"; // Pastikan AdminApi diatur untuk memanfaatkan cookie HttpOnly
+import { AdminApi } from "../../api/adminApi"; // Gunakan AdminApi yang baru
 
 const AdminAuthContext = createContext();
 
@@ -10,7 +10,7 @@ export const AdminAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fungsi untuk memeriksa status login admin dengan token JWT dari cookie HttpOnly
+  // Fungsi untuk memeriksa status login admin dengan cookie HttpOnly
   const checkAuth = useCallback(async () => {
     setLoading(true);
     try {
@@ -25,10 +25,10 @@ export const AdminAuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Fungsi login, panggil login API dari plugin Simple JWT Login
+  // Fungsi login
   const login = async (username, password) => {
     try {
-      await AdminApi.login({ username, password }); // Mengirimkan data login dan biarkan plugin Simple JWT mengelola cookie HttpOnly
+      await AdminApi.login({ username, password }); // Kirim data login dan biarkan plugin custom mengatur cookie HttpOnly
       await checkAuth(); // Verifikasi status login admin setelah login berhasil
       navigate("/admin/dashboard");
     } catch (err) {
@@ -37,16 +37,16 @@ export const AdminAuthProvider = ({ children }) => {
     }
   };
 
-  // Fungsi logout, panggil endpoint logout dari plugin Simple JWT Login
+  // Fungsi logout
   const logout = async () => {
     try {
-      await AdminApi.logout(); // Hapus cookie JWT di server (server yang akan menghapusnya)
+      await AdminApi.logout(); // Hapus cookie di server (plugin custom yang akan menghapusnya)
     } catch (err) {
       console.warn("Logout error:", err);
     }
     setIsAuthenticated(false);
     setAdminInfo(null);
-    navigate("/admin/login"); // Navigasi ke halaman login setelah logout
+    navigate("/admin/login");
   };
 
   // Cek status autentikasi saat komponen mount
