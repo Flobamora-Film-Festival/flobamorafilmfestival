@@ -4,7 +4,7 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import LanguageToggle from "../../components/LanguageToggle";
 import ThemeToggle from "../../components/ThemeToggle";
-import { useTheme } from "../../context/ThemeProvider"; // Pastikan context ini meng-eksport useTheme
+import { useTheme } from "../../context/ThemeProvider";
 
 const translations = {
   ID: {
@@ -39,65 +39,36 @@ const AdminLoginPage = () => {
 
   const t = translations[language] || translations.ID;
 
-  // Atur tema sesuai waktu
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour >= 18 || hour < 6) {
-      setTheme("dark");
-    } else {
-      setTheme("light");
-    }
+    setTheme(hour >= 18 || hour < 6 ? "dark" : "light");
   }, [setTheme]);
 
-  // Cek apakah sudah terautentikasi sebelum menampilkan halaman login
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin/dashboard"); // Redirect ke dashboard jika sudah login
+      navigate("/admin/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch("https://backend.flobamorafilmfestival.com/wp-json/custom/v1/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // agar cookie diterima
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!response.ok) {
-        let data;
-        try {
-          data = await response.json();
-        } catch {
-          data = {};
-        }
-        alert(`${t.loginFailed}: ${data.message || t.errorMessage}`);
-        return;
-      }
-
-      // Panggil context login agar state frontend di-set
-      await login(); // sudah akan redirect di dalamnya
-    } catch (error) {
-      console.error("Login error:", error);
-      alert(t.networkError);
+      await login(username, password); // ini akan otomatis redirect di context
+    } catch (err) {
+      const message = err?.message?.includes("403") || err?.message?.includes("401") ? t.noAccess : t.loginFailed + ": " + (err.message || t.errorMessage);
+      alert(message);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center dark:bg-gray-900">
       <div className="absolute top-4 right-4 flex space-x-4">
-        {/* Language Toggle */}
         <LanguageToggle />
-
-        {/* Theme Toggle */}
         <ThemeToggle />
       </div>
 
       <div className="w-full max-w-md p-6 border rounded shadow dark:bg-gray-800 dark:border-gray-700 mx-4 sm:mx-0">
-        <h2 className="text-2xl font-bold mb-4 text-white">{t.title}</h2> {/* Menambahkan teks putih untuk judul */}
+        <h2 className="text-2xl font-bold mb-4 text-white">{t.title}</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="text"
@@ -123,4 +94,5 @@ const AdminLoginPage = () => {
     </div>
   );
 };
+
 export default AdminLoginPage;

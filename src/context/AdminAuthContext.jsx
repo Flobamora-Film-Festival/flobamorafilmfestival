@@ -1,6 +1,6 @@
-// src/context/AdminAuthProvider.jsx
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { AdminApi } from "../api/AdminApi";
 
 const AdminAuthContext = createContext();
 
@@ -10,25 +10,13 @@ export const AdminAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fungsi untuk memeriksa autentikasi
+  // Fungsi untuk memeriksa status login admin
   const checkAuth = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/users/me", {
-        method: "GET",
-        credentials: "include", // Menggunakan cookie untuk autentikasi
-      });
-
-      if (!res.ok) throw new Error("Not authenticated");
-
-      const user = await res.json();
-      if (user.roles.includes("administrator")) {
-        setIsAuthenticated(true);
-        setAdminInfo(user);
-      } else {
-        setIsAuthenticated(false);
-        setAdminInfo(null);
-      }
+      const user = await AdminApi.getCurrentAdmin();
+      setIsAuthenticated(true);
+      setAdminInfo(user);
     } catch {
       setIsAuthenticated(false);
       setAdminInfo(null);
@@ -37,36 +25,48 @@ export const AdminAuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Fungsi login, mengharuskan untuk memeriksa autentikasi setelah login
-  const login = async () => {
-    await checkAuth(); // panggil untuk memeriksa setelah login berhasil
-    navigate("/admin/dashboard");
+  // Fungsi login, panggil login API lalu cek autentikasi
+  const login = async (username, password) => {
+    try {
+      await AdminApi.login({ username, password });
+      await checkAuth();
+      navigate("/admin/dashboard");
+    } catch (err) {
+      throw err;
+    }
   };
 
-  // Fungsi logout, akan menghapus cookie JWT
+  // Fungsi logout
   const logout = async () => {
     try {
-      // Memanggil endpoint logout untuk menghapus cookie JWT
-      await fetch("https://backend.flobamorafilmfestival.com/wp-json/custom/v1/logout", {
-        method: "POST",
-        credentials: "include", // Menjamin cookie JWT dikirim
-      });
+      await AdminApi.logout();
     } catch (err) {
       console.warn("Logout error:", err);
     }
-    // Menghapus status autentikasi setelah logout
     setIsAuthenticated(false);
     setAdminInfo(null);
     navigate("/admin/login");
   };
 
-  // Mengecek status autentikasi saat komponen pertama kali dimuat
+  // Cek status autentikasi saat komponen mount
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  return <AdminAuthContext.Provider value={{ isAuthenticated, adminInfo, loading, login, logout }}>{children}</AdminAuthContext.Provider>;
+  return (
+    <AdminAuthContext.Provider
+      value={{
+        isAuthenticated,
+        adminInfo,
+        loading,
+        login,
+        logout,
+      }}
+    >
+      {children}
+    </AdminAuthContext.Provider>
+  );
 };
 
-// Custom hook untuk menggunakan autentikasi admin
+// Custom hook untuk akses context
 export const useAdminAuth = () => useContext(AdminAuthContext);
