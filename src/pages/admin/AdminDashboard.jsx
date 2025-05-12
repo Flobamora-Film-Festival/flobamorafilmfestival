@@ -28,7 +28,7 @@ const textsAdminDashboard = {
 };
 
 const AdminDashboard = () => {
-  const { token, logout } = useAdminAuth();
+  const { logout } = useAdminAuth();
   const navigate = useNavigate();
   const { language } = useLanguage();
   const { theme } = useTheme();
@@ -55,6 +55,8 @@ const AdminDashboard = () => {
         setUserInfo({ name: data.name || "Admin", roles: data.roles || [] });
       } catch (err) {
         console.error("Error fetching user info", err);
+        logout();
+        navigate("/admin/login");
       }
     };
 
@@ -102,7 +104,9 @@ const AdminDashboard = () => {
         )}
 
         <h2 className="text-xl font-semibold mb-2">{t.postsTitle}:</h2>
-        {posts.length > 0 ? (
+        {loading ? (
+          <p className="text-gray-500">{t.loading}</p>
+        ) : posts.length > 0 ? (
           <ul className="space-y-2">
             {posts.map((post) => (
               <li key={post.id} className="p-4 border rounded shadow dark:border-gray-700">

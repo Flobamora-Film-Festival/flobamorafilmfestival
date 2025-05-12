@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 
 const Sidebar = () => {
-  const { isAuthenticated, userRole, token } = useAdminAuth(); // Ambil token dan userRole dari useAdminAuth
+  const { isAuthenticated, userRole } = useAdminAuth(); // Ambil isAuthenticated dan userRole dari useAdminAuth
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,14 +12,15 @@ const Sidebar = () => {
     if (isAuthenticated) {
       const fetchCategories = async () => {
         try {
+          // Kirim permintaan untuk mengambil kategori
           const res = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/categories", {
-            headers: {
-              Authorization: `Bearer ${token}`, // Gunakan token untuk otentikasi
-            },
+            credentials: "include", // Pastikan cookie dikirim bersama dengan permintaan
           });
+
           if (!res.ok) {
             throw new Error("Failed to fetch categories");
           }
+
           const data = await res.json();
           setCategories(data);
         } catch (err) {
@@ -32,7 +33,7 @@ const Sidebar = () => {
 
       fetchCategories();
     }
-  }, [isAuthenticated, token]); // Pastikan fetchCategories dipanggil saat isAuthenticated atau token berubah
+  }, [isAuthenticated]); // Pastikan fetchCategories dipanggil saat isAuthenticated berubah
 
   const linkClass = "block px-4 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition";
   const activeClass = "bg-gray-300 dark:bg-gray-700 font-semibold";
