@@ -5,7 +5,7 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import LanguageToggle from "../../components/LanguageToggle";
 import ThemeToggle from "../../components/ThemeToggle";
 import { useTheme } from "../../context/ThemeProvider";
-import { AdminApi } from "../../api/adminApi"; // Pastikan AdminApi telah sesuai dengan metode login dari plugin
+import { AdminApi } from "../../../api/adminApi"; // Pastikan AdminApi telah sesuai dengan metode login dari plugin
 
 const translations = {
   ID: {
