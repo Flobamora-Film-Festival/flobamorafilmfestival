@@ -10,7 +10,7 @@ const getTokenFromCookie = () => {
   return null;
 };
 
-export const AdminApi = {
+export const adminApi = {
   // Login: Kirim username dan password, simpan cookie JWT
   login: async ({ username, password }) => {
     const response = await fetch(`${API_BASE}/simple-jwt-login/v1/auth`, {

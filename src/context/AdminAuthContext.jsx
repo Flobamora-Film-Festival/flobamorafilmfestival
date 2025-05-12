@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { AdminApi } from "../api/AdminApi";
+import { AdminApi } from "../api/adminApi";
 
 const AdminAuthContext = createContext();
 
