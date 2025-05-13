@@ -10,6 +10,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "@assets": path.resolve(__dirname, "./src/assets"),
       "@utils": path.resolve(__dirname, "./src/utils"),
+      "@api": path.resolve(__dirname, "./api"),
+      "@src": path.resolve(__dirname, "./src"),
     },
   },
   optimizeDeps: {

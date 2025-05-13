@@ -42,10 +42,13 @@ flobamorafilmfestival
 ├─ Press
 ├─ README.md
 ├─ api
+│  ├─ admin-login.js
 │  ├─ adminApi.js
 │  ├─ news.js
 │  └─ send-email.js
 ├─ index.html
+├─ localhost-key.pem
+├─ localhost.pem
 ├─ package-lock.json
 ├─ package.json
 ├─ postcss.config.js
@@ -102,7 +105,9 @@ flobamorafilmfestival
 │  │     └─ AudiensidenganwakilwalikotaKupang-Serena.jpeg
 │  └─ vite.svg
 ├─ src
+│  ├─ AdminApp.jsx
 │  ├─ App.jsx
+│  ├─ api
 │  ├─ assets
 │  │  ├─ Flobamora-logo.png
 │  │  ├─ agustus.png
@@ -215,6 +220,9 @@ flobamorafilmfestival
 │  │  ├─ ScrollToTop.jsx
 │  │  ├─ ThemeToggle.jsx
 │  │  ├─ admin
+│  │  │  ├─ AdminFooter.jsx
+│  │  │  ├─ AdminLayout.jsx
+│  │  │  ├─ AdminProtectedRoute.jsx
 │  │  │  ├─ Header.jsx
 │  │  │  ├─ NewsForm.jsx
 │  │  │  ├─ Sidebar.jsx
@@ -248,7 +256,6 @@ flobamorafilmfestival
 │  ├─ firebase
 │  │  └─ firebase-config.jsx
 │  ├─ hooks
-│  │  ├─ useAdminAuth.js
 │  │  └─ useAuth.js
 │  ├─ index.css
 │  ├─ main.jsx
@@ -305,7 +312,6 @@ flobamorafilmfestival
 │  │  │  └─ SubmitFilm.jsx
 │  │  └─ umum
 │  │     ├─ Beranda.jsx
-│  │     ├─ Contact.jsx
 │  │     ├─ Jadwal.jsx
 │  │     ├─ Katalog.jsx
 │  │     ├─ NotFound.jsx
