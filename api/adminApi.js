@@ -3,60 +3,83 @@ const API_BASE = "https://backend.flobamorafilmfestival.com/wp-json";
 export const AdminApi = {
   // Login: Kirim username dan password
   login: async ({ username, password }) => {
-    const response = await fetch(`${API_BASE}/custom-auth/v1/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    try {
+      const response = await fetch(`${API_BASE}/custom-auth/v1/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Kirim kredensial bersama permintaan
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data?.message || "Login gagal");
+      // Cek apakah response OK (status 200)
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.message || "Login gagal");
+      }
+
+      // Mendapatkan data dari response jika berhasil
+      const data = await response.json();
+
+      // Mengembalikan data login jika berhasil
+      return data;
+    } catch (error) {
+      console.error("Login Error:", error);
+      throw error; // Melemparkan error untuk ditangani di tempat lain
     }
-
-    // Tidak perlu melakukan apa-apa untuk token karena plugin custom yang mengatur cookie HttpOnly
-    return data;
   },
 
   // Logout: Menghapus cookie dari server
   logout: async () => {
-    const response = await fetch(`${API_BASE}/custom-auth/v1/logout`, {
-      method: "POST",
-      credentials: "include", // Pastikan cookie dikirim bersama permintaan
-    });
+    try {
+      const response = await fetch(`${API_BASE}/custom-auth/v1/logout`, {
+        method: "POST",
+        credentials: "include", // Kirimkan kredensial bersama permintaan
+      });
 
-    if (!response.ok) {
-      throw new Error("Logout gagal");
+      // Cek apakah response OK (status 200)
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.message || "Logout gagal");
+      }
+
+      // Jika logout berhasil
+      return { success: true };
+    } catch (error) {
+      console.error("Logout Error:", error);
+      throw error; // Melemparkan error untuk ditangani di tempat lain
     }
-
-    return { success: true }; // Server akan menghapus cookie secara otomatis
   },
 
   // Get current logged-in admin info
   getCurrentAdmin: async () => {
-    const response = await fetch(`${API_BASE}/custom-auth/v1/me`, {
-      method: "GET",
-      credentials: "include", // Pastikan cookie dikirim bersama permintaan
-    });
+    try {
+      const response = await fetch(`${API_BASE}/custom-auth/v1/me`, {
+        method: "GET",
+        credentials: "include", // Kirim kredensial bersama permintaan
+      });
 
-    if (!response.ok) {
-      throw new Error("Gagal mengambil data admin");
+      // Cek apakah response OK (status 200)
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.message || "Gagal mengambil data admin");
+      }
+
+      const user = await response.json();
+
+      // Pastikan user memiliki role "administrator"
+      if (!user.roles || !user.roles.includes("administrator")) {
+        throw new Error("Akun ini tidak memiliki akses administrator");
+      }
+
+      return user;
+    } catch (error) {
+      console.error("Get Current Admin Error:", error);
+      throw error; // Melemparkan error untuk ditangani di tempat lain
     }
-
-    const user = await response.json();
-    console.log("Current Admin Data:", user); // Debugging untuk melihat data yang diterima
-
-    // Pastikan hanya akun dengan peran admin yang dapat mengakses
-    if (!user.roles || !user.roles.includes("administrator")) {
-      throw new Error("Akun ini tidak memiliki akses administrator");
-    }
-
-    return user;
   },
 };
