@@ -5,6 +5,7 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import LanguageToggle from "../../components/LanguageToggle";
 import ThemeToggle from "../../components/ThemeToggle";
 import { useTheme } from "../../context/ThemeProvider";
+import { AdminApi } from "../../../api/adminApi"; // AdminApi dengan plugin custom
 
 const translations = {
   ID: {
@@ -36,7 +37,7 @@ const AdminLoginPage = () => {
   const { login, isAuthenticated } = useAdminAuth();
   const navigate = useNavigate();
   const { setTheme } = useTheme();
-  const [loading, setLoading] = useState(false);
+
   const t = translations[language] || translations.ID;
 
   useEffect(() => {
@@ -46,27 +47,20 @@ const AdminLoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log("Navigating to dashboard"); // Debugging
       navigate("/admin/dashboard"); // Redirect ke dashboard jika sudah login
     }
   }, [isAuthenticated, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    if (!username.trim() || !password) {
-      alert(t.errorMessage);
-      return;
-    }
-
-    setLoading(true);
     try {
-      await login(username, password); // Fungsi login dari context
+      // Panggil API login dari AdminApi yang disesuaikan dengan plugin custom
+      await AdminApi.login({ username, password });
+      navigate("/admin/dashboard"); // Redirect ke dashboard setelah login berhasil
     } catch (err) {
+      // Menampilkan pesan error jika login gagal
       const message = err?.message?.includes("403") || err?.message?.includes("401") ? t.noAccess : `${t.loginFailed}: ${err.message || t.errorMessage}`;
       alert(message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -96,8 +90,8 @@ const AdminLoginPage = () => {
             className="w-full p-2 border rounded text-gray-900 dark:text-white dark:bg-gray-700 dark:border-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-300"
             required
           />
-          <button type="submit" disabled={loading} className="w-full py-2 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50">
-            {loading ? "..." : t.loginButton}
+          <button type="submit" className="w-full py-2 bg-red-700 text-white rounded hover:bg-red-800">
+            {t.loginButton}
           </button>
         </form>
       </div>

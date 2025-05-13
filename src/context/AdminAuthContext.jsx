@@ -14,12 +14,10 @@ export const AdminAuthProvider = ({ children }) => {
   const checkAuth = useCallback(async () => {
     setLoading(true);
     try {
-      const user = await AdminApi.getCurrentAdmin();
-      console.log("User admin:", user); // Debugging, cek user
+      const user = await AdminApi.getCurrentAdmin(); // Mendapat objek user langsung
       setIsAuthenticated(true);
-      setAdminInfo(user); // Simpan user langsung
+      setAdminInfo(user); // Simpan user langsung, bukan user.data
     } catch (error) {
-      console.error("Authentication failed:", error);
       setIsAuthenticated(false);
       setAdminInfo(null);
     } finally {
@@ -30,13 +28,12 @@ export const AdminAuthProvider = ({ children }) => {
   // Fungsi login
   const login = async (username, password) => {
     try {
-      await AdminApi.login({ username, password });
-      console.log("Login successful, checking auth..."); // Debugging
-      await checkAuth();
-      navigate("/admin/dashboard"); // Redirect ke dashboard
+      await AdminApi.login({ username, password }); // Kirim data login dan biarkan plugin custom mengatur cookie HttpOnly
+      await checkAuth(); // Verifikasi status login admin setelah login berhasil
+      navigate("/admin/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      throw err; // Meneruskan error untuk ditangani di halaman login
+      throw err;
     }
   };
 
