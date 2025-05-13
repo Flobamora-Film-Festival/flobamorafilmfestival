@@ -5,7 +5,6 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import LanguageToggle from "../../components/LanguageToggle";
 import ThemeToggle from "../../components/ThemeToggle";
 import { useTheme } from "../../context/ThemeProvider";
-import { AdminApi } from "../../../api/adminApi"; // AdminApi dengan plugin custom
 
 const translations = {
   ID: {
@@ -45,8 +44,10 @@ const AdminLoginPage = () => {
     setTheme(hour >= 18 || hour < 6 ? "dark" : "light");
   }, [setTheme]);
 
+  // Debugging
   useEffect(() => {
     if (isAuthenticated) {
+      console.log("Navigating to dashboard, isAuthenticated:", isAuthenticated); // Debugging
       navigate("/admin/dashboard"); // Redirect ke dashboard jika sudah login
     }
   }, [isAuthenticated, navigate]);
@@ -61,8 +62,10 @@ const AdminLoginPage = () => {
 
     setLoading(true);
     try {
-      await login(username, password);
+      console.log("Attempting to login with:", username, password); // Debugging
+      await login(username, password); // Fungsi login dari context
     } catch (err) {
+      console.error("Login error:", err);
       const message = err?.message?.includes("403") || err?.message?.includes("401") ? t.noAccess : `${t.loginFailed}: ${err.message || t.errorMessage}`;
       alert(message);
     } finally {
