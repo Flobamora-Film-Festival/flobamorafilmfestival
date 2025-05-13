@@ -1,28 +1,5 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "https://backend.flobamorafilmfestival.com"
-        },
-        {
-          "key": "Access-Control-Allow-Credentials",
-          "value": "true"
-        }
-      ]
-    }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+
   "trailingSlash": false
 }
