@@ -50,6 +50,7 @@ export const AdminApi = {
     }
 
     const user = await response.json();
+    console.log("Current Admin Data:", user); // Debugging untuk melihat data yang diterima
 
     // Pastikan hanya akun dengan peran admin yang dapat mengakses
     if (!user.roles || !user.roles.includes("administrator")) {
