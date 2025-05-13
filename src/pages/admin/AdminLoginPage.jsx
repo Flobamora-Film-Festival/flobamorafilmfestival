@@ -53,10 +53,18 @@ const AdminLoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
-      // Panggil API login dari AdminApi yang disesuaikan dengan plugin custom
+      // Panggil API login dan biarkan plugin custom mengatur cookie HttpOnly
       await AdminApi.login({ username, password });
-      navigate("/admin/dashboard"); // Redirect ke dashboard setelah login berhasil
+
+      // Setelah login, periksa status autentikasi
+      await checkAuth(); // Pastikan status autentikasi diperiksa setelah login
+
+      // Jika autentikasi berhasil, arahkan ke dashboard
+      if (isAuthenticated) {
+        navigate("/admin/dashboard");
+      }
     } catch (err) {
       // Menampilkan pesan error jika login gagal
       const message = err?.message?.includes("403") || err?.message?.includes("401") ? t.noAccess : `${t.loginFailed}: ${err.message || t.errorMessage}`;

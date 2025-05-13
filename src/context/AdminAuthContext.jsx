@@ -25,12 +25,19 @@ export const AdminAuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Fungsi login
   const login = async (username, password) => {
     try {
-      await AdminApi.login({ username, password }); // Kirim data login dan biarkan plugin custom mengatur cookie HttpOnly
-      await checkAuth(); // Verifikasi status login admin setelah login berhasil
-      navigate("/admin/dashboard");
+      await AdminApi.login({ username, password });
+
+      // Setelah login, pastikan status autentikasi diverifikasi
+      await checkAuth(); // Tunggu sampai status autentikasi diperiksa
+
+      // Hanya arahkan ke dashboard jika autentikasi berhasil
+      if (isAuthenticated) {
+        navigate("/admin/dashboard");
+      } else {
+        throw new Error("Autentikasi gagal");
+      }
     } catch (err) {
       console.error("Login error:", err);
       throw err;
