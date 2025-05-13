@@ -39,7 +39,7 @@ export const AdminApi = {
   getCurrentAdmin: async () => {
     const response = await fetch(`${API_BASE}/custom-auth/v1/me`, {
       method: "GET",
-      credentials: "include", // Kirim cookie login
+      credentials: "include", // Pastikan cookie ikut serta
     });
 
     if (!response.ok) {
