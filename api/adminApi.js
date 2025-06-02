@@ -41,14 +41,13 @@ export const AdminApi = {
       method: "GET",
       credentials: "include", // Pastikan cookie ikut serta
     });
+    const data = await response.json();
 
     if (!response.ok) {
       throw new Error("Gagal mengambil data admin");
     }
 
-    const user = await response.json();
-
-    if (!user.roles || !user.roles.includes("administrator")) {
+    if (!data.user.roles || !data.user.roles.includes("administrator")) {
       throw new Error("Akun ini tidak memiliki akses administrator");
     }
 

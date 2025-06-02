@@ -1,25 +1,24 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
-import { useAdminAuth } from "../../context/AdminAuthContext"; // Mengimpor dari Context
+import { Navigate, useLocation } from "react-router-dom";
+import { useAdminAuth } from "../../context/AdminAuthContext";
 
 const AdminProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAdminAuth(); // Mengambil status autentikasi dan loading dari Context
+  const { isAuthenticated, loading } = useAdminAuth();
+  const location = useLocation();
 
-  // Menampilkan loading jika autentikasi sedang diperiksa
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500">Memeriksa autentikasi admin...</p>
+      <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-900">
+        <p className="text-gray-500 dark:text-gray-300">Memeriksa autentikasi admin...</p>
       </div>
     );
   }
 
-  // Jika tidak terautentikasi, alihkan ke halaman login
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    // Simpan pathname saat ini agar bisa dikembalikan setelah login
+    return <Navigate to="/admin/login" replace state={{ from: location }} />;
   }
 
-  // Jika sudah terautentikasi, tampilkan children (halaman yang dilindungi)
   return children;
 };
 

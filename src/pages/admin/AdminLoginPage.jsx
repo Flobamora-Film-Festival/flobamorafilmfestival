@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageProvider";
-import { useAdminAuth } from "../../context/AdminAuthContext";
+import { useAdminAuth } from "../../context/AdminAuthContext"; // ✅ digunakan
 import LanguageToggle from "../../components/LanguageToggle";
 import ThemeToggle from "../../components/ThemeToggle";
 import { useTheme } from "../../context/ThemeProvider";
-import { AdminApi } from "../../../api/adminApi"; // AdminApi dengan plugin custom
 
 const translations = {
   ID: {
@@ -34,7 +33,7 @@ const AdminLoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { language } = useLanguage();
-  const { login, isAuthenticated } = useAdminAuth();
+  const { login, isAuthenticated } = useAdminAuth(); // ✅ digunakan dengan benar
   const navigate = useNavigate();
   const { setTheme } = useTheme();
 
@@ -47,7 +46,7 @@ const AdminLoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin/dashboard"); // Redirect ke dashboard jika sudah login
+      navigate("/admin/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -55,18 +54,10 @@ const AdminLoginPage = () => {
     e.preventDefault();
 
     try {
-      // Panggil API login dan biarkan plugin custom mengatur cookie HttpOnly
-      await AdminApi.login({ username, password });
-
-      // Setelah login, periksa status autentikasi
-      await checkAuth(); // Pastikan status autentikasi diperiksa setelah login
-
-      // Jika autentikasi berhasil, arahkan ke dashboard
-      if (isAuthenticated) {
-        navigate("/admin/dashboard");
-      }
+      await login(username, password);
+      // Redirect ke halaman yang dituju sebelum login
+      navigate(from, { replace: true });
     } catch (err) {
-      // Menampilkan pesan error jika login gagal
       const message = err?.message?.includes("403") || err?.message?.includes("401") ? t.noAccess : `${t.loginFailed}: ${err.message || t.errorMessage}`;
       alert(message);
     }

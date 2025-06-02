@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { AdminApi } from "../../api/adminApi"; // Gunakan AdminApi yang baru
+import { useNavigate, useLocation } from "react-router-dom";
+import { AdminApi } from "../../api/adminApi";
 
 const AdminAuthContext = createContext();
 
@@ -8,35 +8,38 @@ export const AdminAuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminInfo, setAdminInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
-  // Fungsi untuk memeriksa status login admin dengan cookie HttpOnly
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Cek status login dari endpoint /me
   const checkAuth = useCallback(async () => {
     setLoading(true);
     try {
-      const user = await AdminApi.getCurrentAdmin(); // Mendapat objek user langsung
-      setIsAuthenticated(true);
-      setAdminInfo(user); // Simpan user langsung, bukan user.data
+      const user = await AdminApi.getCurrentAdmin();
+      if (!isAuthenticated) setIsAuthenticated(true);
+      if (!adminInfo) setAdminInfo(user);
+      return user;
     } catch (error) {
-      setIsAuthenticated(false);
-      setAdminInfo(null);
+      if (isAuthenticated) setIsAuthenticated(false);
+      if (adminInfo !== null) setAdminInfo(null);
+      return null;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated, adminInfo]);
 
+  // Login dan arahkan bila berhasil
   const login = async (username, password) => {
     try {
       await AdminApi.login({ username, password });
 
-      // Setelah login, pastikan status autentikasi diverifikasi
-      await checkAuth(); // Tunggu sampai status autentikasi diperiksa
+      const user = await checkAuth();
+      if (!user) throw new Error("Autentikasi gagal");
 
-      // Hanya arahkan ke dashboard jika autentikasi berhasil
-      if (isAuthenticated) {
+      // Hanya arahkan jika belum di dashboard
+      if (location.pathname !== "/admin/dashboard") {
         navigate("/admin/dashboard");
-      } else {
-        throw new Error("Autentikasi gagal");
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -44,10 +47,10 @@ export const AdminAuthProvider = ({ children }) => {
     }
   };
 
-  // Fungsi logout
+  // Logout & arahkan ke login
   const logout = async () => {
     try {
-      await AdminApi.logout(); // Hapus cookie di server (plugin custom yang akan menghapusnya)
+      await AdminApi.logout();
     } catch (err) {
       console.warn("Logout error:", err);
     }
@@ -56,9 +59,8 @@ export const AdminAuthProvider = ({ children }) => {
     navigate("/admin/login");
   };
 
-  // Cek status autentikasi saat komponen mount
   useEffect(() => {
-    checkAuth(); // Periksa status autentikasi saat komponen pertama kali di-render
+    checkAuth();
   }, [checkAuth]);
 
   return (
@@ -69,6 +71,7 @@ export const AdminAuthProvider = ({ children }) => {
         loading,
         login,
         logout,
+        checkAuth,
       }}
     >
       {children}
