@@ -14,25 +14,30 @@ const Jadwal = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://backend.flobamorafilmfestival.com/wp-json/flobamora/v1/jadwal")
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Jadwal diterima:", data);
+    const fetchJadwal = () => {
+      fetch("https://backend.flobamorafilmfestival.com/wp-json/flobamora/v1/jadwal")
+        .then((res) => {
+          if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Jadwal diterima:", data);
+          const bioskop = data.filter((item) => item.route);
+          const festival = data.filter((item) => !item.route);
+          setBioskopPasiar(bioskop);
+          setFestivalEvents(festival);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Gagal fetch jadwal:", error);
+          setLoading(false);
+        });
+    };
 
-        const bioskop = data.filter((item) => item.route); // berdasarkan route
-        const festival = data.filter((item) => !item.route);
+    fetchJadwal(); // initial load
+    const interval = setInterval(fetchJadwal, 60000); // refresh setiap 60 detik
 
-        setBioskopPasiar(bioskop);
-        setFestivalEvents(festival);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Gagal fetch jadwal:", error);
-        setLoading(false);
-      });
+    return () => clearInterval(interval); // clear saat komponen dilepas
   }, []);
 
   const groupByDate = (events) =>
