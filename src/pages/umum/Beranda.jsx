@@ -40,19 +40,21 @@ const Beranda = () => {
 
         if (categoryData.length === 0) {
           console.warn("Kategori 'news' tidak ditemukan");
+          setIsLoadingNews(false); // jangan lupa stop loading juga
           return;
         }
 
         const categoryId = categoryData[0].id;
 
-        const postsRes = await fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?categories=${categoryId}&per_page=3&_embed`);
+        // Tambahkan orderby=date&order=desc agar terbaru duluan
+        const postsRes = await fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?categories=${categoryId}&per_page=3&_embed&orderby=date&order=desc`);
         const postsData = await postsRes.json();
 
-        setLatestNews(postsData); // ✅ ini yang benar
-        setIsLoadingNews(false); // ✅ ini juga
+        setLatestNews(postsData);
+        setIsLoadingNews(false);
       } catch (error) {
         console.error("Gagal mengambil berita:", error);
-        setIsLoadingNews(false); // ✅ juga di sini
+        setIsLoadingNews(false);
       }
     };
 
