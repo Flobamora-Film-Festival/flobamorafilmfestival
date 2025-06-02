@@ -62,7 +62,7 @@ const NewsDetailPage = () => {
 
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center">{formatDate(newsItem.date)}</p>
 
-      <div className="content text-justify text-lg text-gray-700 dark:text-gray-300 leading-relaxed space-y-4" dangerouslySetInnerHTML={{ __html: newsItem.content.rendered }} />
+      <div className="content text-lg text-gray-700 dark:text-gray-300 leading-relaxed space-y-4" dangerouslySetInnerHTML={{ __html: newsItem.content.rendered }} />
 
       <div className="comments mt-8">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">{language === "ID" ? "Komentar" : "Comments"}</h2>
