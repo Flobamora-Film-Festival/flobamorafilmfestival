@@ -14,13 +14,19 @@ const NewsList = ({ newsLimit = 5, language }) => {
   const lang = language.toLowerCase(); // Polylang expects lowercase: "id", "en"
 
   useEffect(() => {
-    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/categories?slug=news&lang=${lang}&_=${Date.now()}`)
+    if (!categoryId) return;
+
+    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?categories=${categoryId}&per_page=3&orderby=date&order=desc&_embed&_=${Date.now()}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.length > 0) setCategoryId(data[0].id);
+        setLatestNews(data);
+        setIsLoadingNews(false);
       })
-      .catch((error) => console.error("Gagal mengambil kategori:", error));
-  }, [lang]);
+      .catch((error) => {
+        console.error("Gagal mengambil berita:", error);
+        setIsLoadingNews(false);
+      });
+  }, [categoryId]);
 
   // Fetch posts berdasarkan ID kategori dan bahasa dengan paginasi dan filter
   useEffect(() => {
