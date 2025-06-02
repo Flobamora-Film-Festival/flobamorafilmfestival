@@ -14,25 +14,25 @@ const Jadwal = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("https://backend.flobamorafilmfestival.com/wp-json/flobamora/v1/jadwal");
-        const data = await res.json();
+    fetch("https://backend.flobamorafilmfestival.com/wp-json/flobamora/v1/jadwal")
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Jadwal diterima:", data);
 
-        // Filter berdasarkan kategori (pastikan 'category' sudah diisi di ACF)
-        const pasiar = data.filter((item) => item.category?.toLowerCase() === "bioskop pasiar");
-        const festival = data.filter((item) => item.category?.toLowerCase() === "festival");
+        const bioskop = data.filter((item) => item.route); // berdasarkan route
+        const festival = data.filter((item) => !item.route);
 
-        setBioskopPasiar(pasiar);
+        setBioskopPasiar(bioskop);
         setFestivalEvents(festival);
-      } catch (error) {
-        console.error("Gagal fetch jadwal:", error);
-      } finally {
         setLoading(false);
-      }
-    }
-
-    fetchData();
+      })
+      .catch((error) => {
+        console.error("Gagal fetch jadwal:", error);
+        setLoading(false);
+      });
   }, []);
 
   const groupByDate = (events) =>
