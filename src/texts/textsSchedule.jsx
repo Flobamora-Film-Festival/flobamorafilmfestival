@@ -1,4 +1,3 @@
-// src/texts/textsSchedule.jsx
 export default {
   ID: {
     scheduleTitle: "Jadwal Festival",

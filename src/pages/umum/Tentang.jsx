@@ -27,8 +27,8 @@ const Tentang = () => {
         <h2 className="text-lg sm:text-xl font-semibold">{language === "ID" ? "Apa Itu Flobamora Film Festival?" : "What is Flobamora Film Festival?"}</h2>
         <p className="leading-relaxed">
           {language === "ID"
-            ? "Flobamora Film Festival adalah festival film pendek berskala nasional pertama di Nusa Tenggara Timur (NTT), Indonesia. Festival ini lahir dari Parade Film NTT yang diinisiasi oleh Komunitas Film Kupang (KFK) sejak tahun 2021, dan pertama kali digelar dengan nama Flobamora Film Festival pada 27–30 Oktober 2023."
-            : "Flobamora Film Festival is the first national-scale short film festival based in East Nusa Tenggara (NTT), Indonesia. It grew from the Parade Film NTT, initiated by Komunitas Film Kupang (KFK) in 2021, and officially became Flobamora Film Festival in 2023."}
+            ? "Flobamora Film Festival adalah festival film pendek berskala nasional pertama di Nusa Tenggara Timur (NTT), Indonesia. Festival ini lahir dari Parade Film NTT yang diinisiasi oleh Komunitas Film Kupang (KFK) sejak tahun 2021, dan pertama kali digelar dengan nama Flobamora Film Festival pada 27–30 Oktober 2022."
+            : "Flobamora Film Festival is the first national-scale short film festival based in East Nusa Tenggara (NTT), Indonesia. It grew from the Parade Film NTT, initiated by Komunitas Film Kupang (KFK) in 2021, and officially became Flobamora Film Festival in 2022."}
         </p>
       </section>
 

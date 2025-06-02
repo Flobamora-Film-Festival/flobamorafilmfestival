@@ -1,4 +1,3 @@
-// src/components/ScheduleSection.jsx
 import { motion } from "framer-motion";
 
 export default function ScheduleSection({ title, groupedEvents, headers, formatDate, type = "festival" }) {
@@ -23,10 +22,19 @@ export default function ScheduleSection({ title, groupedEvents, headers, formatD
                     <span className="font-semibold">{headers.program}:</span>
                     <span>{event.title}</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold">{type === "festival" ? headers.category : headers.route}:</span>
-                    <span>{type === "festival" ? event.category : event.route}</span>
-                  </div>
+                  {/* Tampilkan "Kategori" jika type = festival, "Rute" jika pasiar */}
+                  {type === "festival" && event.category && (
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold">{headers.category}:</span>
+                      <span>{event.category}</span>
+                    </div>
+                  )}
+                  {type === "pasiar" && event.route && (
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold">{headers.route}:</span>
+                      <span>{event.route}</span>
+                    </div>
+                  )}
                   <div className="flex items-center space-x-2">
                     <span className="font-semibold">{headers.location}:</span>
                     <span>{event.location}</span>
