@@ -13,9 +13,8 @@ const NewsList = ({ newsLimit = 5, language }) => {
 
   const lang = language.toLowerCase(); // Polylang expects lowercase: "id", "en"
 
-  // Fetch ID kategori berdasarkan slug 'news'
   useEffect(() => {
-    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/categories?slug=news&lang=${lang}`)
+    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/categories?slug=news&lang=${lang}&_=${Date.now()}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) setCategoryId(data[0].id);

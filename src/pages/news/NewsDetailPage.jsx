@@ -11,28 +11,31 @@ const NewsDetailPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Ambil data berita berdasarkan slug
-    fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&_lang=${language === "ID" ? "id" : "en"}`)
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchNewsDetail = async () => {
+      try {
+        // Tambahkan timestamp untuk hindari cache
+        const newsRes = await fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&_lang=${language === "ID" ? "id" : "en"}&_=${Date.now()}`);
+        const data = await newsRes.json();
+
         if (data.length > 0) {
           const post = data[0];
           setNewsItem(post);
 
-          // Ambil komentar berdasarkan ID post
-          fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/comments?post=${post.id}`)
-            .then((res) => res.json())
-            .then((commentsData) => setComments(commentsData))
-            .catch((error) => console.error("Gagal mengambil komentar:", error));
+          // Ambil komentar juga dengan tambahkan timestamp
+          const commentsRes = await fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/comments?post=${post.id}&_=${Date.now()}`);
+          const commentsData = await commentsRes.json();
+          setComments(commentsData);
         } else {
           setNewsItem(null);
         }
-        setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Gagal mengambil detail berita:", error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchNewsDetail();
   }, [slug, language]);
 
   const formatDate = (date) => {
