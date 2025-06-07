@@ -35,12 +35,11 @@ const Beranda = () => {
   useEffect(() => {
     const fetchNewsByCategorySlug = async () => {
       try {
+        // 1. Ambil ID kategori berdasarkan slug "news"
         const categoryRes = await fetch("https://backend.flobamorafilmfestival.com/wp-json/wp/v2/categories?slug=news");
-
         if (!categoryRes.ok) {
           throw new Error(`Gagal fetch kategori: ${categoryRes.status} ${categoryRes.statusText}`);
         }
-
         const categoryData = await categoryRes.json();
 
         if (!Array.isArray(categoryData) || categoryData.length === 0) {
@@ -51,14 +50,13 @@ const Beranda = () => {
 
         const categoryId = categoryData[0].id;
 
+        // 2. Ambil 3 post terbaru dari kategori tersebut
         const postsRes = await fetch(`https://backend.flobamorafilmfestival.com/wp-json/wp/v2/posts?categories=${categoryId}&per_page=3&_embed&orderby=date&order=desc`);
-
         if (!postsRes.ok) {
           throw new Error(`Gagal fetch posts: ${postsRes.status} ${postsRes.statusText}`);
         }
 
         const postsData = await postsRes.json();
-
         setLatestNews(postsData);
       } catch (error) {
         console.error("Gagal mengambil berita:", error);
