@@ -44,6 +44,7 @@ import Media from "./pages/media/Media";
 // News
 import NewsPage from "./pages/news/NewsPage";
 import NewsDetailPage from "./pages/news/NewsDetailPage";
+import NewsByTagPage from "./pages/news/NewsByTagPage";
 
 // Users
 import LoginPage from "./pages/auth/LoginPage";
@@ -116,6 +117,7 @@ const App = () => {
             {/* News */}
             <Route path="/news" element={<NewsPage />} />
             <Route path="/news/:slug" element={<NewsDetailPage />} />
+            <Route path="/news/tag/:slug" element={<NewsByTagPage />} />
 
             {/* WordPress Posts */}
             <Route path="/posts" element={<Posts />} />
