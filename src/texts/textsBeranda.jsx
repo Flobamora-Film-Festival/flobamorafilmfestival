@@ -9,6 +9,7 @@ const textsBeranda = {
     aboutFestival:
       "Flobamora Film Festival adalah festival film pendek berskala nasional pertama di Nusa Tenggara Timur (NTT). Festival ini berawal dari Parade Film NTT pada tahun 2021 dan pertama kali diadakan pada 27 hingga 30 Oktober 2023 oleh Komunitas Film Kupang (KFK). Sejak saat itu, Flobamora Film Festival menjadi acara tahunan. Sejak awal, Flobamora Film Festival berkomitmen untuk memberikan ruang apresiasi dan edukasi bagi sineas di NTT, sekaligus membangun jaringan nasional dan internasional di tingkat individu, komunitas, organisasi, dan festival.",
     submitfilm: "Submit Film Anda",
+    schedule: "Lihat Jadwal",
     festivalOverview: "Flobamora Film Festival telah menjangkau lebih dari 2.000 penonton...",
     learnMore: "Pelajari Selengkapnya",
     competition: "Kompetisi Film",
@@ -46,6 +47,7 @@ const textsBeranda = {
     aboutFestival:
       "The Flobamora Film Festival is the first national-scale short film festival in East Nusa Tenggara (NTT). This festival originated from the NTT Film Parade in 2021 and was first held from October 27 to 30, 2023, by the Kupang Film Community (KFK). Since then, the Flobamora Film Festival has become an annual event. From the beginning, the Flobamora Film Festival has been committed to providing a space for film appreciation and education in NTT while also fostering national and international networks across individual, community, organizational, and festival levels.",
     submitfilm: "Submit Your Film",
+    schedule: "View Schedule",
     festivalOverview: "Flobamora Film Festival has reached over 2,000 audiences...",
     learnMore: "Learn More",
     competition: "Film Competition",

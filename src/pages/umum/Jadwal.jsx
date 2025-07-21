@@ -9,9 +9,14 @@ const Jadwal = () => {
   const { language } = useLanguage();
   const textContent = textsSchedule[language];
 
-  const [bioskopPasiar, setBioskopPasiar] = useState([]);
   const [festivalEvents, setFestivalEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [availableDates, setAvailableDates] = useState([]);
+  const [availableVenues, setAvailableVenues] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState("all");
+  const [selectedVenue, setSelectedVenue] = useState("all");
 
   useEffect(() => {
     const fetchJadwal = () => {
@@ -21,11 +26,10 @@ const Jadwal = () => {
           return res.json();
         })
         .then((data) => {
-          console.log("Jadwal diterima:", data);
-          const bioskop = data.filter((item) => item.route);
-          const festival = data.filter((item) => !item.route);
-          setBioskopPasiar(bioskop);
+          const festival = data.filter((item) => !item.route); // Hanya acara non-Pasiar
           setFestivalEvents(festival);
+          setAvailableDates([...new Set(festival.map((event) => event.date))]);
+          setAvailableVenues([...new Set(festival.map((event) => event.venue).filter(Boolean))]);
           setLoading(false);
         })
         .catch((error) => {
@@ -34,10 +38,9 @@ const Jadwal = () => {
         });
     };
 
-    fetchJadwal(); // initial load
-    const interval = setInterval(fetchJadwal, 60000); // refresh setiap 60 detik
-
-    return () => clearInterval(interval); // clear saat komponen dilepas
+    fetchJadwal();
+    const interval = setInterval(fetchJadwal, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const groupByDate = (events) =>
@@ -47,8 +50,13 @@ const Jadwal = () => {
       return acc;
     }, {});
 
-  const groupedBioskopPasiar = groupByDate(bioskopPasiar);
-  const groupedFestivalEvents = groupByDate(festivalEvents);
+  const filteredEvents = festivalEvents.filter((event) => {
+    const matchDate = selectedDate === "all" || event.date === selectedDate;
+    const matchVenue = selectedVenue === "all" || event.venue === selectedVenue;
+    return matchDate && matchVenue;
+  });
+
+  const groupedFestivalEvents = groupByDate(filteredEvents);
 
   const formatDate = (date) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -64,9 +72,29 @@ const Jadwal = () => {
     <div className="min-h-screen py-10 px-5 lg:px-20 dark:bg-gray-900 transition-all">
       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-Outfit font-bold text-gray-900 dark:text-white mb-6 text-center">{textContent.scheduleTitle}</h1>
 
-      <ScheduleSection title={textContent.bioskopPasiarTitle} groupedEvents={groupedBioskopPasiar} headers={textContent.headers} formatDate={formatDate} type="pasiar" />
+      {/* Filter */}
+      <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8 text-sm sm:text-base">
+        <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="px-4 py-2 rounded-md border dark:bg-gray-800 dark:text-white">
+          <option value="all">{language === "ID" ? "Semua Tanggal" : "All Dates"}</option>
+          {availableDates.map((date) => (
+            <option key={date} value={date}>
+              {formatDate(date)}
+            </option>
+          ))}
+        </select>
 
-      <ScheduleSection title={textContent.festivalTitle} groupedEvents={groupedFestivalEvents} headers={textContent.headers} formatDate={formatDate} type="festival" />
+        <select value={selectedVenue} onChange={(e) => setSelectedVenue(e.target.value)} className="px-4 py-2 rounded-md border dark:bg-gray-800 dark:text-white">
+          <option value="all">{language === "ID" ? "Semua Lokasi" : "All Venues"}</option>
+          {availableVenues.map((venue) => (
+            <option key={venue} value={venue}>
+              {venue}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Jadwal */}
+      <ScheduleSection groupedEvents={groupedFestivalEvents} headers={textContent.headers} formatDate={formatDate} type="festival" />
     </div>
   );
 };
