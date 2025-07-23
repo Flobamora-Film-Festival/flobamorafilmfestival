@@ -63,7 +63,6 @@ const Navbar = () => {
       label: language === "ID" ? "Acara" : "Event",
       submenu: [
         { label: language === "ID" ? "Jadwal" : "Schedule", link: "/jadwal" },
-        { label: language === "ID" ? "Tiket" : "Ticket", link: "/tiket" },
         {
           label: language === "ID" ? "Peta Venue" : "Venue Map",
           link: "/venue",

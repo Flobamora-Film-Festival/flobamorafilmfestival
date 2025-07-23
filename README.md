@@ -316,7 +316,6 @@ flobamorafilmfestival
 │  │     ├─ Katalog.jsx
 │  │     ├─ NotFound.jsx
 │  │     ├─ Tentang.jsx
-│  │     ├─ Tiket.jsx
 │  │     └─ Venue.jsx
 │  ├─ routes
 │  │  └─ emailRoutes.js
@@ -333,7 +332,6 @@ flobamorafilmfestival
 │  │  ├─ textsMedia.jsx
 │  │  ├─ textsNews.jsx
 │  │  ├─ textsSchedule.jsx
-│  │  └─ textsTiket.jsx
 │  └─ utils
 │     ├─ formLabels.js
 │     ├─ initialFormData.js

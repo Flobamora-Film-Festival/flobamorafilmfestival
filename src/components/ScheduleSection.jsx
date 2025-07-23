@@ -19,7 +19,7 @@ export default function ScheduleSection({ title, groupedEvents, formatDate }) {
               {groupedEvents[date].map((event, idx) => (
                 <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }} className="border border-gray-300 rounded-lg p-4 shadow-md bg-white dark:bg-gray-800 text-sm space-y-2">
                   <div className="flex items-center space-x-2">
-                    <span className="font-semibold">{isID ? "Waktu" : "Time"}:</span>
+                    <span className="font-semibold">{isID ? "Waktu (WITA / UTC+8)" : "Time (WITA / UTC+8)"}:</span>
                     <span>{event.time}</span>
                   </div>
                   <div className="flex items-start space-x-2">
@@ -32,7 +32,7 @@ export default function ScheduleSection({ title, groupedEvents, formatDate }) {
                     <span>{event.venue}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="font-semibold">{isID ? "Durasi" : "Duration"}:</span>
+                    <span className="font-semibold">{isID ? "Durasi (menit)" : "Duration (minutes)"}:</span>
                     <span>{event.duration}</span>
                   </div>
                 </motion.div>
@@ -44,10 +44,10 @@ export default function ScheduleSection({ title, groupedEvents, formatDate }) {
               <table className="w-full border-collapse border border-gray-300 text-sm md:text-base">
                 <thead>
                   <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{isID ? "Waktu" : "Time"}</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{isID ? "Waktu (WITA / UTC+8)" : "Time (WITA / UTC+8)"}</th>
                     <th className="border border-gray-300 px-6 py-3 w-[35%]">{isID ? "Kegiatan" : "Activity"}</th>
                     <th className="border border-gray-300 px-6 py-3 w-[25%]">{isID ? "Tempat" : "Venue"}</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{isID ? "Durasi" : "Duration"}</th>
+                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{isID ? "Durasi (menit)" : "Duration (minutes)"}</th>
                   </tr>
                 </thead>
                 <tbody>
