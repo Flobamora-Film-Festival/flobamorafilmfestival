@@ -1,137 +1,192 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useLanguage } from "../../context/LanguageProvider";
 import { ThemeContext } from "../../context/ThemeContext";
-import { useLanguage } from "../../context/LanguageProvider"; // Update import
-import { Dialog, DialogPanel, DialogTitle, DialogDescription } from "@headlessui/react";
-
-// Dummy data slot Kompetisi Film Pelajar NTT
-const slotData = [
-  {
-    slotTitle: {
-      ID: "Kompetisi Film Pelajar NTT - Slot 1",
-      EN: "Student Film Competition - Slot 1",
-    },
-    films: [
-      {
-        title: { ID: "Langkah Awal", EN: "First Step" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Seorang pelajar menemukan semangat baru lewat dunia perfilman.",
-          EN: "A student discovers a new passion through filmmaking.",
-        },
-        duration: "10 menit",
-        theme: "Inspiratif",
-        director: "Andi Rato",
-        country: "Indonesia",
-      },
-      {
-        title: { ID: "Cahaya di Balik Jendela", EN: "Light Behind the Window" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Kisah siswa penyandang disabilitas yang ingin bersekolah.",
-          EN: "The story of a student with disabilities striving for education.",
-        },
-        duration: "11 menit",
-        theme: "Drama",
-        director: "Lidia Sone",
-        country: "Indonesia",
-      },
-      {
-        title: { ID: "Harapan di Lembah", EN: "Hope in the Valley" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Perjuangan siswa di pedalaman untuk menggapai cita-cita.",
-          EN: "A rural student’s struggle to achieve dreams.",
-        },
-        duration: "13 menit",
-        theme: "Pendidikan",
-        director: "Raka Meko",
-        country: "Indonesia",
-      },
-      {
-        title: { ID: "Sepeda Tua", EN: "Old Bicycle" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Sepeda tua membawa kenangan dan harapan baru bagi seorang anak.",
-          EN: "An old bicycle brings back memories and hope to a child.",
-        },
-        duration: "12 menit",
-        theme: "Keluarga",
-        director: "Diana Leo",
-        country: "Indonesia",
-      },
-      {
-        title: { ID: "Surat untuk Masa Depan", EN: "Letter to the Future" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Anak muda menulis surat untuk dirinya di masa depan.",
-          EN: "A young person writes a letter to their future self.",
-        },
-        duration: "9 menit",
-        theme: "Reflektif",
-        director: "Yani Meko",
-        country: "Indonesia",
-      },
-    ],
-  },
-];
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
 const LayarKompetisiFilmPelajarNTT = () => {
   const { theme } = useContext(ThemeContext);
-  const { language } = useLanguage(); // Use the custom hook `useLanguage`
+  const { language } = useLanguage();
   const isDark = theme === "dark";
 
+  const [films, setFilms] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedFilm, setSelectedFilm] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("https://backend.flobamorafilmfestival.com/wp-json/flobamora/v1/kompetisi-pelajar");
+        const data = await res.json();
+        setFilms(data);
+      } catch (err) {
+        console.error("Gagal fetch data pelajar:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const labels = {
+    ID: {
+      genre: "Genre",
+      director: "Sutradara",
+      producer: "Produser",
+      school: "Sekolah",
+      originCity: "Asal Kota",
+      productionYear: "Tahun Produksi",
+      duration: "Durasi",
+      synopsis: "Sinopsis",
+      stills: "Stills",
+      close: "Tutup",
+    },
+    EN: {
+      genre: "Genre",
+      director: "Director",
+      producer: "Producer",
+      school: "School",
+      originCity: "City of Origin",
+      productionYear: "Production Year",
+      duration: "Duration",
+      synopsis: "Synopsis",
+      stills: "Stills",
+      close: "Close",
+    },
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center py-10">
+        <p className="text-lg">{language === "ID" ? "Memuat film pelajar..." : "Loading student films..."}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
       <h1 className="text-3xl font-bold text-center mb-10">{language === "ID" ? "Kompetisi Film Pelajar NTT" : "NTT Student Film Competition"}</h1>
 
-      {slotData.map((slot, index) => (
-        <div key={index} className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-center">🎞️ {slot.slotTitle[language]}</h2>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-            {slot.films.map((film, idx) => (
-              <div
-                key={idx}
-                onClick={() => setSelectedFilm(film)}
-                className={`cursor-pointer transition-transform hover:scale-105 rounded-lg overflow-hidden border shadow-md ${isDark ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-900"}`}
-              >
-                <img src={film.poster} alt={film.title[language]} className="w-full h-auto object-cover" />
-                <div className="p-3 text-center">
-                  <p className="text-sm font-medium">{film.title[language]}</p>
-                </div>
-              </div>
-            ))}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        {films.map((film) => (
+          <div
+            key={film.id}
+            onClick={() => setSelectedFilm(film)}
+            className={`cursor-pointer transition-transform hover:scale-105 rounded-lg overflow-hidden border shadow-md ${isDark ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-900"}`}
+          >
+            <div className="w-full h-[360px] bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
+              <img src={film.poster?.medium || film.poster?.url || "/placeholder.jpg"} alt={film.title} className="h-full object-contain" />
+            </div>
+            <div className="p-3 text-center">
+              <p className="text-sm font-medium">{film.title}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
-      {/* Modal Pop-up */}
+      {/* Modal Detail Film */}
       {selectedFilm && (
         <Dialog open={!!selectedFilm} onClose={() => setSelectedFilm(null)} className="relative z-50" static>
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
           <div className="fixed inset-0 flex items-center justify-center p-4">
-            <DialogPanel className="w-full max-w-2xl rounded-lg bg-white dark:bg-gray-800 p-6 shadow-xl">
-              <DialogTitle className="text-xl font-bold mb-2">{selectedFilm?.title?.[language]}</DialogTitle>
-              <div className="flex gap-4 flex-col md:flex-row">
-                <img src={selectedFilm?.poster} alt={selectedFilm?.title?.[language]} className="w-full max-w-[200px] rounded-lg shadow" />
-                <div>
-                  <p className="text-sm mb-2">
-                    <strong>🎬 {language === "ID" ? "Durasi" : "Duration"}:</strong> {selectedFilm?.duration}
-                  </p>
-                  <p className="text-sm mb-2">
-                    <strong>🎥 {language === "ID" ? "Sutradara" : "Director"}:</strong> {selectedFilm?.director}
-                  </p>
-                  <p className="text-sm mb-2">
-                    <strong>🌍 {language === "ID" ? "Negara" : "Country"}:</strong> {selectedFilm?.country}
-                  </p>
-                  <p className="text-sm mt-2">{selectedFilm?.synopsis?.[language]}</p>
+            <DialogPanel className="w-full max-w-4xl rounded-lg bg-white dark:bg-gray-800 p-6 shadow-xl max-h-[90vh] overflow-y-auto relative">
+              <DialogTitle className="text-xl font-bold mb-4 pr-12">{selectedFilm.title}</DialogTitle>
+
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full lg:w-[300px] cursor-pointer" onClick={() => setPreviewImage(selectedFilm.poster?.sizes?.large || selectedFilm.poster?.url)}>
+                  <img src={selectedFilm.poster?.sizes?.medium_large || selectedFilm.poster?.url} alt={selectedFilm.title} className="rounded-lg shadow object-cover aspect-[3/4] w-full" />
+                </div>
+
+                <div className="flex-1 text-sm text-gray-800 dark:text-gray-200 space-y-2">
+                  <div className="flex">
+                    <span className="w-[150px] font-semibold">{labels[language].genre}</span>
+                    <span className="mx-1">:</span>
+                    <span>{language === "ID" ? selectedFilm.genre : selectedFilm.genre_en}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-[150px] font-semibold">{labels[language].director}</span>
+                    <span className="mx-1">:</span>
+                    <span>{selectedFilm.director}</span>
+                  </div>
+                  {selectedFilm.producer && (
+                    <div className="flex">
+                      <span className="w-[150px] font-semibold">{labels[language].producer}</span>
+                      <span className="mx-1">:</span>
+                      <span>{selectedFilm.producer}</span>
+                    </div>
+                  )}
+                  <div className="flex">
+                    <span className="w-[150px] font-semibold">{labels[language].school}</span>
+                    <span className="mx-1">:</span>
+                    <span>{selectedFilm.school}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-[150px] font-semibold">{labels[language].originCity}</span>
+                    <span className="mx-1">:</span>
+                    <span>{selectedFilm.origin_city}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-[150px] font-semibold">{labels[language].productionYear}</span>
+                    <span className="mx-1">:</span>
+                    <span>{selectedFilm.production_year}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-[150px] font-semibold">{labels[language].duration}</span>
+                    <span className="mx-1">:</span>
+                    <span>{selectedFilm.duration}</span>
+                  </div>
+
+                  <div className="pt-4">
+                    <h3 className="font-semibold mb-2">{labels[language].synopsis}</h3>
+                    <div className="text-justify whitespace-pre-line leading-relaxed">{language === "ID" ? selectedFilm.synopsis : selectedFilm.synopsis_en}</div>
+                  </div>
                 </div>
               </div>
-              <button onClick={() => setSelectedFilm(null)} className="mt-6 text-sm text-gray-600 hover:underline dark:text-gray-300">
-                {language === "ID" ? "Tutup" : "Close"}
-              </button>
+
+              {Array.isArray(selectedFilm.stills) && selectedFilm.stills.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="font-semibold mb-2">{labels[language].stills}</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {selectedFilm.stills.map((still) => (
+                      <img
+                        key={still.id}
+                        src={still.sizes?.medium_large || still.url}
+                        alt={still.title}
+                        onClick={() => setPreviewImage(still.sizes?.large || still.url)}
+                        className="rounded shadow w-full object-cover cursor-pointer hover:opacity-90 transition"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="text-end mt-6">
+                <button onClick={() => setSelectedFilm(null)} className="text-sm text-gray-600 hover:underline dark:text-gray-300">
+                  {labels[language].close}
+                </button>
+              </div>
+            </DialogPanel>
+          </div>
+        </Dialog>
+      )}
+
+      {/* Preview Gambar */}
+      {previewImage && (
+        <Dialog open={!!previewImage} onClose={() => setPreviewImage(null)} className="relative z-50" static>
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <DialogPanel className="bg-white dark:bg-gray-900 rounded-lg p-4 max-w-3xl w-full shadow-xl">
+              <div className="relative">
+                <img src={previewImage} alt="Preview" className="w-full max-h-[80vh] object-contain rounded" />
+                <div className="mt-4 flex justify-end gap-4">
+                  <button onClick={() => setPreviewImage(null)} className="text-sm text-gray-600 dark:text-gray-300 hover:underline">
+                    {labels[language].close}
+                  </button>
+                  <a href={previewImage} download className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                    {language === "ID" ? "Unduh Gambar" : "Download Image"}
+                  </a>
+                </div>
+              </div>
             </DialogPanel>
           </div>
         </Dialog>

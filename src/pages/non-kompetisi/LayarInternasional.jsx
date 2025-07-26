@@ -1,137 +1,82 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { Dialog } from "@headlessui/react";
+import { useLanguage } from "../../context/LanguageProvider";
 import { ThemeContext } from "../../context/ThemeContext";
-import { useLanguage } from "../../context/LanguageProvider"; // Update import
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-
-const slotData = [
-  {
-    slotTitle: { ID: "Slot Internasional 1", EN: "International Slot 1" },
-    films: [
-      {
-        title: { ID: "Bayangan Senja", EN: "Twilight Shadows" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Sebuah film tentang bayang-bayang masa lalu di tengah senja.",
-          EN: "A film about shadows of the past at twilight.",
-        },
-        duration: "14 menit",
-        theme: "Drama",
-        director: "Lucas Monteiro",
-        country: "Brazil",
-      },
-      {
-        title: { ID: "Jejak Cahaya", EN: "Traces of Light" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Perjalanan seorang anak menemukan makna harapan.",
-          EN: "A child's journey to find the meaning of hope.",
-        },
-        duration: "12 menit",
-        theme: "Inspiratif",
-        director: "Aya Nakamura",
-        country: "Japan",
-      },
-      {
-        title: { ID: "Anak Salju", EN: "Snow Child" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Misteri anak kecil yang hidup di tengah badai salju.",
-          EN: "The mystery of a child living through a snowstorm.",
-        },
-        duration: "11 menit",
-        theme: "Fantasi",
-        director: "Olga Petrova",
-        country: "Russia",
-      },
-      {
-        title: { ID: "Lautan Tanpa Nama", EN: "Nameless Sea" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Seorang pelaut menulis surat untuk lautan yang tak dikenal.",
-          EN: "A sailor writes letters to the nameless sea.",
-        },
-        duration: "13 menit",
-        theme: "Puisi Visual",
-        director: "Amani Malik",
-        country: "Morocco",
-      },
-      {
-        title: { ID: "Langkah Kecil Dunia", EN: "Tiny Steps of the World" },
-        poster: "https://via.placeholder.com/300x400",
-        synopsis: {
-          ID: "Kisah anak-anak dari berbagai benua melangkah bersama.",
-          EN: "Stories of children from around the world taking steps together.",
-        },
-        duration: "10 menit",
-        theme: "Dokumenter",
-        director: "Sarah Kim",
-        country: "South Korea",
-      },
-    ],
-  },
-];
 
 const LayarInternasional = () => {
+  const { language } = useLanguage();
   const { theme } = useContext(ThemeContext);
-  const { language } = useLanguage(); // Use the custom hook `useLanguage`
-  const isDark = theme === "dark";
-
+  const [films, setFilms] = useState([]);
   const [selectedFilm, setSelectedFilm] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const isDark = theme === "dark";
+  const textColor = isDark ? "text-white" : "text-gray-900";
+
+  const title = language === "ID" ? "Layar Internasional" : "International Screen";
+  const desc = language === "ID" ? "Program kurasi film pendek internasional non-kompetisi dari berbagai negara." : "Curated program of international non-competition short films from various countries.";
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/wp-json/flobamora/v1/non-kompetisi`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filtered = data.filter((film) => film.acf.screening_type === "nonkompetisi" && film.acf.screening_slot === "internasional");
+        setFilms(filtered);
+      });
+  }, []);
+
+  const openModal = (film) => {
+    setSelectedFilm(film);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedFilm(null);
+  };
 
   return (
     <div className="w-full">
-      <h1 className="text-3xl font-bold text-center mb-10">{language === "ID" ? "Layar Internasional" : "International Film Screening"}</h1>
+      <h2 className="text-2xl md:text-3xl font-bold mb-4">{title}</h2>
+      <p className={`mb-10 max-w-3xl ${textColor}`}>{desc}</p>
 
-      {slotData.map((slot, index) => (
-        <div key={index} className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-center">🎞️ {slot.slotTitle[language]}</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {films.map((film) => (
+          <button key={film.id} onClick={() => openModal(film)} className="focus:outline-none">
+            <img src={film.acf.poster?.url} alt={film.title.rendered} className="w-full h-auto rounded-lg shadow-md hover:opacity-80 transition" />
+          </button>
+        ))}
+      </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-            {slot.films.map((film, idx) => (
-              <div
-                key={idx}
-                onClick={() => setSelectedFilm(film)}
-                className={`cursor-pointer transition-transform hover:scale-105 rounded-lg overflow-hidden border shadow-md ${isDark ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-900"}`}
-              >
-                <img src={film.poster} alt={film.title[language]} className="w-full h-auto object-cover" />
-                <div className="p-3 text-center">
-                  <p className="text-sm font-medium">{film.title[language]}</p>
+      <Dialog open={isModalOpen} onClose={closeModal} className="fixed z-50 inset-0 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-4">
+          <Dialog.Panel className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-3xl w-full shadow-xl">
+            {selectedFilm && (
+              <>
+                <Dialog.Title className="text-xl font-bold mb-2">{selectedFilm.title.rendered}</Dialog.Title>
+                <p className="mb-1 text-sm">
+                  <span className="font-semibold">{language === "ID" ? "Sutradara" : "Director"}:</span> {selectedFilm.acf.sutradara}
+                </p>
+                <p className="mb-1 text-sm">
+                  <span className="font-semibold">{language === "ID" ? "Produser" : "Producer"}:</span> {selectedFilm.acf.produser}
+                </p>
+                <p className="mb-1 text-sm">
+                  <span className="font-semibold">{language === "ID" ? "Durasi" : "Duration"}:</span> {selectedFilm.acf.durasi}
+                </p>
+                <p className="mb-4 text-sm">
+                  <span className="font-semibold">{language === "ID" ? "Tahun" : "Year"}:</span> {selectedFilm.acf.tahun}
+                </p>
+                <div className="mb-4">
+                  <p className="text-sm">{language === "ID" ? selectedFilm.acf.sinopsis : selectedFilm.acf.sinopsis_en}</p>
                 </div>
-              </div>
-            ))}
-          </div>
+                <button onClick={closeModal} className="mt-4 px-4 py-2 rounded bg-black text-white dark:bg-white dark:text-black">
+                  {language === "ID" ? "Tutup" : "Close"}
+                </button>
+              </>
+            )}
+          </Dialog.Panel>
         </div>
-      ))}
-
-      {/* Modal */}
-      {selectedFilm && (
-        <Dialog open={!!selectedFilm} onClose={() => setSelectedFilm(null)} className="relative z-50" static>
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-          <div className="fixed inset-0 flex items-center justify-center p-4">
-            <DialogPanel className="w-full max-w-2xl rounded-lg bg-white dark:bg-gray-800 p-6 shadow-xl">
-              <DialogTitle className="text-xl font-bold mb-2">{selectedFilm?.title?.[language]}</DialogTitle>
-              <div className="flex gap-4 flex-col md:flex-row">
-                <img src={selectedFilm?.poster} alt={selectedFilm?.title?.[language]} className="w-full max-w-[200px] rounded-lg shadow" />
-                <div>
-                  <p className="text-sm mb-2">
-                    <strong>🎬 {language === "ID" ? "Durasi" : "Duration"}:</strong> {selectedFilm?.duration}
-                  </p>
-                  <p className="text-sm mb-2">
-                    <strong>🎥 {language === "ID" ? "Sutradara" : "Director"}:</strong> {selectedFilm?.director}
-                  </p>
-                  <p className="text-sm mb-2">
-                    <strong>🌍 {language === "ID" ? "Negara" : "Country"}:</strong> {selectedFilm?.country}
-                  </p>
-                  <p className="text-sm mt-2">{selectedFilm?.synopsis?.[language]}</p>
-                </div>
-              </div>
-              <button onClick={() => setSelectedFilm(null)} className="mt-6 text-sm text-gray-600 hover:underline dark:text-gray-300">
-                {language === "ID" ? "Tutup" : "Close"}
-              </button>
-            </DialogPanel>
-          </div>
-        </Dialog>
-      )}
+      </Dialog>
     </div>
   );
 };

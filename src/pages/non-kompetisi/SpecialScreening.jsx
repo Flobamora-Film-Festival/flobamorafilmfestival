@@ -1,11 +1,11 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
-const LayarKompetisiFilmNTT = () => {
-  const { theme } = useContext(ThemeContext);
+const SpecialScreening = () => {
   const { language } = useLanguage();
+  const { theme } = useContext(ThemeContext);
   const isDark = theme === "dark";
 
   const [films, setFilms] = useState([]);
@@ -14,18 +14,26 @@ const LayarKompetisiFilmNTT = () => {
   const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchFilms = async () => {
       try {
-        const res = await fetch("https://backend.flobamorafilmfestival.com/wp-json/flobamora/v1/kompetisi-film-ntt");
+        const res = await fetch("https://backend.flobamorafilmfestival.com/wp-json/flobamora/v1/non-kompetisi");
         const data = await res.json();
-        setFilms(data);
+
+        const filtered = data
+          .filter((film) => film.screening_slot?.value === "spesial")
+          .map((film) => ({
+            ...film,
+            stills: [film.still1, film.still2, film.still3].filter(Boolean), // <-- Buat array stills manual
+          }));
+
+        setFilms(filtered);
       } catch (err) {
         console.error("Gagal fetch data:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchFilms();
   }, []);
 
   const labels = {
@@ -65,7 +73,7 @@ const LayarKompetisiFilmNTT = () => {
 
   return (
     <div className="w-full">
-      <h1 className="text-3xl font-bold text-center mb-10">{language === "ID" ? "Kompetisi Film NTT" : "NTT Film Competition"}</h1>
+      <h1 className="text-3xl font-bold text-center mb-10">{language === "ID" ? "Spesial Screening" : "Special Screening"}</h1>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {films.map((film) => (
@@ -75,9 +83,8 @@ const LayarKompetisiFilmNTT = () => {
             className={`cursor-pointer transition-transform hover:scale-105 rounded-lg overflow-hidden border shadow-md ${isDark ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-900"}`}
           >
             <div className="w-full h-[360px] bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
-              <img src={film.poster?.medium || film.poster?.url || "/placeholder.jpg"} alt={film.title} className="h-full object-contain" />
+              <img src={film.poster || "/placeholder.jpg"} alt={film.title} className="h-full object-contain" />
             </div>
-
             <div className="p-3 text-center">
               <p className="text-sm font-medium">{film.title}</p>
             </div>
@@ -85,7 +92,7 @@ const LayarKompetisiFilmNTT = () => {
         ))}
       </div>
 
-      {/* Modal Detail Film */}
+      {/* Modal Detail */}
       {selectedFilm && (
         <Dialog open={!!selectedFilm} onClose={() => setSelectedFilm(null)} className="relative z-50" static>
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
@@ -94,12 +101,10 @@ const LayarKompetisiFilmNTT = () => {
               <DialogTitle className="text-xl font-bold mb-4 pr-12">{selectedFilm.title}</DialogTitle>
 
               <div className="flex flex-col md:flex-row gap-6">
-                {/* Poster */}
-                <div className="w-full lg:w-[300px] cursor-pointer" onClick={() => setPreviewImage(selectedFilm.poster?.sizes?.large || selectedFilm.poster?.url)}>
-                  <img src={selectedFilm.poster?.sizes?.medium_large || selectedFilm.poster?.url || "/placeholder.jpg"} alt={selectedFilm.title} className="rounded-lg shadow object-cover aspect-[3/4] w-full" />
+                <div className="w-full lg:w-[300px] cursor-pointer" onClick={() => setPreviewImage(selectedFilm.poster)}>
+                  <img src={selectedFilm.poster || "/placeholder.jpg"} alt={selectedFilm.title} className="rounded-lg shadow object-cover aspect-[3/4] w-full" />
                 </div>
 
-                {/* Info */}
                 <div className="flex-1 text-sm text-gray-800 dark:text-gray-200 space-y-2">
                   <div className="flex">
                     <span className="w-[150px] font-semibold">{labels[language].genre}</span>
@@ -152,20 +157,13 @@ const LayarKompetisiFilmNTT = () => {
                 <div className="mt-6">
                   <h3 className="font-semibold mb-2">{labels[language].stills}</h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {selectedFilm.stills.map((still) => (
-                      <img
-                        key={still.id}
-                        src={still.sizes?.medium_large || still.url}
-                        alt={still.title}
-                        onClick={() => setPreviewImage(still.sizes?.large || still.url)}
-                        className="rounded shadow w-full object-cover cursor-pointer hover:opacity-90 transition"
-                      />
+                    {selectedFilm.stills.map((url, index) => (
+                      <img key={index} src={url} alt={`Still ${index + 1}`} onClick={() => setPreviewImage(url)} className="rounded shadow w-full object-cover cursor-pointer hover:opacity-90 transition" />
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Tombol tutup */}
               <div className="text-end mt-6">
                 <button onClick={() => setSelectedFilm(null)} className="text-sm text-gray-600 hover:underline dark:text-gray-300">
                   {labels[language].close}
@@ -201,4 +199,4 @@ const LayarKompetisiFilmNTT = () => {
   );
 };
 
-export default LayarKompetisiFilmNTT;
+export default SpecialScreening;
