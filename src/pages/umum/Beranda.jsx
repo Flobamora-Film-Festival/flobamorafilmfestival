@@ -196,14 +196,26 @@ const Beranda = () => {
           </div>
         </div>
 
-        {/* Button to Submit Film */}
-        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+        {/* Button to Submit Film di sembunyikan sementara, digantikan dengan jadwal */}
+        <motion.div className="hidden" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
           <Link
             to="/submit-film"
             className="px-10 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white flex items-center gap-2 
     dark:border-transparent focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
           >
             {selectedText.submitfilm} <img src={right_arrow_white} alt="right arrow" className="w-4" />
+          </Link>
+        </motion.div>
+
+        {/* Button to View Schedule */}
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+          <Link
+            to="/jadwal"
+            className="px-10 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white flex items-center gap-2 
+    dark:border-transparent focus:outline-none focus:ring-2 focus:ring-[#b820e6]"
+          >
+            {selectedText.schedule}
+            <img src={right_arrow_white} alt="right arrow" className="w-4" />
           </Link>
         </motion.div>
       </header>
@@ -297,7 +309,11 @@ const Beranda = () => {
         )}
 
         <div className="mt-10 text-center">
-          <Link to="/news" className="inline-block bg-red-600 hover:bg-red-700 text-white text-sm sm:text-base font-medium py-3 px-6 rounded-full transition-all">
+          <Link
+            to="/news"
+            className="inline-block px-10 py-3 border rounded-full bg-gradient-to-r from-[#b820e6] to-[#da7d20] text-white text-sm sm:text-base font-medium 
+    dark:border-transparent focus:outline-none focus:ring-2 focus:ring-[#b820e6] transition-all"
+          >
             {language === "ID" ? "Lihat Semua Berita" : "View All News"}
           </Link>
         </div>

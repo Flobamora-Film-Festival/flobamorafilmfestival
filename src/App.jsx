@@ -11,7 +11,6 @@ import ThemeToggle from "./components/ThemeToggle";
 // Halaman Umum
 import Beranda from "./pages/umum/Beranda";
 import Jadwal from "./pages/umum/Jadwal";
-import Tiket from "./pages/umum/Tiket";
 import Venue from "./pages/umum/Venue";
 import Katalog from "./pages/umum/Katalog";
 import Tentang from "./pages/umum/Tentang";
@@ -81,7 +80,6 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Beranda />} />
             <Route path="/jadwal" element={<Jadwal />} />
-            <Route path="/tiket" element={<Tiket />} />
             <Route path="/venue" element={<Venue />} />
             <Route path="/katalog" element={<Katalog />} />
             <Route path="/tentang" element={<Tentang />} />

@@ -32,7 +32,7 @@ const Kompetisi = () => {
       </div>
 
       {/* Section: Kompetisi Film NTT */}
-      <section className={`${bgSectionAlt} ${textColor} py-16`}>
+      <section className={`${bgSectionAlt} ${textColor} pt-10 pb-16`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <LayarKompetisiFilmNTT />
         </div>
