@@ -50,11 +50,28 @@ const Jadwal = () => {
       return acc;
     }, {});
 
-  const filteredEvents = festivalEvents.filter((event) => {
-    const matchDate = selectedDate === "all" || event.date === selectedDate;
-    const matchVenue = selectedVenue === "all" || event.venue === selectedVenue;
-    return matchDate && matchVenue;
-  });
+  const parseDateTime = (tanggal, waktu) => {
+    if (!waktu) return new Date(tanggal); // fallback kalau waktu kosong
+    const [startTime] = waktu.split(" - ");
+    const cleaned = startTime.replace(/[^\d:.]/g, "").trim();
+    const [jam, menit] = cleaned.split(/[:.]/).map(Number);
+    const d = new Date(tanggal);
+    d.setHours(jam || 0);
+    d.setMinutes(menit || 0);
+    return d;
+  };
+
+  const filteredEvents = festivalEvents
+    .filter((event) => {
+      const matchDate = selectedDate === "all" || event.date === selectedDate;
+      const matchVenue = selectedVenue === "all" || event.venue === selectedVenue;
+      return matchDate && matchVenue;
+    })
+    .sort((a, b) => {
+      const dateA = parseDateTime(a.date, a.time);
+      const dateB = parseDateTime(b.date, b.time);
+      return dateA - dateB;
+    });
 
   const groupedFestivalEvents = groupByDate(filteredEvents);
 

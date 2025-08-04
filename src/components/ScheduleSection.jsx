@@ -31,10 +31,6 @@ export default function ScheduleSection({ title, groupedEvents, formatDate }) {
                     <span className="font-semibold">{isID ? "Tempat" : "Venue"}:</span>
                     <span>{event.venue}</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold">{isID ? "Durasi (menit)" : "Duration (minutes)"}:</span>
-                    <span>{event.duration}</span>
-                  </div>
                 </motion.div>
               ))}
             </div>
@@ -47,7 +43,6 @@ export default function ScheduleSection({ title, groupedEvents, formatDate }) {
                     <th className="border border-gray-300 px-6 py-3 w-[20%]">{isID ? "Waktu (WITA / UTC+8)" : "Time (WITA / UTC+8)"}</th>
                     <th className="border border-gray-300 px-6 py-3 w-[35%]">{isID ? "Kegiatan" : "Activity"}</th>
                     <th className="border border-gray-300 px-6 py-3 w-[25%]">{isID ? "Tempat" : "Venue"}</th>
-                    <th className="border border-gray-300 px-6 py-3 w-[20%]">{isID ? "Durasi (menit)" : "Duration (minutes)"}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -56,7 +51,6 @@ export default function ScheduleSection({ title, groupedEvents, formatDate }) {
                       <td className="border border-gray-300 px-6 py-3">{event.time}</td>
                       <td className="border border-gray-300 px-6 py-3 font-semibold whitespace-pre-line">{event.activity}</td>
                       <td className="border border-gray-300 px-6 py-3">{event.venue}</td>
-                      <td className="border border-gray-300 px-6 py-3">{event.duration}</td>
                     </tr>
                   ))}
                 </tbody>
