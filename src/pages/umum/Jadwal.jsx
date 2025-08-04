@@ -70,7 +70,20 @@ const Jadwal = () => {
     .sort((a, b) => {
       const dateA = parseDateTime(a.date, a.time);
       const dateB = parseDateTime(b.date, b.time);
-      return dateA - dateB;
+
+      if (dateA < dateB) return -1;
+      if (dateA > dateB) return 1;
+
+      // Jika jam sama, bandingkan berdasarkan nomor Slot
+      const getSlotNumber = (text) => {
+        const match = text?.match(/Slot\s*(\d+)/i);
+        return match ? parseInt(match[1]) : 999; // fallback ke belakang jika tidak ditemukan
+      };
+
+      const slotA = getSlotNumber(a.program || a.title || "");
+      const slotB = getSlotNumber(b.program || b.title || "");
+
+      return slotA - slotB;
     });
 
   const groupedFestivalEvents = groupByDate(filteredEvents);
